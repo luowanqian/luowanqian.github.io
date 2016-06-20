@@ -79,6 +79,11 @@ deploy:
 
 avatar: /images/site/debian_logo_64px.png
 
+# Local search
+search:
+  path: search.xml
+  filed: post
+
 # Duoshuo
 duoshuo_shortname: scutmath
 
