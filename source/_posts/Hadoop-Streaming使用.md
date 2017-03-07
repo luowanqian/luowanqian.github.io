@@ -2,6 +2,7 @@
 title: Hadoop Streaming使用
 date: 2017-03-07 16:44:28
 tags:
+ - Hadoop
 ---
 
 关于 __Hadoop Streaming__ 的使用，可以参考官方网站 [Hadoop Streaming][1]。个人觉得使用Steaming这个功能，可以使用其他语言来编写MapReduce程序，相比使用Java来编写程序，工作量小了很多。
