@@ -3,3 +3,6 @@ public/
 node_modules/
 
 db.json
+
+themes/hexo-theme-next/
+!themes/hexo-theme-next/_config.yml
