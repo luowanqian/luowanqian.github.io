@@ -14,6 +14,8 @@ value : 储存图片数据，数据类型为ArrayPrimitiveWritable
 
 为什么要用`ArrayPrimitiveWritable`来存储图片数据，主要是我想将图片数据用一个`int`数组来存储，数组元素就是图像的像素，数据范围在`[0, 255]`，当然，你可以使用`byte`数组来存储图片数据。
 
+<!-- more -->
+
 ## 生成SequenceFile
 
 实验用的图片文件为：

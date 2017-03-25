@@ -11,6 +11,8 @@ tags:
 
 从图中看出库仅仅支持JPEG、PNG、BMP、WBMP以及GIF这些图片格式。如果想读取其他格式（例如PGM）时应该怎么办？网上搜索到了一个Java ImageIO的扩展插件——[TwelveMonkeys][1]，安装后ImageIO就可以支持多种图片格式，这个有一个好处就是原先读取图片的代码不需要改变，读取图片还是使用 __javax.imageio__ 包。
 
+<!-- more -->
+
 ## 安装TwelveMonkeys
 
 安装很简单，使用Maven可以很容易地添加到项目中，如果想让ImageIO支持JPEG和TIFF格式，可以在POM文件中添加下面的代码：

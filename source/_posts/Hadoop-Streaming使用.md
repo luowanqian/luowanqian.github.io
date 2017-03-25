@@ -7,6 +7,8 @@ tags:
 
 关于 __Hadoop Streaming__ 的使用，可以参考官方网站 [Hadoop Streaming][1]。个人觉得使用Steaming这个功能，可以使用其他语言来编写MapReduce程序，相比使用Java来编写程序，工作量小了很多。
 
+<!-- more -->
+
 根据《Hadoop权威指南》中例子使用python来实现 __Max Temperature__ 这个程序，要分别实现Map函数以及Reduce函数。
 
 ### Map函数
