@@ -38,8 +38,8 @@ seo: false
 # When running the site in a subdirectory (e.g. domain.tld/blog), remove the leading slash (/archives -> archives)
 menu:
   home: /
-  #categories: /categories
-  #about: /about
+  categories: /categories
+  about: /about
   archives: /archives
   tags: /tags
   #sitemap: /sitemap.xml
@@ -71,9 +71,9 @@ menu_icons:
 # ---------------------------------------------------------------
 
 # Schemes
-scheme: Muse
+#scheme: Muse
 #scheme: Mist
-#scheme: Pisces
+scheme: Pisces
 
 
 # ---------------------------------------------------------------
@@ -133,8 +133,9 @@ font:
 # Social Links
 # Key is the link label showing to end users.
 # Value is the target link (E.g. GitHub: https://github.com/iissnan)
-#social:
+social:
   #LinkLabel: Link
+  GitHub: https://github.com/luowanqian
 
 
 # Social Links Icons
@@ -154,7 +155,7 @@ social_icons:
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.jpg
 # in site  directory(source/uploads): /uploads/avatar.jpg
-#avatar:
+avatar: /images/site/debian_logo_64px.png
 
 
 # Table Of Contents in the Sidebar
@@ -199,11 +200,12 @@ sidebar:
 
 
 # Blog rolls
-#links_title: Links
+links_title: Links
 #links_layout: block
 #links_layout: inline
-#links:
+links:
   #Title: http://example.com/
+  Melonydi's Blog: http://www.melonydi.cn/
 
 
 # ---------------------------------------------------------------
@@ -277,9 +279,10 @@ highlight_theme: normal
 
 # MathJax Support
 mathjax:
-  enable: false
+  enable: true
   per_page: false
-  cdn: //cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  #cdn: //cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  cdn: //mathjax.scutmath.com/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 
 
 # Swiftype Search API Key
@@ -301,7 +304,7 @@ disqus:
 #hypercomments_id:
 
 # Gentie productKey
-gentie_productKey:51ffea7a351841ac9afbae1c4c6aa283
+gentie_productKey: 51ffea7a351841ac9afbae1c4c6aa283
 
 # changyan
 changyan:
@@ -454,7 +457,7 @@ algolia_search:
 
 # Local search
 local_search:
-  enable: false
+  enable: true
 
 # External URL with BASE64 encrypt & decrypt
 # Usage: {% exturl text url "title" %}

@@ -80,27 +80,12 @@ deploy:
 # NexT Theme configuration
 # ======================================
 
-avatar: /images/site/debian_logo_64px.png
-
 # Local search
 search:
   path: search.xml
   filed: post
-
-# Duoshuo
-#duoshuo_shortname: scutmath
-
-# Social links
-social:
-  github: https://github.com/luowanqian
-
-# Links
-links_title: Links
-links:
-  Melonydi's Blog: http://www.melonydi.cn/
-
-# Baidu Analytics
-#baidu_analytics: 85d59fbb9f2892081ad6e2482be1a328
+  format: html
+  limit: 10000
 
 # ======================================
 # End NexT Theme configuration
