@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: hexo-theme-next
+theme: jacman
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -72,20 +72,5 @@ deploy:
   #repo: git@github.com:luowanqian/luowanqian.github.io.git
   repo:
       github: git@github.com:luowanqian/luowanqian.github.io.git,master
-      coding: git@git.coding.net:luowanqian/luowanqian.git,master
+      # coding: git@git.coding.net:luowanqian/luowanqian.git,master
   #branch: master
-
-
-# ======================================
-# NexT Theme configuration
-# ======================================
-
-# Local search
-search:
-  path: search.xml
-  filed: post
-  format: html
-  limit: 10000
-
-# ======================================
-# End NexT Theme configuration

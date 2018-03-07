@@ -7,7 +7,11 @@ tags:
 
 Yale人脸数据库在人脸识别论文中频繁用到，因此做人脸识别这方面研究还是存一份这个数据库以备用。在网上可以很容易下载这个数据库，我在浙大蔡登教授的主页上下载了这个数据库（[Four face databases in matlab format][1])，主页上这个数据库有两种大小可以选择下载，一个是图像大小是32x32的数据库，另一个是64x64，本文选择的是32x32。
 
-<!-- more -->
+## 数据集说明
+
+主页上有对这个数据集说明：
+
+> Contains 165 grayscale images in GIF format of 15 individuals. There are 11 images per subject, one per different facial expression or configuration: center-light, w/glasses, happy, left-light, w/no glasses, normal, right-light, sad, sleepy, surprised, and wink.
 
 ## 显示人脸图像
 

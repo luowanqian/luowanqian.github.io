@@ -7,8 +7,6 @@ tags:
 
 在实验《Hadoop权威指南 第3版》书本上的例子4-2时发现了一个关于 __FileSystem__ 的问题。例子代码如下：
 
-<!-- more -->
-
 {% codeblock lang:java %}
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;

@@ -8,8 +8,6 @@ tags:
 
 {% asset_img 1.png %}
 
-<!-- more -->
-
 遇到这问题时，首先查看了错误信息提示中提到的网址 [https://wiki.apache.org/hadoop/ConnectionRefused][1]，文章中提示说是端口问题，但是经过排查不是端口问题，所以只能排查其他原因了。首先使用Java的 __jps__ 命令查看JVM，查看结果如下：
 
 {% asset_img 2.png %}
