@@ -71,7 +71,7 @@ $ hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
     -reducer max_temperature_reduce.py
 ```
 
-__注意：__如果文件是在本地文件系统中而不是HDFS中时，要使用 `-fs file:///` 这个命令选项
+注意：如果文件是在本地文件系统中而不是HDFS中时，要使用 `-fs file:///` 这个命令选项
 
 运行结果保存到 `output` 文件夹中
 

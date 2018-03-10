@@ -74,3 +74,8 @@ deploy:
       github: git@github.com:luowanqian/luowanqian.github.io.git,master
       # coding: git@git.coding.net:luowanqian/luowanqian.git,master
   #branch: master
+
+math:
+  engine: 'mathjax' # or 'katex'
+  mathjax:
+    src: //cdn.bootcss.com/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML
