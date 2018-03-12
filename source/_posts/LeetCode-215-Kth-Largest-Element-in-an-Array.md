@@ -3,6 +3,7 @@ title: LeetCode 215 - Kth Largest Element in an Array
 date: 2018-03-09 23:31:35
 tags:
  - 算法
+ - LeetCode
 ---
 
 > 问题描述：
@@ -37,7 +38,7 @@ public:
     int findKthLargest(vector<int>& nums, int k) {
         priority_queue<int, vector<int>, greater<int>> k_numbers;
         int min_number;
-
+    
         for (auto it=nums.begin(); it!=nums.end(); ++it) {
             if (k_numbers.size() < k) {
                 k_numbers.push(*it);
@@ -49,7 +50,7 @@ public:
                 }
             }
         }
-
+    
         return k_numbers.top();
     }
 };
@@ -58,9 +59,9 @@ int main()
 {
     Solution solu;
     vector<int> nums = {3, 2, 1, 5, 6, 4};
-
+    
     cout << "The 2th max number is " << solu.findKthLargest(nums, 2) << endl;
-
+    
     return 0;
 }
 
@@ -80,7 +81,7 @@ public:
     int findKthLargest(vector<int>& nums, int k) {
         multiset<int> k_numbers;
         multiset<int>::iterator set_iterator;
-
+    
         for (auto it=nums.begin(); it!=nums.end(); ++it) {
             if (k_numbers.size() < k) {
                 k_numbers.insert(*it);
@@ -92,7 +93,7 @@ public:
                 }
             }
         }
-
+    
         return *(k_numbers.begin());
     }
 };
@@ -101,9 +102,9 @@ int main()
 {
     Solution solu;
     vector<int> nums = {3, 2, 1, 5, 6, 4};
-
+    
     cout << "The 2th max number is " << solu.findKthLargest(nums, 2) << endl;
-
+    
     return 0;
 }
 {% endcodeblock %}
