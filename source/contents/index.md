@@ -15,3 +15,11 @@
 | ------------------------------------------------------------ | ------------------ | -------- | -------- |
 | [Single Linked List](https://gist.github.com/luowanqian/d7509451289d1d3d2ad83cccfd4b34cd) | Double Linked List | [Stack](https://gist.github.com/luowanqian/5436c1a33c4eff223f42e9bbe026a31d)    | [Queue](https://gist.github.com/luowanqian/4a43f4261e62a6993dda41f1f51f985b)    |
 | [Binary Search Tree](https://gist.github.com/luowanqian/da1c443da4d6f55132023eaaf1fd4e92) |                    |          |          |
+
+# 笔试
+
+| 时间      | 公司     | 题目 |
+| --------- | -------- | ---- |
+| 2018.3.21 | 华为     | {% post_link 华为2018校园实习招聘编程题 华为2018校园实习招聘编程题 %}     |
+| 2018.3.24 | 今日头条 |  {% post_link 今日头条2018春季校园招聘编程题 今日头条2018春季校园招聘编程题%}    |
+
