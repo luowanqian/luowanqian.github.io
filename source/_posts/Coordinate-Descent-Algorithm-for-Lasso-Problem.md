@@ -98,6 +98,7 @@ $$
 
 
 
+
 综上所有内容，我们可以得到第 $k$ 个坐标轴方向的最优值为：
 $$
 \beta_k^* = \begin{cases}
@@ -258,7 +259,7 @@ $$
 $$
 \min_{\beta, b} \frac{1}{2 n} \Vert y - X\beta - 1b\Vert^2_2 + \lambda \Vert \beta \Vert_1
 $$
-根据前面的讨论，在选定第 $k$ 坐标轴方面，解 $\beta^*_k$的表达式为
+根据前面的讨论，在选定第 $k$ 坐标轴方向，解 $\beta^*_k$的表达式为
 $$
 \beta_k^* = \begin{cases}
 \frac{r_k - \lambda}{z_k} & r_k \gt \lambda \\
