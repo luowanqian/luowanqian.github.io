@@ -99,6 +99,9 @@ $$
 
 
 
+
+
+
 综上所有内容，我们可以得到第 $k$ 个坐标轴方向的最优值为：
 $$
 \beta_k^* = \begin{cases}
@@ -284,7 +287,7 @@ $$
 因此 $r_k$ 可以写为
 $$
 \begin{align}
-r_k & =\frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j =1}^k x_{ij} \beta_j - b + x_{ik} \beta_k)x_{ik}
+r_k & =\frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j =1}^p x_{ij} \beta_j - b + x_{ik} \beta_k)x_{ik}
 \end{align}
 $$
 这里的 $\beta_k$ 是未更新之前的值，更新后的值为 $\beta_k^*$，注意区别。用向量表示 $r_k$ 为
@@ -294,7 +297,7 @@ $$
 
 其中 $X[:, k]$ 代表矩阵 $X$ 第 $k$ 列。$b^*$ 的表达式写成向量形式可以写为
 $$
-b^* = \frac{1}{n} (y - X\beta)^T (y - X\beta)
+b^* = \frac{1}{n} 1^T (y - X\beta)
 $$
 算法整体流程如下表示
 
@@ -303,11 +306,6 @@ $$
 核心代码如下
 
 {% codeblock %}
-import numpy as np
-from sklearn import preprocessing
-from sklearn.metrics import r2_score
-
-
 class Lasso:
     """
     The optimization objective of Lasso is
@@ -339,11 +337,23 @@ class Lasso:
     
         return coef_k
     
+    def objective(self, X, y, coef, intercept, alpha):
+        n, p = X.shape
+        total = 0
+    
+        y_predict = np.dot(X, coef) + intercept
+        total += \
+            1/(2.0*n) * np.linalg.norm(y-y_predict, ord=2) ** 2
+        total += alpha * np.linalg.norm(coef, ord=1)
+    
+        return total
+    
     def fit(self, X, y):
         if self._copy_X:
             X = X.copy()
         if self._normalize:
             X = self._scaler.fit_transform(X)
+        self._objectives = []
     
         # initialize data
         num_samples, num_features = X.shape
@@ -352,7 +362,7 @@ class Lasso:
         intercept = 0
         if self._fit_intercept:
             tmp = y - np.dot(X, coef)
-            intercept = np.dot(tmp, tmp) / (1.0 * num_samples)
+            intercept = np.sum(tmp) / (1.0 * num_samples)
         num_iters = 0
         for iter in range(self._max_iter):
             num_iters = num_iters + 1
@@ -363,12 +373,14 @@ class Lasso:
                                                 intercept, self._alpha)
                 if self._fit_intercept:
                     tmp = y - np.dot(X, coef)
-                    intercept = np.dot(tmp, tmp) / (1.0 * num_samples)
+                    intercept = np.sum(tmp) / (1.0 * num_samples)
     
                 # check condition of convergence
                 coef_updates = np.abs(coef - old_coef)
                 if np.amax(coef_updates) < self._tol:
                     break
+            self._objectives.append(self.objective(X, y, coef,
+                                                   intercept, self._alpha))
     
         self._coef = coef
         self._intercept = intercept
@@ -403,6 +415,10 @@ class Lasso:
     def n_iter_(self):
         return self._num_iters
     
+    @property
+    def objectives_(self):
+        return self._objectives
+    
     def __str__(self):
         return ('Lasso(alpha={}, copy_X={}, '
                 'fit_intercept={}, max_iter={}, '
@@ -414,3 +430,8 @@ class Lasso:
 {% endcodeblock %}
 
 相关代码在：[GitHub](https://github.com/luowanqian/MachineLearning/tree/master/CoordinateDescent/Lasso)
+
+## 参考
+
+1. [A COORDINATE DESCENT ALGORITHM FOR THE LASSO PROBLEM](http://jocelynchi.com/a-coordinate-descent-algorithm-for-the-lasso-problem)
+2. [SOFT-THRESHOLDING OPERATOR AND THE LASSO SOLUTION](http://jocelynchi.com/soft-thresholding-operator-and-the-lasso-solution)
