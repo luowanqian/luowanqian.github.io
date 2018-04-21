@@ -3,6 +3,8 @@
 | Number | Problem                                                      |
 | ------ | ------------------------------------------------------------ |
 | 1      | {% post_link LeetCode-1-Two-Sum Two Sum %}                   |
+| 2 | Add Two Numbers |
+| 13 | {% post_link LeetCode-13-Roman-to-Integer Roman to Integer %} |
 | 15      | {% post_link LeetCode-15-3Sum 3Sum %} |
 | 88     | {% post_link LeetCode-88-Merge-Sorted-Array Merge Sorted Array %} |
 | 136    | {% post_link LeetCode-136-Single-Number Single Number %}     |
@@ -10,8 +12,18 @@
 | 191    | {% post_link LeetCode-191-Number-of-1-Bits Number of 1 Bits %} |
 | 215    | {% post_link LeetCode-215-Kth-Largest-Element-in-an-Array Kth Largest Element in an Array %} |
 | 237    | {% post_link LeetCode-237-Delete-Node-in-a-Linked-List Delete Node in a Linked List %} |
+| 344 | Reverse String |
+| 349 | Intersection of Two Arrays |
+| 383 | {% post_link LeetCode-383-Ransom-Note Ransom Note %} |
+| 387 | First Unique Character in a String |
 | 415    | Add Strings     |
+| 520 | Detect Capital |
+| 521 | {% post_link LeetCode-521-Longest-Uncommon-Subsequence-I Longest Uncommon Subsequence I%} |
 | 532    | {% post_link LeetCode-532-K-diff-Pairs-in-an-Array K-diff Pairs in an Array %} |
+| 557 | {% post_link LeetCode-557-Reverse-Words-in-a-String-III Reverse Words in a String III %} |
+| 657 | {% post_link LeetCode-657-Judge-Route-Circle Judge Route Circle %} |
+| 696 | Count Binary Substrings |
+| 819 | {% post_link LeetCode-819-Most-Common-Word Most Common Word %} |
 
 所有代码都在这里面：[https://github.com/luowanqian/LeetCode](https://github.com/luowanqian/LeetCode) 
 
