@@ -1,0 +1,73 @@
+---
+title: Shell Snippets Part 1
+date: 2018-04-23 12:40:43
+tags:
+ - Shell
+ - 编程语言
+---
+
+## Introduction
+
+Shell Snippets
+
+## 列出目录里面文件名并进行排序
+
+在目录 `train` 里面有大量的图片 (扩展名为 png)
+
+```
+$ ls -l train/ | head
+total 400000
+-rw-r--r--@ 1 luowanqian  staff  2455 10 19  2013 1.png
+-rw-r--r--@ 1 luowanqian  staff  2101 10 19  2013 10.png
+-rw-r--r--@ 1 luowanqian  staff  2466 10 19  2013 100.png
+-rw-r--r--@ 1 luowanqian  staff  2171 10 19  2013 1000.png
+-rw-r--r--@ 1 luowanqian  staff  2031 10 19  2013 10000.png
+-rw-r--r--@ 1 luowanqian  staff  2051 10 19  2013 10001.png
+-rw-r--r--@ 1 luowanqian  staff  2317 10 19  2013 10002.png
+-rw-r--r--@ 1 luowanqian  staff  2511 10 19  2013 10003.png
+-rw-r--r--@ 1 luowanqian  staff  2460 10 19  2013 10004.png
+```
+
+提取该目录下的所有图片的文件名并进行排序
+
+### 方案1
+
+```
+$ ls -l train/ | grep ".png" | tr -s ' ' | cut -d ' ' -f 9 | sort -n > list.txt
+$ head list.txt
+1.png
+2.png
+3.png
+4.png
+5.png
+6.png
+7.png
+8.png
+9.png
+10.png
+```
+
+其中
+
+* `tr -s ' '` 是为了将多个space压缩成一个space
+* `cut -d ' ' -f 9` 是为了取出最后一列的文件名
+* `sort -n` 是将文件进行排序，由于文件名里面有数字，所以用`-n`选项
+
+
+### 方案2
+
+```
+$ ls train/ | sort -n > list.txt
+$ head list.txt
+1.png
+2.png
+3.png
+4.png
+5.png
+6.png
+7.png
+8.png
+9.png
+10.png
+```
+
