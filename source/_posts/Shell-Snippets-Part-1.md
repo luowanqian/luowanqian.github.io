@@ -71,3 +71,12 @@ $ head list.txt
 10.png
 ```
 
+## pip升级所有包
+
+pip 升级所有Python包，命令如下
+
+```shell
+pip3 list --outdated --format=freeze | cut -d = -f 1 | xargs pip3 install -U'
+```
+
+其中 `pip3` 可以根据 pip 版本替换。
