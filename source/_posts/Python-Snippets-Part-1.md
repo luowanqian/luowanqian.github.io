@@ -1,5 +1,6 @@
 ---
 title: Python Snippets Part 1
+urlname: python_snippets_part1
 date: 2018-05-02 22:57:40
 tags:
  - Python
@@ -46,4 +47,3 @@ False
 ```
 
 目录 `dir2` 和文件 `file2.txt` 均不存在，所以函数 `os.path.exists()` 和 `os.path.isfile()` 均返回 False。
-

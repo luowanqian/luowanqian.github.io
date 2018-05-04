@@ -1,6 +1,7 @@
 ---
 title: H5py支持Parallel HDF5
 date: 2018-04-28 23:14:06
+urlname: h5py_parallel_hdf5
 tags:
  - 软件配置
  - HDF5
@@ -49,4 +50,3 @@ $ pip3 install --no-binary=h5py h5py
 ```
 $ pip3 install --no-cache-dir --no-binary=h5py h5py
 ```
-

@@ -1,5 +1,6 @@
 ---
 title: LeetCode 191 - Number of 1 Bits
+urlname: leetcode_191
 date: 2018-04-03 12:27:25
 tags:
  - LeetCode

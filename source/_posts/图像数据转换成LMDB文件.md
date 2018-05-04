@@ -1,5 +1,6 @@
 ---
 title: 图像数据转换成LMDB文件
+urlname: images_to_lmdb
 date: 2018-04-28 10:54:12
 tags:
  - Caffe
@@ -69,7 +70,7 @@ def make_datum(image, label, channels, height, width):
     datum.height = height
     datum.width = width
     datum.data = image.tobytes()
-    
+
     return datum
 
 
@@ -108,7 +109,7 @@ for image_id, label in zip(images, labels):
     datum = make_datum(image, label, channels, height, width)
     str_id = '{:08}'.format(count)
     lmdb_txn.put(str_id, datum.SerializeToString())
-    
+
     if count % batch_size == 0:
         lmdb_txn.commit()
         lmdb_txn = lmdb_env.begin(write=True)
@@ -134,7 +135,7 @@ for key, value in lmdb_cursor:
     channels = datum.channels
     data = datum.data
     count = count + 1
-    
+
     if count == 2:
         image = np.frombuffer(data, dtype=np.uint8)
         image = np.reshape(image, (height, width, channels))

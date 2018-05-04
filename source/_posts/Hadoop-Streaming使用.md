@@ -1,6 +1,7 @@
 ---
 title: Hadoop Streaming使用
 date: 2017-03-07 16:44:28
+urlname: hadoop_streaming_usage
 tags:
  - Hadoop
 ---

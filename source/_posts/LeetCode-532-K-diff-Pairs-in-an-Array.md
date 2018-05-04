@@ -1,5 +1,6 @@
 ---
 title: LeetCode 532 - K-diff Pairs in an Array
+urlname: leetcode_532
 date: 2018-03-24 21:42:47
 tags:
  - LeetCode
@@ -81,10 +82,10 @@ public:
                 pair_smalls.insert(num - k);
             if (unique_nums.find(num + k) != unique_nums.end())
                 pair_smalls.insert(num);
-    
+
             unique_nums.insert(num);
         }
-    
+
         return pair_smalls.size();
     }
 };
@@ -96,12 +97,11 @@ int main()
     vector<int> nums1 = {3, 1, 4, 1, 5};
     int k1 = 2;
     cout << solu.findPairs(nums1, k1) << endl;
-    
+
     vector<int> nums2 = {1, 2, 3, 4, 5};
     int k2 = -1;
     cout << solu.findPairs(nums2, k2) << endl;
-    
+
     return 0;
 }
 {% endcodeblock %}
-

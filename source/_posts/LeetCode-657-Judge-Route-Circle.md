@@ -1,5 +1,6 @@
 ---
 title: LeetCode 657 - Judge Route Circle
+urlname: leetcode_657
 tags:
   - LeetCode
   - 算法
@@ -85,4 +86,3 @@ int main()
     return 0;
 }
 ```
-

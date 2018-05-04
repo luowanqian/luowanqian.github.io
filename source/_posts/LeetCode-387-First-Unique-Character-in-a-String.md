@@ -1,5 +1,6 @@
 ---
 title: LeetCode 387 - First Unique Character in a String
+urlname: leetcode_387
 tags:
   - LeetCode
   - 算法
@@ -97,4 +98,3 @@ int main()
     return 0;
 }
 ```
-

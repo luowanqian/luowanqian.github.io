@@ -1,5 +1,6 @@
 ---
 title: LeetCode 696 - Count Binary Substrings
+urlname: leetcode_696
 tags:
   - LeetCode
   - 算法
@@ -104,6 +105,3 @@ int main()
     return 0;
 }
 ```
-
-
-

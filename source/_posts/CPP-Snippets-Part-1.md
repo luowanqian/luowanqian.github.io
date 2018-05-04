@@ -1,6 +1,7 @@
 ---
 title: C++ Snippets Part 1
 date: 2018-04-22 23:27:19
+urlname: cpp_snippets_part1
 tags:
  - C++
  - 编程语言
@@ -52,4 +53,3 @@ int main()
     return 0;
 }
 ```
-

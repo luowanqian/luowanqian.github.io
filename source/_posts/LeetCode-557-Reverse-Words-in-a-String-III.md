@@ -1,5 +1,6 @@
 ---
 title: LeetCode 557 - Reverse Words in a String III
+urlname: leetcode_557
 date: 2018-04-13 23:44:37
 tags:
  - LeetCode
@@ -44,7 +45,7 @@ public:
         for (int i=0; i<s.size(); i++) {
             if (s[i] == ' ') {
                 end = i - 1;
-    
+
                 // reverse word
                 while (start < end) {
                     tmp = s[start];
@@ -53,13 +54,13 @@ public:
                     start++;
                     end--;
                 }
-    
+
                 while (i < s.size() && s[i] == ' ')
                     i++;
                 start = i;
             }
         }
-    
+
         // process last word
         end = s.size() - 1;
         while (start < end) {
@@ -69,7 +70,7 @@ public:
             start++;
             end--;
         }
-    
+
         return s;
     }
 };
@@ -81,7 +82,7 @@ int main()
 
     cout << str1 << endl;
     cout << solu.reverseWords(str1) << endl;
-    
+
     return 0;
 }
 {% endcodeblock %}

@@ -1,6 +1,7 @@
 ---
 title: K-means参数K的选择
 date: 2018-04-21 15:27:05
+urlname: k_means_choose_k
 tags:
  - 机器学习
 ---

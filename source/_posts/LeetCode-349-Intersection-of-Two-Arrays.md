@@ -1,5 +1,6 @@
 ---
 title: LeetCode 349 - Intersection of Two Arrays
+urlname: leetcode_349
 tags:
   - LeetCode
   - 算法
@@ -134,4 +135,3 @@ int main()
     return 0;
 }
 ```
-

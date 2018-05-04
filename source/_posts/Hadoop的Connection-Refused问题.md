@@ -1,6 +1,7 @@
 ---
 title: Hadoop的Connection Refused问题
 date: 2017-02-24 17:09:04
+urlname: hadoop_connection_refused
 tags:
  - Hadoop
 ---

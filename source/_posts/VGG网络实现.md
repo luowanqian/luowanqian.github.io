@@ -1,5 +1,6 @@
 ---
 title: VGG网络实现
+urlname: vgg_network_implementation
 date: 2018-04-30 15:39:03
 tags:
  - 深度学习
@@ -81,4 +82,3 @@ self.classifier = nn.Sequential(
 
 1. [VGG论文翻译——中文版](http://noahsnail.com/2017/08/17/2017-8-17-VGG%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%94%E4%B8%AD%E6%96%87%E7%89%88/)
 2. [Pytorch实现的Vgg网络](https://guanfuchen.github.io/post/markdown_blog_ws/markdown_blog_2017_11/pytorch%E5%AE%9E%E7%8E%B0%E7%9A%84vgg%E7%BD%91%E7%BB%9C/)
-

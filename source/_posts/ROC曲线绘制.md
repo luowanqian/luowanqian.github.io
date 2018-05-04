@@ -1,5 +1,6 @@
 ---
 title: ROC曲线绘制
+urlname: roc_curve_draw
 date: 2018-04-23 10:50:53
 tags:
  - 机器学习
@@ -121,4 +122,3 @@ def roc_curve(y_true, y_score, pos_label=None):
 1. [通过一个例子来绘制一条ROC曲线?](https://www.zhihu.com/question/40748327)
 2. [roc-auc](http://nphard.me/2017/08/17/roc-auc/)
 3. [ROC和AUC介绍以及如何计算AUC](http://alexkong.net/2013/06/introduction-to-auc-and-roc/)
-

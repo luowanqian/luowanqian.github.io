@@ -1,5 +1,6 @@
 ---
 title: 大量图片文件生成SequenceFile
+urlname: images_to_sequencefile
 date: 2017-03-12 09:38:34
 tags:
  - Hadoop

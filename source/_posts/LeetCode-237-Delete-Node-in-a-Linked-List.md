@@ -1,5 +1,6 @@
 ---
 title: LeetCode 237 - Delete Node in a Linked List
+urlname: leetcode_237
 date: 2018-03-23 16:11:27
 tags:
  - 算法
@@ -46,4 +47,3 @@ public:
     }
 };
 ```
-

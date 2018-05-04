@@ -1,5 +1,6 @@
 ---
 title: LeetCode 383 - Ransom Note
+urlname: leetcode_383
 date: 2018-04-21 09:57:31
 tags:
  - LeetCode
@@ -77,4 +78,3 @@ int main()
     return 0;
 }
 ```
-

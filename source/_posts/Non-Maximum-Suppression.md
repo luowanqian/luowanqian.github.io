@@ -1,5 +1,6 @@
 ---
 title: Non-Maximum Suppression
+urlname: non_maximum_suppression
 date: 2018-04-25 22:03:48
 tags:
  - 机器学习

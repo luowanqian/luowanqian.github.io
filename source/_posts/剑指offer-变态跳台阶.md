@@ -1,5 +1,6 @@
 ---
 title: 剑指offer - 变态跳台阶
+urlname: coding_interviews_crazy_steps
 date: 2018-03-08 10:52:52
 tags:
  - 算法

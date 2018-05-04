@@ -1,5 +1,6 @@
 ---
 title: LeetCode 521 - Longest Uncommon Subsequence I
+urlname: leetcode_521
 date: 2018-04-15 22:26:45
 tags:
  - LeetCode
@@ -19,9 +20,9 @@ __Example 1:__
 ```
 Input: "aba", "cdc"
 Output: 3
-Explanation: The longest uncommon subsequence is "aba" (or "cdc"), 
-because "aba" is a subsequence of "aba", 
-but not a subsequence of any other strings in the group of two strings. 
+Explanation: The longest uncommon subsequence is "aba" (or "cdc"),
+because "aba" is a subsequence of "aba",
+but not a subsequence of any other strings in the group of two strings.
 ```
 
 __Note:__
@@ -83,4 +84,3 @@ int main()
     return 0;
 }
 ```
-

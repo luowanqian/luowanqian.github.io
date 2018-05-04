@@ -1,6 +1,7 @@
 ---
 title: Hadoop的FileNotFound问题
 date: 2017-02-28 16:35:14
+urlname: hadoop_file_not_found
 tags:
  - Hadoop
 ---

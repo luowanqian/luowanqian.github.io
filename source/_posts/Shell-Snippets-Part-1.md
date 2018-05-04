@@ -1,5 +1,6 @@
 ---
 title: Shell Snippets Part 1
+urlname: shell_snippets_part1
 date: 2018-04-23 12:40:43
 tags:
  - Shell
@@ -94,4 +95,3 @@ $ rsync -P ubuntu/ubuntu-16.04.4-desktop-amd64.iso lab217server:/home/luowanqian
 __参考：__
 
 1. [How To Resume Partially Transferred Files Over SSH Using Rsync](https://www.ostechnix.com/how-to-resume-partially-downloaded-or-transferred-files-using-rsync/)
-

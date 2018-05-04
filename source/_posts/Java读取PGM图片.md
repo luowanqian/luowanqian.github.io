@@ -1,6 +1,7 @@
 ---
 title: Java读取PGM图片
 date: 2017-03-11 16:20:24
+urlname: java_read_pgm
 tags:
  - Java
 ---

@@ -1,6 +1,7 @@
 ---
 title: LeetCode 1 - Two Sum
 date: 2018-03-12 10:22:59
+urlname: leetcode_1
 tags:
  - 算法
  - LeetCode

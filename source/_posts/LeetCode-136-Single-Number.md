@@ -1,5 +1,6 @@
 ---
 title: LeetCode 136 - Single Number
+urlname: leetcode_136
 date: 2018-03-12 08:33:13
 tags:
  - 算法

@@ -1,5 +1,6 @@
 ---
 title: 人脸数据库Yale
+urlname: face_database_yale
 date: 2017-03-09 16:08:41
 tags:
  - Face Database

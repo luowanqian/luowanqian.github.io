@@ -1,6 +1,7 @@
 ---
 title: CMake使用笔记
 date: 2018-04-03 08:24:31
+urlname: cmake_note
 tags:
  - Makefile
 ---

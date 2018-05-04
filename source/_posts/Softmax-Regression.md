@@ -1,5 +1,6 @@
 ---
 title: Softmax Regression
+urlname: softmax_regression
 date: 2018-03-30 19:18:32
 tags:
  - 机器学习
@@ -83,7 +84,7 @@ $$
 $$
 \begin{align}
 f(\theta) &= -\frac{1}{N} \sum_{i=1}^N \sum_{k=1}^K 1 \{ y_i = k \} (\theta^T_k x_i ) \\
-g(\theta) & = \frac{1}{N} \sum_{i=1}^N \sum_{k=1}^K 1 \{ y_i = k \} \ln (\sum_{j=1}^K e^{\theta_j^T x_i}) 
+g(\theta) & = \frac{1}{N} \sum_{i=1}^N \sum_{k=1}^K 1 \{ y_i = k \} \ln (\sum_{j=1}^K e^{\theta_j^T x_i})
 \end{align}
 $$
 损失函数 $J(\theta)$ 对矩阵 $\theta$ 某一个元素 $\theta_{pq}$ ($\theta_{pq}$ 代表参数向量 $\theta_q$ 的第 $p$ 个元素) 的偏导为：
@@ -110,7 +111,7 @@ $$
 & =  \frac{1}{N} \sum_{i=1}^N \sum_{k=1}^K 1 \{ y_i = k \} \frac{1}{ \sum_{j=1}^K e^{\theta_j^Tx_i} } \frac{\partial{e^{\theta_q^T x_i}} }{\partial{\theta_{pq}}} \\
 & = \frac{1}{N} \sum_{i=1}^N \sum_{k=1}^K 1 \{ y_i = k \} \frac{ e^{\theta_q^T x_i} }{ \sum_{j=1}^K e^{\theta_j^Tx_i} } \frac{ \partial{\theta^T_q x_i}  }{\partial{\theta_{pq}}} \\
 & = \frac{1}{N} \sum_{i=1}^N \sum_{k=1}^K 1 \{ y_i = k \} \frac{ x_{ip} e^{\theta_q^T x_i} }{ \sum_{j=1}^K e^{\theta_j^Tx_i} } \\
-& = \frac{1}{N} \sum_{i=1}^N \frac{ x_{ip} e^{\theta_q^T x_i} }{ \sum_{j=1}^K e^{\theta_j^Tx_i} } \sum_{k=1}^K 1 \{ y_i = k \} 
+& = \frac{1}{N} \sum_{i=1}^N \frac{ x_{ip} e^{\theta_q^T x_i} }{ \sum_{j=1}^K e^{\theta_j^Tx_i} } \sum_{k=1}^K 1 \{ y_i = k \}
 \end{align}
 $$
 由于 $\sum_{k=1}^K 1 \{ y_i = k \} = 1$，则最终可以得到

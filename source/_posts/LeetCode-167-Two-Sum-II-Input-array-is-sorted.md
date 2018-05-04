@@ -1,5 +1,6 @@
 ---
 title: LeetCode 167 - Two Sum II - Input array is sorted
+urlname: leetcode_167
 date: 2018-03-30 23:30:48
 tags:
  - LeetCode
@@ -42,7 +43,7 @@ public:
 
         if (numbers.size() < 2)
             return idx;
-    
+
         int left, right;
         left = 0;
         right = numbers.size()-1;
@@ -57,7 +58,7 @@ public:
                 break;
             }
         }
-    
+
         return idx;
     }
 };

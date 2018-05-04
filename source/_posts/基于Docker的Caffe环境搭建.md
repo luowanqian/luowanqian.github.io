@@ -1,5 +1,6 @@
 ---
 title: 基于Docker的Caffe环境搭建
+urlname: docker_caffe
 date: 2018-04-07 23:16:50
 tags:
  - Docker
@@ -158,4 +159,3 @@ nvidia-docker run --name DeepLearning -d --mount type=bind,source=`pwd`/data,tar
 ## 参考
 
 1. [Docker Setup Cafee](https://github.com/BVLC/caffe/tree/master/docker)
-
