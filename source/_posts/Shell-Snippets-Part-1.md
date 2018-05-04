@@ -80,3 +80,18 @@ pip3 list --outdated --format=freeze | cut -d = -f 1 | xargs pip3 install -U'
 ```
 
 其中 `pip3` 可以根据 pip 版本替换。
+
+## rsync断点续传
+
+主要使用的是 rsync 的 `-P` 的选项，传输命令写为
+
+```
+$ rsync -P ubuntu/ubuntu-16.04.4-desktop-amd64.iso lab217server:/home/luowanqian/Downloads/
+```
+
+如果传输过程中网络中断或者使用了 `Ctrl + C`，此时可以再次使用该命令进行断点续传。
+
+__参考：__
+
+1. [How To Resume Partially Transferred Files Over SSH Using Rsync](https://www.ostechnix.com/how-to-resume-partially-downloaded-or-transferred-files-using-rsync/)
+

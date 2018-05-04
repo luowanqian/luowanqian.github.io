@@ -1,11 +1,11 @@
 ---
-title: h5py使用技巧
+title: H5py备忘录
 date: 2018-04-27 17:32:59
 tags:
  - HDF5
 ---
 
-本文主要是摘录了《Python and HDF5》书中的内容，内容是如何高效地使用h5py。
+本文主要是记录一些h5py的使用方法。
 
 __Note:__ 如果没有特别说明，`np` 指的是 `numpy`，代表导入的 numpy
 

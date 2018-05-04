@@ -1,3 +1,22 @@
+# 备忘录
+
+> 记录一些库的使用方法
+
+| 代码库 | 链接                                    |
+| ------ | --------------------------------------- |
+| Numpy  | {% post_link Numpy备忘录 Numpy备忘录 %} |
+| H5py   | {% post_link H5py备忘录 H5py备忘录 %}   |
+
+# Snippets
+
+> 记录一些常用的代码片段
+
+| Snippet | 链接                                    |
+| ------ | --------------------------------------- |
+| C++ | {% post_link CPP-Snippets-Part-1 C++ Snippets Part 1 %} |
+| Shell | {% post_link Shell-Snippets-Part-1 Shell Snippets Part 1 %} |
+| Python | {% post_link Python-Snippets-Part-1 Python Snippets Part 1 %}  |
+
 # LeetCode
 
 | Number | Problem                                                      |
