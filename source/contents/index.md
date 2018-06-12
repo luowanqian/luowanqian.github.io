@@ -6,6 +6,8 @@
 | ------ | --------------------------------------- |
 | Numpy  | {% post_link Numpy备忘录 Numpy备忘录 %} |
 | H5py   | {% post_link H5py备忘录 H5py备忘录 %}   |
+| Pandas | {% post_link Pandas备忘录 Pandas备忘录 %} |
+| Matplotlib | {% post_link Matplotlib备忘录 Matplotlib备忘录 %} |
 
 # Snippets
 
@@ -25,6 +27,7 @@
 | 2 | Add Two Numbers |
 | 13 | {% post_link LeetCode-13-Roman-to-Integer Roman to Integer %} |
 | 15      | {% post_link LeetCode-15-3Sum 3Sum %} |
+| 70 | Climbing Stairs |
 | 88     | {% post_link LeetCode-88-Merge-Sorted-Array Merge Sorted Array %} |
 | 136    | {% post_link LeetCode-136-Single-Number Single Number %}     |
 | 167      | {% post_link LeetCode-167-Two-Sum-II-Input-array-is-sorted Two Sum II - Input array is sorted %} |
@@ -42,6 +45,7 @@
 | 557 | {% post_link LeetCode-557-Reverse-Words-in-a-String-III Reverse Words in a String III %} |
 | 657 | {% post_link LeetCode-657-Judge-Route-Circle Judge Route Circle %} |
 | 696 | {% post_link LeetCode-696-Count-Binary-Substrings Count Binary Substrings %} |
+| 746 | Min Cost Climbing Stairs |
 | 819 | {% post_link LeetCode-819-Most-Common-Word Most Common Word %} |
 
 所有代码都在这里面：[https://github.com/luowanqian/LeetCode](https://github.com/luowanqian/LeetCode) 
@@ -58,5 +62,6 @@
 | 时间      | 公司     | 题目 |
 | --------- | -------- | ---- |
 | 2018.3.21 | 华为     | {% post_link 华为2018校园实习招聘编程题 华为2018校园实习招聘编程题 %}     |
-| 2018.3.24 | 今日头条 |  {% post_link 今日头条2018春季校园招聘编程题 今日头条2018春季校园招聘编程题%}    |
+| 2018.3.24 | 今日头条 |  {% post_link 今日头条2018春季校园招聘编程题 今日头条2018春季校园招聘编程题 %}    |
+| 2018.4.5  | 腾讯 | {% post_link 腾讯2018数据分析岗实习笔试题 腾讯2018数据分析岗实习笔试题 %} |
 
