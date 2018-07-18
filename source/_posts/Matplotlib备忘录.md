@@ -66,3 +66,22 @@ ax.plot(data)
 plt.savefig('1.png')
 fig.savefig('2.png')
 ```
+
+## 特定图像
+
+### Histogram
+
+直方图 (Histogram) 使用的是 `hist` 函数进行绘制，`bins` 选项可以设置bin的个数。
+
+```
+mu, sigma = 100, 15
+num_bins = 100
+x = mu + sigma * np.random.randn(1000000)
+
+n, bins, patches = plt.hist(x, num_bins, density=True)
+
+plt.title('Histogram')
+plt.grid(True)
+```
+
+{% asset_img histogram.png %}

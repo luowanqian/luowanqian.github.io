@@ -45,7 +45,9 @@
 | 9 | Palindrome Number |
 | 11 | Container With Most Water |
 | 13 | {% post_link LeetCode-13-Roman-to-Integer Roman to Integer %} |
+| 14 | Longest Common Prefix |
 | 15      | {% post_link LeetCode-15-3Sum 3Sum %} |
+| 21 | Merge Two Sorted Lists |
 | 45 | Jump Game II |
 | 70 | Climbing Stairs |
 | 88     | {% post_link LeetCode-88-Merge-Sorted-Array Merge Sorted Array %} |
