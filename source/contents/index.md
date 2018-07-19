@@ -48,6 +48,8 @@
 | 14 | Longest Common Prefix |
 | 15      | {% post_link LeetCode-15-3Sum 3Sum %} |
 | 21 | Merge Two Sorted Lists |
+| 26 | Remove Duplicates from Sorted Array |
+| 27 | Remove Element |
 | 45 | Jump Game II |
 | 70 | Climbing Stairs |
 | 88     | {% post_link LeetCode-88-Merge-Sorted-Array Merge Sorted Array %} |

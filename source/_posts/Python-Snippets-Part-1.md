@@ -47,3 +47,38 @@ False
 ```
 
 目录 `dir2` 和文件 `file2.txt` 均不存在，所以函数 `os.path.exists()` 和 `os.path.isfile()` 均返回 False。
+
+## ParameterGrid
+
+机器学习算法最常见的调参方法是网格搜索，需要将多组参数进行组合，Scikit-learn提供了一个类 `ParametGrid` 可以生成所有的参数组合，这里提取其关键代码单独写成一个生成器：
+
+```python
+from itertools import product
+
+
+def parameters_grid(parameter_map):
+    items = sorted(parameter_map.items())
+    if not items:
+        yield {}
+    else:
+        keys, values = zip(*items)
+        for v in product(*values):
+            params = dict(zip(keys, v))
+            yield params
+
+
+if __name__ == '__main__':
+    parameter_map = {'a': [1, 2], 'b': [True, False]}
+    for params in parameters_grid(parameter_map):
+        print(params)
+
+```
+
+代码运行结果
+
+```
+{'a': 1, 'b': True}
+{'a': 1, 'b': False}
+{'a': 2, 'b': True}
+{'a': 2, 'b': False}
+```
