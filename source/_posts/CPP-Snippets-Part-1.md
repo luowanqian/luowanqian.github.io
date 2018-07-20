@@ -9,7 +9,7 @@ tags:
 
 ## Introduction
 
-C++ Snippets: [C++ Snippets](https://github.com/luowanqian/Snippets/tree/master/C%2B%2B)
+C++ Snippets
 
 ## A string tokenizer
 

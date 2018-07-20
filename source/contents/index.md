@@ -19,12 +19,20 @@
 | Shell | {% post_link Shell-Snippets-Part-1 Shell Snippets Part 1 %} |
 | Python | {% post_link Python-Snippets-Part-1 Python Snippets Part 1 %}  |
 
-# Data Structures
+# 数据结构
 
 | Column 1                                                     | Column 2           | Column 3 | Column 4 |
 | ------------------------------------------------------------ | ------------------ | -------- | -------- |
-| [Single Linked List](https://gist.github.com/luowanqian/d7509451289d1d3d2ad83cccfd4b34cd) | Double Linked List | [Stack](https://gist.github.com/luowanqian/5436c1a33c4eff223f42e9bbe026a31d)    | [Queue](https://gist.github.com/luowanqian/4a43f4261e62a6993dda41f1f51f985b)    |
-| [Binary Search Tree](https://gist.github.com/luowanqian/da1c443da4d6f55132023eaaf1fd4e92) |                    |          |          |
+| [Single Linked List](https://github.com/luowanqian/DSA/tree/master/LinkedList) | Double Linked List | [Stack](https://github.com/luowanqian/DSA/tree/master/Stack)    | [Queue](https://github.com/luowanqian/DSA/tree/master/Queue)    |
+| [Binary Search Tree](https://github.com/luowanqian/DSA/tree/master/BinarySearchTree) |                    |          |          |
+所有代码都在这里面：[https://github.com/luowanqian/DSA](https://github.com/luowanqian/DSA)
+
+# 算法
+
+| Column 1 | Column 2 | Column 3 | Column 4 |
+| ---- | ---- | ---- | ---- |
+| [Insertion Sort](https://github.com/luowanqian/DSA/tree/master/Sort/InsertionSort) | [Quick Sort](https://github.com/luowanqian/DSA/tree/master/Sort/QuickSort) | [KMP](https://github.com/luowanqian/DSA/tree/master/String/KMP) | |
+所有代码都在这里面：[https://github.com/luowanqian/DSA](https://github.com/luowanqian/DSA)
 
 # 笔试
 
@@ -47,9 +55,11 @@
 | 13 | {% post_link LeetCode-13-Roman-to-Integer Roman to Integer %} |
 | 14 | Longest Common Prefix |
 | 15      | {% post_link LeetCode-15-3Sum 3Sum %} |
+| 20 | Valid Parentheses |
 | 21 | Merge Two Sorted Lists |
 | 26 | Remove Duplicates from Sorted Array |
 | 27 | Remove Element |
+| 28 | Implement strStr() |
 | 45 | Jump Game II |
 | 70 | Climbing Stairs |
 | 88     | {% post_link LeetCode-88-Merge-Sorted-Array Merge Sorted Array %} |
