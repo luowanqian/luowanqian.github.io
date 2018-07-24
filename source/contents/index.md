@@ -31,7 +31,7 @@
 
 | Column 1 | Column 2 | Column 3 | Column 4 |
 | ---- | ---- | ---- | ---- |
-| [Insertion Sort](https://github.com/luowanqian/DSA/tree/master/Sort/InsertionSort) | [Quick Sort](https://github.com/luowanqian/DSA/tree/master/Sort/QuickSort) | [KMP](https://github.com/luowanqian/DSA/tree/master/String/KMP) | |
+| [Insertion Sort](https://github.com/luowanqian/DSA/tree/master/Sort/InsertionSort) | [Quick Sort](https://github.com/luowanqian/DSA/tree/master/Sort/QuickSort) |[Heap Sort](https://github.com/luowanqian/DSA/tree/master/Sort/HeapSort) | [KMP](https://github.com/luowanqian/DSA/tree/master/String/KMP) |
 所有代码都在这里面：[https://github.com/luowanqian/DSA](https://github.com/luowanqian/DSA)
 
 # 笔试
@@ -60,7 +60,9 @@
 | 26 | Remove Duplicates from Sorted Array |
 | 27 | Remove Element |
 | 28 | Implement strStr() |
+| 35 | Search Insert Position |
 | 45 | Jump Game II |
+| 66 | Plus One |
 | 70 | Climbing Stairs |
 | 88     | {% post_link LeetCode-88-Merge-Sorted-Array Merge Sorted Array %} |
 | 100 | Same Tree |
