@@ -21,10 +21,10 @@
 
 # 数据结构
 
-| Column 1                                                     | Column 2           | Column 3 | Column 4 |
-| ------------------------------------------------------------ | ------------------ | -------- | -------- |
-| [Single Linked List](https://github.com/luowanqian/DSA/tree/master/LinkedList) | Double Linked List | [Stack](https://github.com/luowanqian/DSA/tree/master/Stack)    | [Queue](https://github.com/luowanqian/DSA/tree/master/Queue)    |
-| [Binary Search Tree](https://github.com/luowanqian/DSA/tree/master/BinarySearchTree) |                    |          |          |
+| Column 1                                                     | Column 2                                                     | Column 3                                                     | Column 4                                                     |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [Single Linked List](https://github.com/luowanqian/DSA/tree/master/LinkedList) | Double Linked List                                           | [Stack](https://github.com/luowanqian/DSA/tree/master/Stack) | [Queue](https://github.com/luowanqian/DSA/tree/master/Queue) |
+| [Binary Search Tree](https://github.com/luowanqian/DSA/tree/master/BinarySearchTree) | [Max Heap](https://github.com/luowanqian/DSA/tree/master/Heap/MaxHeap) | [Graph](https://github.com/luowanqian/DSA/tree/master/Graph/AdjacencyList)                                                        |                                                              |
 所有代码都在这里面：[https://github.com/luowanqian/DSA](https://github.com/luowanqian/DSA)
 
 # 算法
@@ -62,18 +62,25 @@
 | 28 | Implement strStr() |
 | 35 | Search Insert Position |
 | 45 | Jump Game II |
+| 53 |  Maximum Subarray |
 | 66 | Plus One |
+| 67 | Add Binary |
+| 69 | Sqrt(x) |
 | 70 | Climbing Stairs |
+| 83 | Remove Duplicates from Sorted List |
 | 88     | {% post_link LeetCode-88-Merge-Sorted-Array Merge Sorted Array %} |
 | 100 | Same Tree |
 | 101 | Symmetric Tree |
 | 102 | Binary Tree Level Order Traversal |
 | 104 | Maximum Depth of Binary Tree |
+| 107 | Binary Tree Level Order Traversal II |
+| 108 | Convert Sorted Array to Binary Search Tree |
 | 111 | Minimum Depth of Binary Tree |
 | 112 | Path Sum |
 | 114 | Flatten Binary Tree to Linked List |
 | 136    | {% post_link LeetCode-136-Single-Number Single Number %}     |
 | 141 | Linked List Cycle |
+| 152 | Maximum Product Subarray |
 | 155 | Min Stack |
 | 167      | {% post_link LeetCode-167-Two-Sum-II-Input-array-is-sorted Two Sum II - Input array is sorted %} |
 | 191    | {% post_link LeetCode-191-Number-of-1-Bits Number of 1 Bits %} |
