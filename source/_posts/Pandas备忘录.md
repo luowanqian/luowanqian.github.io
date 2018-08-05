@@ -277,6 +277,39 @@ Ohio        0    1
 Colorado    4    5
 ```
 
+### Reset Index
+
+可以使用DataFrame的`reset_index()`函数将index变为DataFrame的一列，原index替换为递增的整数索引
+
+```python
+>>> data.reset_index()
+      index  one  two  three  four
+0      Ohio    0    1      2     3
+1  Colorado    4    5      6     7
+2      Utah    8    9     10    11
+3  New York   12   13     14    15
+```
+
+这个函数还有一个用处就是可以给每一行编一个号，如果index已为递增的整数索引，再调用`reset_index()`函数时，就会多出一列，内容为递增整数，相当于给每一行编个号。
+
+```python
+>>> data2 = data.reset_index()
+>>> data2
+      index  one  two  three  four
+0      Ohio    0    1      2     3
+1  Colorado    4    5      6     7
+2      Utah    8    9     10    11
+3  New York   12   13     14    15
+>>> data2.reset_index()
+   level_0     index  one  two  three  four
+0        0      Ohio    0    1      2     3
+1        1  Colorado    4    5      6     7
+2        2      Utah    8    9     10    11
+3        3  New York   12   13     14    15
+```
+
+列`level_0`可以用于数据编号。
+
 ## Series数据映射
 
 已知数据
@@ -468,6 +501,133 @@ dtype: int64
 5  0.293066  1.875362 -0.426759
 6 -0.389516  0.379184  0.759198
 ```
+
+## 重复值
+
+已知DataFrame
+
+```python
+>>> data = pd.DataFrame({'k1': ['one', 'two'] * 3 + ['two'],
+...                      'k2': [1, 1, 2, 3, 3, 4, 4]})
+>>> data
+    k1  k2
+0  one   1
+1  two   1
+2  one   2
+3  two   3
+4  one   3
+5  two   4
+6  two   4
+```
+
+### 删除重复值
+
+可以使用函数`drop_duplicates()`删除重复值
+
+```python
+>>> data.drop_duplicates()
+    k1  k2
+0  one   1
+1  two   1
+2  one   2
+3  two   3
+4  one   3
+5  two   4
+```
+
+函数`drop_duplicates()`默认考虑的是全部列，也可以设定某些列来判断是否重复
+
+```python
+>>> data.drop_duplicates(['k1'])
+    k1  k2
+0  one   1
+1  two   1
+```
+
+## 排序
+
+已知DataFrame
+
+```python
+>>> df = pd.DataFrame({'b': [4, 7, -3, 2], 'a': [0, 1, 0, 1]})
+>>> df
+   a  b
+0  0  4
+1  1  7
+2  0 -3
+3  1  2
+```
+
+### 根据某些列进行排序
+
+排序使用函数`sort_values()`，如果要根据某些列进行排序，可以设定`by=`参数
+
+```python
+>>> df.sort_values(by='a')
+   a  b
+0  0  4
+2  0 -3
+1  1  7
+3  1  2
+>>> df.sort_values(by=['a', 'b'])
+   a  b
+2  0 -3
+0  0  4
+3  1  2
+1  1  7
+```
+
+## GroupBy
+
+已知DataFrame
+
+```python
+>>> df = pd.DataFrame({'key1':['a','a','b','b','a'],
+...                    'key2':['one','two','one','two','one'],
+...                    'data1':np.random.randn(5),
+...                    'data2':np.random.randn(5)})
+>>> df
+      data1     data2 key1 key2
+0  2.462027  0.054159    a  one
+1  0.283423 -0.658160    a  two
+2 -0.969307 -0.407126    b  one
+3 -0.636756  1.925338    b  two
+4 -0.408266  1.833710    a  one
+```
+
+### 查看分组名
+
+DataFrame分了组后，想知道每个分组的名字，可以写为
+
+```python
+>>> df.groupby('key1').groups
+{'a': Int64Index([0, 1, 4], dtype='int64'), 'b': Int64Index([2, 3], dtype='int64')}
+>>> df.groupby('key1').groups.keys()
+dict_keys(['a', 'b'])
+```
+
+### 分组计算和以及平均值
+
+如果想要根据列`key1`的值分组计算`data1`的和，可以写为
+
+```python
+>>> df['data1'].groupby(df['key1']).sum().reset_index()
+  key1     data1
+0    a  2.337185
+1    b -1.606063
+```
+
+或者
+
+```python
+>>> df.filter(['data1', 'key1']).groupby('key1', as_index=False).sum()
+  key1     data1
+0    a  2.337185
+1    b -1.606063
+```
+
+这个`as_index=False`使得`key1`的值不作为index。计算平均值只需要将`sum()`换成`mean()`即可。
+
 ## 读取数据
 
 ### 读取csv文件
