@@ -76,6 +76,7 @@
 | 104 | Maximum Depth of Binary Tree |
 | 107 | Binary Tree Level Order Traversal II |
 | 108 | Convert Sorted Array to Binary Search Tree |
+| 110 | Balanced Binary Tree |
 | 111 | Minimum Depth of Binary Tree |
 | 112 | Path Sum |
 | 114 | Flatten Binary Tree to Linked List |
