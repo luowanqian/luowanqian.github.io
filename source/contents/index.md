@@ -80,6 +80,8 @@
 | 111 | Minimum Depth of Binary Tree |
 | 112 | Path Sum |
 | 114 | Flatten Binary Tree to Linked List |
+| 118 | Pascal's Triangle |
+| 119 | Pascal's Triangle II |
 | 136    | {% post_link LeetCode-136-Single-Number Single Number %}     |
 | 141 | Linked List Cycle |
 | 152 | Maximum Product Subarray |
