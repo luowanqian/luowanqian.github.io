@@ -7,6 +7,10 @@ tags:
  - Pandas
 ---
 
+## Pandas备忘录系列文章
+
+1. {% post_link Pandas备忘录2 Pandas备忘录2 %}
+
 ## 介绍
 
 本文主要是记录一些Pandas的使用方法以及注意事项。
@@ -627,6 +631,40 @@ dict_keys(['a', 'b'])
 ```
 
 这个`as_index=False`使得`key1`的值不作为index。计算平均值只需要将`sum()`换成`mean()`即可。
+
+## Merge
+
+### 笛卡尔乘积
+
+两个集合$X$和$Y$的笛卡尔乘积(Cartesian product)，表示为$X \times Y$，是指第一个对象是$X$的成员而第二个对象是$Y$的所有可能有序对的其中一个成员。举个例子，假设集合$A = \{ a,b  \}$，集合$B = \{ 0, 1, 2 \}$，则两个集合的笛卡尔积为 $\{ (a, 0), (a, 1), (a, 2), (b, 0),  (b, 1), (b, 2) \}$。使用Pandas的`merge`函数可以实现两个DataFrame的笛卡尔积。
+
+```python
+>>> df1 = pd.DataFrame({'A': ['a', 'b', 'c']})
+>>> df1
+   A
+0  a
+1  b
+2  c
+>>> df2 = pd.DataFrame({'B': [0, 1, 2]})
+>>> df2
+   B
+0  0
+1  1
+2  2
+>>> pd.merge(df1.assign(foo=0), df2.assign(foo=0), on=['foo']).drop(columns=['foo'])
+   A  B
+0  a  0
+1  a  1
+2  a  2
+3  b  0
+4  b  1
+5  b  2
+6  c  0
+7  c  1
+8  c  2
+```
+
+主要是实现思想是增加一列`foo`，值设为0，然后使用`merge`函数进行合并。
 
 ## 读取数据
 
