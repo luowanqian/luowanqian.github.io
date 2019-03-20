@@ -506,6 +506,46 @@ dtype: int64
 6 -0.389516  0.379184  0.759198
 ```
 
+### 缺失值删除
+
+1. 删除有缺失值的行
+
+DataFrame的`dropna`函数默认是删除有缺失值的行
+
+```
+>>> df = pd.DataFrame({"name": ['Alfred', 'Batman', 'Catwoman'],
+...                    "toy": [np.nan, 'Batmobile', 'Bullwhip'],
+...                    "born": [pd.NaT, pd.Timestamp("1940-04-25"), pd.NaT]})
+>>> df
+       name        toy       born
+0    Alfred        NaN        NaT
+1    Batman  Batmobile 1940-04-25
+2  Catwoman   Bullwhip        NaT
+>>> df.dropna()
+     name        toy       born
+1  Batman  Batmobile 1940-04-25
+```
+
+2. 删除有缺失值的列
+
+设定`dropna`函数的参数axis为1可以删除有缺失值的列
+
+```
+>>> df = pd.DataFrame({"name": ['Alfred', 'Batman', 'Catwoman'],
+...                    "toy": [np.nan, 'Batmobile', 'Bullwhip'],
+...                    "born": [pd.NaT, pd.Timestamp("1940-04-25"), pd.NaT]})
+>>> df
+       name        toy       born
+0    Alfred        NaN        NaT
+1    Batman  Batmobile 1940-04-25
+2  Catwoman   Bullwhip        NaT
+>>> df.dropna(axis=1)
+       name
+0    Alfred
+1    Batman
+2  Catwoman
+```
+
 ## 重复值
 
 已知DataFrame

@@ -48,3 +48,26 @@ dtype: bool
 dtype: object
 ```
 
+## DataFrame增加行
+
+### append函数
+
+可以使用`append`函数给DataFrame增加行
+
+```
+>>> df = pd.DataFrame([[1, 2], [3, 4]], columns=list('AB'))
+>>> df
+   A  B
+0  1  2
+1  3  4
+>>> df2 = pd.DataFrame([[5, 6]], columns=list('AB'))
+>>> df2
+   A  B
+0  5  6
+>>> df.append(df2, ignore_index=True)
+   A  B
+0  1  2
+1  3  4
+2  5  6
+```
+
