@@ -22,9 +22,9 @@ import numpy as np
 
 ## 查找
 
-### 正则表达式查找
+### contains函数
 
-主要是用`Series.str.contains`这个函数
+主要是用`Series.str.contains`这个函数，如果参数`regex`设为True，则查找字符串解析为正则表达式，设为False则用常规查找方式
 
 ```
 >>> s1 = pd.Series(['Mouse', 'dog', 'house and parrot', '23', 'frog'])
@@ -69,5 +69,27 @@ dtype: object
 0  1  2
 1  3  4
 2  5  6
+```
+
+### 使用特定索引名称增加行
+
+使用DataFrame的`loc`函数可以指定索引名称增加行，前提是得知道列的排列顺序，因此在创建DataFrame时要用`columns`参数指定列的排列顺序
+
+```
+>>> employees = pd.DataFrame(
+...     data={'Name': ['John Doe', 'William Spark'],
+...           'Age': [23, 24]},
+...     index=['Emp001', 'Emp002'],
+...     columns=['Name', 'Age'])
+>>> employees
+                 Name  Age
+Emp001       John Doe   23
+Emp002  William Spark   24
+>>> employees.loc['Emp003'] = ['Sunny', 45]
+>>> employees
+                 Name  Age
+Emp001       John Doe   23
+Emp002  William Spark   24
+Emp003          Sunny   45
 ```
 

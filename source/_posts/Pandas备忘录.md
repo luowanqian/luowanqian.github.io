@@ -13,7 +13,7 @@ tags:
 
 ## 介绍
 
-本文主要是记录一些Pandas的使用方法以及注意事项。
+本文主要是记录一些Pandas的使用方法以及注意事项
 
 __Note:__ 如果没有特别说明，`pd` 指的是 `pandas`，`np` 指的是 `numpy`。
 
@@ -31,9 +31,9 @@ import numpy as np
 
 ### From dict of ndarrays / lists
 
-输入数据为一个字典，字典的key为列名，字典的value为一个Numpy的数组或者一个list，存储DataFrame__一列__的值。
+输入数据为一个字典，字典的key为列名，字典的value为一个Numpy的数组或者一个list，存储DataFrame一列的值
 
-```python
+```
 >>> data = {'one': [1, 2, 3],
 ...         'two': [3, 2, 1]}
 >>> pd.DataFrame(data)
@@ -45,9 +45,9 @@ import numpy as np
 
 ### From a list of dicts
 
-输入数据为一个list，每个元素为一个字典，存储DataFrame__一行__的值，字典的key为列名，value为一个DataFrame中一个元素。
+输入数据为一个list，每个元素为一个字典，存储DataFrame一行的值，字典的key为列名，value为一个DataFrame中一个元素。
 
-```python
+```
 >>> data = [{'one': 1, 'two': 3},
 ...         {'one': 2, 'two': 2},
 ...         {'one': 3, 'two': 1}]
@@ -62,7 +62,7 @@ import numpy as np
 
 Series索引类似Numpy的数组索引，除了可以使用 integer 作为索引值，还可以使用 index 作为索引值
 
-```python
+```
 >>> obj = pd.Series(np.arange(4.), index=['a', 'b', 'c', 'd'])
 >>> obj
 a    0.0
@@ -108,7 +108,7 @@ dtype: float64
 
 先创建一个数据
 
-```python
+```
 >>> data = pd.DataFrame(np.arange(16).reshape((4, 4)),
 ...                     index=['Ohio', 'Colorado', 'Utah', 'New York'],
 ...                     columns=['one', 'two', 'three', 'four'])
@@ -122,7 +122,7 @@ New York   12   13     14    15
 
 ### df[]语法
 
-```python
+```
 # 利用单个label选择单列
 >>> data['two']
 Ohio         1
@@ -178,7 +178,7 @@ New York   12   13     14    15
 
 `df.loc[]` 索引值为 axis labels
 
-```python
+```
 # 使用 df.loc[val] 选择行
 >>> data.loc['Utah']
 one       8
@@ -231,7 +231,7 @@ Ohio        1      2
 
 `df.iloc[]` 索引值为 integers
 
-```python
+```
 # 使用 df.iloc[where] 选择行
 >>> data.iloc[2]
 one       8
@@ -285,7 +285,7 @@ Colorado    4    5
 
 可以使用DataFrame的`reset_index()`函数将index变为DataFrame的一列，原index替换为递增的整数索引
 
-```python
+```
 >>> data.reset_index()
       index  one  two  three  four
 0      Ohio    0    1      2     3
@@ -296,7 +296,7 @@ Colorado    4    5
 
 这个函数还有一个用处就是可以给每一行编一个号，如果index已为递增的整数索引，再调用`reset_index()`函数时，就会多出一列，内容为递增整数，相当于给每一行编个号。
 
-```python
+```
 >>> data2 = data.reset_index()
 >>> data2
       index  one  two  three  four
@@ -339,7 +339,7 @@ male -> 1
 
 可以使用 `map()` 函数，输入映射参数 (映射用一个字典表示)
 
-```pythn
+```
 >>> sex_to_num = {'female': 0, 'male': 1}
 >>> data['Sex'] = data['Sex'].map(sex_to_num)
 >>> data
@@ -355,7 +355,7 @@ male -> 1
 
 __Note:__ 本节所述的 `NA` 代表
 
-```python
+```
 from numpy import nan as NA
 ```
 
@@ -367,7 +367,7 @@ from numpy import nan as NA
 
 对于 Series，可以使用 `isnull()` 函数判断 Series 中的数据是否为缺失值
 
-```python
+```
 >>> data = pd.Series([1, NA, 3.5, NA, 7])
 >>> data
 0    1.0
@@ -387,7 +387,7 @@ dtype: bool
 
 要判断有多少个缺失值，可以使用 `sum()` 判断 `isnull()` 返回的 Boolean 数组中有多少个 True。
 
-```python
+```
 >>> data.isnull().sum()
 2
 ```
@@ -396,7 +396,7 @@ dtype: bool
 
 对于 DataFrame，同样可以使用 `isnull()` 函数判断数据是否为缺失值
 
-```python
+```
 >>> data = pd.DataFrame([[1., 6.5, 3.], [1, NA, NA],
 ...                      [NA, NA, NA], [NA, 6.5, 3.]])
 >>> data
@@ -415,7 +415,7 @@ dtype: bool
 
 如果要知道每一列的缺失值是多少，可以使用 `info()` 函数，或者将 `isnull()` 与 `sum()` 配合起来
 
-```python
+```
 >>> data.info()
 <class 'pandas.core.frame.DataFrame'>
 RangeIndex: 4 entries, 0 to 3
@@ -434,7 +434,7 @@ dtype: int64
 
 如果要知道缺失值总数，可以作两次 `sum()`
 
-```python
+```
 >>> data.isnull().sum().sum()
 6
 ```
@@ -443,7 +443,7 @@ dtype: int64
 
 处理缺失值的一个方法就是使用插值或者自设的值补全缺失值。首先构造一个有缺失值的 DataFrame
 
-```python
+```
 >>> df = pd.DataFrame(np.random.randn(7, 3))
 >>> df.iloc[:4, 1] = NA
 >>> df.iloc[:2, 2] = NA
@@ -462,7 +462,7 @@ dtype: int64
 
 这里主要使用函数 `fillna()`，传入一个值，则缺失值就被设为该值
 
-```python
+```
 # 缺失值使用0补全
 >>> df.fillna(0)
           0         1         2
@@ -477,7 +477,7 @@ dtype: int64
 
 如果传入的是一个字典，则可以对每一列的缺失值设定不同的补全值
 
-```python
+```
 # 第二列缺失值用0.5补全，第三列缺失值用0补全
 >>> df.fillna({1: 0.5, 2: 0})
           0         1         2
@@ -494,7 +494,7 @@ dtype: int64
 
 这里主要使用函数 `fillna()` 的 `method` 参数，例子中数据由于某列第一个元素有缺失，所以方法选择 backfill。
 
-```python
+```
 >>> df.fillna(method='backfill')
           0         1         2
 0  1.309480  0.572520 -0.396921
@@ -550,7 +550,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 
 已知DataFrame
 
-```python
+```
 >>> data = pd.DataFrame({'k1': ['one', 'two'] * 3 + ['two'],
 ...                      'k2': [1, 1, 2, 3, 3, 4, 4]})
 >>> data
@@ -568,7 +568,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 
 可以使用函数`drop_duplicates()`删除重复值
 
-```python
+```
 >>> data.drop_duplicates()
     k1  k2
 0  one   1
@@ -581,7 +581,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 
 函数`drop_duplicates()`默认考虑的是全部列，也可以设定某些列来判断是否重复
 
-```python
+```
 >>> data.drop_duplicates(['k1'])
     k1  k2
 0  one   1
@@ -592,7 +592,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 
 已知DataFrame
 
-```python
+```
 >>> df = pd.DataFrame({'b': [4, 7, -3, 2], 'a': [0, 1, 0, 1]})
 >>> df
    a  b
@@ -606,7 +606,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 
 排序使用函数`sort_values()`，如果要根据某些列进行排序，可以设定`by=`参数
 
-```python
+```
 >>> df.sort_values(by='a')
    a  b
 0  0  4
@@ -625,7 +625,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 
 已知DataFrame
 
-```python
+```
 >>> df = pd.DataFrame({'key1':['a','a','b','b','a'],
 ...                    'key2':['one','two','one','two','one'],
 ...                    'data1':np.random.randn(5),
@@ -643,7 +643,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 
 DataFrame分了组后，想知道每个分组的名字，可以写为
 
-```python
+```
 >>> df.groupby('key1').groups
 {'a': Int64Index([0, 1, 4], dtype='int64'), 'b': Int64Index([2, 3], dtype='int64')}
 >>> df.groupby('key1').groups.keys()
@@ -654,7 +654,7 @@ dict_keys(['a', 'b'])
 
 如果想要根据列`key1`的值分组计算`data1`的和，可以写为
 
-```python
+```
 >>> df['data1'].groupby(df['key1']).sum().reset_index()
   key1     data1
 0    a  2.337185
@@ -663,7 +663,7 @@ dict_keys(['a', 'b'])
 
 或者
 
-```python
+```
 >>> df.filter(['data1', 'key1']).groupby('key1', as_index=False).sum()
   key1     data1
 0    a  2.337185
@@ -678,7 +678,7 @@ dict_keys(['a', 'b'])
 
 两个集合$X$和$Y$的笛卡尔乘积(Cartesian product)，表示为$X \times Y$，是指第一个对象是$X$的成员而第二个对象是$Y$的所有可能有序对的其中一个成员。举个例子，假设集合$A = \{ a,b  \}$，集合$B = \{ 0, 1, 2 \}$，则两个集合的笛卡尔积为 $\{ (a, 0), (a, 1), (a, 2), (b, 0),  (b, 1), (b, 2) \}$。使用Pandas的`merge`函数可以实现两个DataFrame的笛卡尔积。
 
-```python
+```
 >>> df1 = pd.DataFrame({'A': ['a', 'b', 'c']})
 >>> df1
    A
