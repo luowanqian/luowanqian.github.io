@@ -1,6 +1,6 @@
 ---
 title: Ubuntu18.04安装VNC
-urlname: untitled
+urlname: ubuntu_vnc
 date: 2019-05-01 19:37:36
 tags:
  - 软件配置
