@@ -1,6 +1,7 @@
 # 常用软件以及配置
 
 1. {% post_link 保存和恢复Tmux会话 保存和恢复Tmux会话 %}
+2. {% post_link Ubuntu18-04安装VNC Ubuntu18.04安装VNC %}
 
 # 备忘录
 
