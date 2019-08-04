@@ -14,6 +14,7 @@
 | Pandas     | 1. {% post_link Pandas备忘录 Pandas备忘录 %}<br />2. {% post_link Pandas备忘录2 Pandas备忘录2 %} |
 | Matplotlib | {% post_link Matplotlib备忘录 Matplotlib备忘录 %} |
 | ConfigSpace | {% post_link ConfigSpace备忘录 ConfigSpace备忘录 %} |
+| SMACv3 | 1. [Optimize SVM (Jupyter Notebook)](https://gist.github.com/luowanqian/9069ed22703ae2b8a9c7ced06702ad09) |
 
 # Snippets
 
