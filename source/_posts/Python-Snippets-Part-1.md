@@ -142,3 +142,48 @@ if __name__ == '__main__':
                 print('{} generated an exception: {}'.format(url, exc))
         pbar.finish()
 ```
+
+## 遍历文件夹中所有文件
+
+首先目录结构如下：
+
+```
+$ tree test
+test
+├── 1.txt
+├── 2.txt
+└── test2
+    ├── 3.txt
+    └── 4.txt
+```
+
+使用`os.walk()`遍历`test`目录，代码如下：
+
+```python
+root_dir = '/tmp/test'
+for root, dirs, files in os.walk(root_dir, topdown=True):
+    for name in files:
+        print(os.path.join(root, name))
+    for name in dirs:
+        print(os.path.join(root, name))
+```
+
+得到结果如下：
+
+```
+/tmp/test/1.txt
+/tmp/test/2.txt
+/tmp/test/test2
+/tmp/test/test2/3.txt
+/tmp/test/test2/4.txt
+```
+
+如果设置`topdown=False`，得到结果如下：
+
+```
+/tmp/test/test2/3.txt
+/tmp/test/test2/4.txt
+/tmp/test/1.txt
+/tmp/test/2.txt
+/tmp/test/test2
+```
