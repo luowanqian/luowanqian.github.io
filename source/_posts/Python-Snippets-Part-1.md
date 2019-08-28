@@ -187,3 +187,34 @@ for root, dirs, files in os.walk(root_dir, topdown=True):
 /tmp/test/2.txt
 /tmp/test/test2
 ```
+
+## 计算函数运行时间
+
+这里使用装饰器来计算函数运行时间
+
+```python
+import time
+from functools import wraps
+
+
+def timethis(func):
+    """
+    Decorator that reports the execution time
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(func.__name__, end-start)
+
+        return result
+
+    return wrapper
+
+
+@timethis
+def countdown(n):
+    while n > 0:
+        n -= 1
+```
