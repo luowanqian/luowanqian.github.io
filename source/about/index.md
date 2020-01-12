@@ -7,7 +7,7 @@
 
 工作经历：
 
-* 2018.8 - 2019.10 华为诺亚方舟实验室 实习
+* 2018.8 - 2018.10 华为诺亚方舟实验室 实习
 * 2019.7 - 至今 华为诺亚方舟实验室 研发工程师
 
 GitHub: [https://github.com/luowanqian](https://github.com/luowanqian) <br>
