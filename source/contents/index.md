@@ -1,6 +1,7 @@
 # 搬运
 
 1. [Google Style Guide](http://www.scutmath.com/GoogleStyleGuides/)
+2. [Python CheatSheet](http://www.scutmath.com/python-cheatsheet/)
 
 # 常用软件以及配置
 
