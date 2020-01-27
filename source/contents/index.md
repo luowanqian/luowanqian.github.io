@@ -1,14 +1,26 @@
-# 搬运
+- [1. 搬运](#1-搬运)
+- [2. 常用软件以及配置](#2-常用软件以及配置)
+- [3. 备忘录](#3-备忘录)
+- [4. Snippets](#4-snippets)
+- [5. 数据结构](#5-数据结构)
+  - [5.1. C&C++语言实现](#51-cc语言实现)
+- [6. 算法](#6-算法)
+  - [6.1. C&C++语言实现](#61-cc语言实现)
+  - [6.2. Python语言实现](#62-python语言实现)
+- [7. 笔试](#7-笔试)
+- [8. LeetCode](#8-leetcode)
+
+# 1. 搬运
 
 1. [Google Style Guide](http://www.scutmath.com/GoogleStyleGuides/)
 2. [Python CheatSheet](http://www.scutmath.com/python-cheatsheet/)
 
-# 常用软件以及配置
+# 2. 常用软件以及配置
 
 1. {% post_link 保存和恢复Tmux会话 保存和恢复Tmux会话 %}
 2. {% post_link Ubuntu18-04安装VNC Ubuntu18.04安装VNC %}
 
-# 备忘录
+# 3. 备忘录
 
 > 记录一些库的使用方法
 
@@ -21,7 +33,7 @@
 | ConfigSpace | {% post_link ConfigSpace备忘录 ConfigSpace备忘录 %} |
 | SMACv3 | 1. [Optimize SVM (Jupyter Notebook)](https://gist.github.com/luowanqian/9069ed22703ae2b8a9c7ced06702ad09) |
 
-# Snippets
+# 4. Snippets
 
 > 记录一些常用的代码片段
 
@@ -31,23 +43,37 @@
 | Shell   | {% post_link Shell-Snippets-Part-1 Shell Snippets Part 1 %} |
 | Python  | {% post_link Python-Snippets-Part-1 Python Snippets Part 1 %} |
 
-# 数据结构
+# 5. 数据结构
+
+## 5.1. C&C++语言实现
 
 | Column 1                                 | Column 2                                 | Column 3                                 | Column 4                                 |
 | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- |
-| [Single Linked List](https://github.com/luowanqian/DSA/tree/master/LinkedList) | Double Linked List                       | [Stack](https://github.com/luowanqian/DSA/tree/master/Stack) | [Queue](https://github.com/luowanqian/DSA/tree/master/Queue) |
-| [Binary Search Tree](https://github.com/luowanqian/DSA/tree/master/Tree/BinarySearchTree) | [Max Heap](https://github.com/luowanqian/DSA/tree/master/Heap/MaxHeap) | [Graph](https://github.com/luowanqian/DSA/tree/master/Graph/AdjacencyList) | [Trie](https://github.com/luowanqian/DSA/tree/master/Tree/Trie) |
+| Single Linked List | Double Linked List                       | Stack | Queue |
+| Binary Search Tree | Max Heap | Graph | Trie |
+
 所有代码都在这里面：[https://github.com/luowanqian/DSA](https://github.com/luowanqian/DSA)
 
-# 算法
+# 6. 算法
+
+## 6.1. C&C++语言实现
 
 | Column 1                                 | Column 2                                 | Column 3                                 | Column 4                                 |
 | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- |
-| [Insertion Sort](https://github.com/luowanqian/DSA/tree/master/Sort/InsertionSort) | [Quick Sort](https://github.com/luowanqian/DSA/tree/master/Sort/QuickSort) | [Heap Sort](https://github.com/luowanqian/DSA/tree/master/Sort/HeapSort) | [Bubble Sort](https://github.com/luowanqian/DSA/tree/master/Sort/BubbleSort) |
-| [Selection Sort](https://github.com/luowanqian/DSA/tree/master/Sort/SelectionSort) | [BFS Graph](https://github.com/luowanqian/DSA/tree/master/Traversal/Graph) | [KMP](https://github.com/luowanqian/DSA/tree/master/String/KMP) |                                          |
+| Insertion Sort | Quick Sort | Heap Sort | Bubble Sort |
+| Selection Sort | BFS Graph | KMP |                                          |
+
 所有代码都在这里面：[https://github.com/luowanqian/DSA](https://github.com/luowanqian/DSA)
 
-# 笔试
+## 6.2. Python语言实现
+
+| Column 1 | Column 2 | Column 3 | Column 4 |
+| ---- | ---- | ---- | ---- |
+| Multiple Dictionaries | | | |
+
+所有代码都在这里面：[https://github.com/luowanqian/DSA](https://github.com/luowanqian/DSA)
+
+# 7. 笔试
 
 | 时间        | 公司   | 题目                                       |
 | --------- | ---- | ---------------------------------------- |
@@ -55,7 +81,7 @@
 | 2018.3.24 | 今日头条 | {% post_link 今日头条2018春季校园招聘编程题 今日头条2018春季校园招聘编程题 %} |
 | 2018.4.5  | 腾讯   | {% post_link 腾讯2018数据分析岗实习笔试题 腾讯2018数据分析岗实习笔试题 %} |
 
-# LeetCode
+# 8. LeetCode
 
 | Number | Problem                                  |
 | ------ | ---------------------------------------- |
