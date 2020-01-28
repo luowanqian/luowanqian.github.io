@@ -4,6 +4,7 @@ urlname: ubuntu_vnc
 date: 2019-05-01 19:37:36
 tags:
  - 软件配置
+ - Software Installation
 ---
 
 ## 安装桌面环境和VNC服务端

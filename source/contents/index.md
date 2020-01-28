@@ -1,5 +1,5 @@
 - [1. 搬运](#1-搬运)
-- [2. 常用软件以及配置](#2-常用软件以及配置)
+- [2. 软件安装以及配置](#2-软件安装以及配置)
 - [3. 备忘录](#3-备忘录)
 - [4. Snippets](#4-snippets)
 - [5. 数据结构](#5-数据结构)
@@ -15,10 +15,11 @@
 1. [Google Style Guide](http://www.scutmath.com/GoogleStyleGuides/)
 2. [Python CheatSheet](http://www.scutmath.com/python-cheatsheet/)
 
-# 2. 常用软件以及配置
+# 2. 软件安装以及配置
 
 1. {% post_link 保存和恢复Tmux会话 保存和恢复Tmux会话 %}
 2. {% post_link Ubuntu18-04安装VNC Ubuntu18.04安装VNC %}
+3. {% post_link TeX-Live-2019-Installation TeX Live 2019 Installation %}
 
 # 3. 备忘录
 
