@@ -14,6 +14,7 @@
 
 1. [Google Style Guide](http://www.scutmath.com/GoogleStyleGuides/)
 2. [Python CheatSheet](http://www.scutmath.com/python-cheatsheet/)
+3. [Learn RegEx](http://www.scutmath.com/learn-regex/)
 
 # 2. 软件安装以及配置
 
