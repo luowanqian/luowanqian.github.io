@@ -1,4 +1,5 @@
 - [1. 搬运](#1-搬运)
+  - [1.1. 小工具](#11-小工具)
 - [2. 软件安装以及配置](#2-软件安装以及配置)
 - [3. 备忘录](#3-备忘录)
 - [4. Snippets](#4-snippets)
@@ -15,6 +16,12 @@
 1. [Google Style Guide](http://www.scutmath.com/GoogleStyleGuides/)
 2. [Python CheatSheet](http://www.scutmath.com/python-cheatsheet/)
 3. [Learn RegEx](http://www.scutmath.com/learn-regex/)
+
+## 1.1. 小工具
+
+1. [RegEx Examples](https://ihateregex.io/) : 搜索某个正则表达式例子
+2. [RegEx 101](https://regex101.com/) : 在线正则表达式测试工具
+3. [Tree](https://tree.nathanfriend.io/) : 画树型目录结构
 
 # 2. 软件安装以及配置
 
@@ -110,6 +117,7 @@
 | 70     | Climbing Stairs                          |
 | 83     | Remove Duplicates from Sorted List       |
 | 88     | {% post_link LeetCode-88-Merge-Sorted-Array Merge Sorted Array %} |
+| 98 | Validate Binary Search Tree |
 | 100    | Same Tree                                |
 | 101    | Symmetric Tree                           |
 | 102    | Binary Tree Level Order Traversal        |
