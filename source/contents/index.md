@@ -5,6 +5,7 @@
 - [4. Snippets](#4-snippets)
 - [5. 数据结构](#5-数据结构)
   - [5.1. C&C++语言实现](#51-cc语言实现)
+  - [5.2. Python语言实现](#52-python语言实现)
 - [6. 算法](#6-算法)
   - [6.1. C&C++语言实现](#61-cc语言实现)
   - [6.2. Python语言实现](#62-python语言实现)
@@ -63,6 +64,14 @@
 
 所有代码都在这里面：[https://github.com/luowanqian/DSA](https://github.com/luowanqian/DSA)
 
+## 5.2. Python语言实现
+
+| Column 1 | Column 2 | Column 3 | Column 4 |
+| ---- | ---- | ---- | ---- |
+| Linked Queue | Binary Search Tree | | |
+
+所有代码都在这里面：[https://github.com/luowanqian/DSA](https://github.com/luowanqian/DSA)
+
 # 6. 算法
 
 ## 6.1. C&C++语言实现
@@ -70,7 +79,7 @@
 | Column 1                                 | Column 2                                 | Column 3                                 | Column 4                                 |
 | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- |
 | Insertion Sort | Quick Sort | Heap Sort | Bubble Sort |
-| Selection Sort | BFS Graph | KMP |                                          |
+| Selection Sort | BFS Graph | KMP | |
 
 所有代码都在这里面：[https://github.com/luowanqian/DSA](https://github.com/luowanqian/DSA)
 
@@ -138,6 +147,7 @@
 | 167    | {% post_link LeetCode-167-Two-Sum-II-Input-array-is-sorted Two Sum II - Input array is sorted %} |
 | 191    | {% post_link LeetCode-191-Number-of-1-Bits Number of 1 Bits %} |
 | 206    | Reverse Linked List                      |
+| 207 | Course Schedule |
 | 215    | {% post_link LeetCode-215-Kth-Largest-Element-in-an-Array Kth Largest Element in an Array %} |
 | 232    | Implement Queue using Stacks             |
 | 237    | {% post_link LeetCode-237-Delete-Node-in-a-Linked-List Delete Node in a Linked List %} |
