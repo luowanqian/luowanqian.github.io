@@ -2,34 +2,35 @@
 title: Pandas备忘录
 date: 2018-05-06 22:29:26
 urlname: pandas_memo
+list_number: false
 tags:
  - Python
  - Pandas
 ---
 
-## Pandas备忘录系列文章
+## 1. Pandas备忘录系列文章
 
 1. {% post_link Pandas备忘录2 Pandas备忘录2 %}
 
-## 介绍
+## 2. 介绍
 
 本文主要是记录一些Pandas的使用方法以及注意事项
 
 __Note:__ 如果没有特别说明，`pd` 指的是 `pandas`，`np` 指的是 `numpy`。
 
-```
+```python
 import pandas as pd
 import numpy as np
 ```
 
-## 构建DataFrame
+## 3. 构建DataFrame
 
 构建一个DataFrame方法有很多，这里介绍一部分常用的方法，即
 
 * From dict of ndarrays / lists
 * From a list of dicts
 
-### From dict of ndarrays / lists
+### 3.1. From dict of ndarrays / lists
 
 输入数据为一个字典，字典的key为列名，字典的value为一个Numpy的数组或者一个list，存储DataFrame一列的值
 
@@ -43,7 +44,7 @@ import numpy as np
 2    3    1
 ```
 
-### From a list of dicts
+### 3.2. From a list of dicts
 
 输入数据为一个list，每个元素为一个字典，存储DataFrame一行的值，字典的key为列名，value为一个DataFrame中一个元素。
 
@@ -58,7 +59,7 @@ import numpy as np
 2    3    1
 ```
 
-## Series索引
+## 4. Series索引
 
 Series索引类似Numpy的数组索引，除了可以使用 integer 作为索引值，还可以使用 index 作为索引值
 
@@ -90,7 +91,7 @@ c    2.0
 dtype: float64
 ```
 
-## DataFrame索引
+## 5. DataFrame索引
 
 先贴张DataFrame索引方法的表格，摘录自《Python for Data Analysis》。
 
@@ -120,7 +121,7 @@ Utah        8    9     10    11
 New York   12   13     14    15
 ```
 
-### df[]语法
+### 5.1. df[]语法
 
 ```
 # 利用单个label选择单列
@@ -174,7 +175,7 @@ Utah        8    9     10    11
 New York   12   13     14    15
 ```
 
-### df.loc语法
+### 5.2. df.loc语法
 
 `df.loc[]` 索引值为 axis labels
 
@@ -227,7 +228,7 @@ Colorado    5      6
 Ohio        1      2
 ```
 
-### df.iloc语法
+### 5.3. df.iloc语法
 
 `df.iloc[]` 索引值为 integers
 
@@ -281,7 +282,7 @@ Ohio        0    1
 Colorado    4    5
 ```
 
-### Reset Index
+### 5.4. Reset Index
 
 可以使用DataFrame的`reset_index()`函数将index变为DataFrame的一列，原index替换为递增的整数索引
 
@@ -314,7 +315,7 @@ Colorado    4    5
 
 列`level_0`可以用于数据编号。
 
-## Series数据映射
+## 6. Series数据映射
 
 已知数据
 
@@ -351,7 +352,7 @@ male -> 1
 4   35    1
 ```
 
-## 缺失值
+## 7. 缺失值
 
 __Note:__ 本节所述的 `NA` 代表
 
@@ -359,7 +360,7 @@ __Note:__ 本节所述的 `NA` 代表
 from numpy import nan as NA
 ```
 
-### 缺失值分析
+### 7.1. 缺失值分析
 
 首先分析数据缺失值情况
 
@@ -439,7 +440,7 @@ dtype: int64
 6
 ```
 
-### 缺失值补全
+### 7.2. 缺失值补全
 
 处理缺失值的一个方法就是使用插值或者自设的值补全缺失值。首先构造一个有缺失值的 DataFrame
 
@@ -506,7 +507,7 @@ dtype: int64
 6 -0.389516  0.379184  0.759198
 ```
 
-### 缺失值删除
+### 7.3. 缺失值删除
 
 1. 删除有缺失值的行
 
@@ -546,7 +547,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 2  Catwoman
 ```
 
-## 重复值
+## 8. 重复值
 
 已知DataFrame
 
@@ -564,7 +565,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 6  two   4
 ```
 
-### 删除重复值
+### 8.1. 删除重复值
 
 可以使用函数`drop_duplicates()`删除重复值
 
@@ -588,7 +589,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 1  two   1
 ```
 
-## 排序
+## 9. 排序
 
 已知DataFrame
 
@@ -602,7 +603,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 3  1  2
 ```
 
-### 根据某些列进行排序
+### 9.1. 根据某些列进行排序
 
 排序使用函数`sort_values()`，如果要根据某些列进行排序，可以设定`by=`参数
 
@@ -621,7 +622,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 1  1  7
 ```
 
-## GroupBy
+## 10. GroupBy
 
 已知DataFrame
 
@@ -639,7 +640,7 @@ DataFrame的`dropna`函数默认是删除有缺失值的行
 4 -0.408266  1.833710    a  one
 ```
 
-### 查看分组名
+### 10.1. 查看分组名
 
 DataFrame分了组后，想知道每个分组的名字，可以写为
 
@@ -650,7 +651,7 @@ DataFrame分了组后，想知道每个分组的名字，可以写为
 dict_keys(['a', 'b'])
 ```
 
-### 分组计算和以及平均值
+### 10.2. 分组计算和以及平均值
 
 如果想要根据列`key1`的值分组计算`data1`的和，可以写为
 
@@ -672,9 +673,9 @@ dict_keys(['a', 'b'])
 
 这个`as_index=False`使得`key1`的值不作为index。计算平均值只需要将`sum()`换成`mean()`即可。
 
-## Merge
+## 11. Merge
 
-### 笛卡尔乘积
+### 11.1. 笛卡尔乘积
 
 两个集合$X$和$Y$的笛卡尔乘积(Cartesian product)，表示为$X \times Y$，是指第一个对象是$X$的成员而第二个对象是$Y$的所有可能有序对的其中一个成员。举个例子，假设集合$A = \{ a,b  \}$，集合$B = \{ 0, 1, 2 \}$，则两个集合的笛卡尔积为 $\{ (a, 0), (a, 1), (a, 2), (b, 0),  (b, 1), (b, 2) \}$。使用Pandas的`merge`函数可以实现两个DataFrame的笛卡尔积。
 
@@ -706,8 +707,8 @@ dict_keys(['a', 'b'])
 
 主要是实现思想是增加一列`foo`，值设为0，然后使用`merge`函数进行合并。
 
-## 读取数据
+## 12. 读取数据
 
-### 读取csv文件
+### 12.1. 读取csv文件
 
 读取csv数据文件需要用到 `read_csv()` 函数

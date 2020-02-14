@@ -2,27 +2,28 @@
 title: Pandas备忘录2
 date: 2018-09-03 22:30:02
 urlname: pandas_memo2
+list_number: false
 tags:
  - Python
  - Pandas
 ---
 
-## Pandas备忘录系列文章
+## 1. Pandas备忘录系列文章
 
 1. {% post_link Pandas备忘录 Pandas备忘录 %}
 
-## 介绍
+## 2. 介绍
 
 __Note:__ 如果没有特别说明，`pd`指的是`pandas`，`np`指的是`numpy`。
 
-```
+```python
 import pandas as pd
 import numpy as np
 ```
 
-## 查找
+## 3. 查找
 
-### contains函数
+### 3.1. contains函数
 
 主要是用`Series.str.contains`这个函数，如果参数`regex`设为True，则查找字符串解析为正则表达式，设为False则用常规查找方式
 
@@ -48,9 +49,9 @@ dtype: bool
 dtype: object
 ```
 
-## DataFrame增加行
+## 4. DataFrame增加行
 
-### append函数
+### 4.1. append函数
 
 可以使用`append`函数给DataFrame增加行
 
@@ -71,7 +72,7 @@ dtype: object
 2  5  6
 ```
 
-### 使用特定索引名称增加行
+### 4.2. 使用特定索引名称增加行
 
 使用DataFrame的`loc`函数可以指定索引名称增加行，前提是得知道列的排列顺序，因此在创建DataFrame时要用`columns`参数指定列的排列顺序
 
