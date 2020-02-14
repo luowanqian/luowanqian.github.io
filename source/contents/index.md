@@ -1,5 +1,6 @@
 - [1. 搬运](#1-搬运)
   - [1.1. 小工具](#11-小工具)
+  - [1.2. 其他](#12-其他)
 - [2. 软件安装以及配置](#2-软件安装以及配置)
 - [3. 备忘录](#3-备忘录)
 - [4. Snippets](#4-snippets)
@@ -20,9 +21,16 @@
 
 ## 1.1. 小工具
 
-1. [RegEx Examples](https://ihateregex.io/) : 搜索某个正则表达式例子
-2. [RegEx 101](https://regex101.com/) : 在线正则表达式测试工具
-3. [Tree](https://tree.nathanfriend.io/) : 画树型目录结构
+| 工具链接 | 描述 |
+| ---- | ---- |
+| [TLDR](https://tldr.ostera.io/), [TLDR中文版](https://tldr.linux.cn/) | TLDR, 可查询某个命令使用例子 |
+| [RegEx Examples](https://ihateregex.io/) | 搜索某个正则表达式例子 |
+| [RegEx 101](https://regex101.com/) | 在线正则表达式测试工具 |
+| [Tree](https://tree.nathanfriend.io/) | 画树型目录结构 |
+
+## 1.2. 其他
+
+1. [Statistics/Machine Learning Dictionary](statistics_machine_learning.html)
 
 # 2. 软件安装以及配置
 
@@ -133,12 +141,14 @@
 | 104    | Maximum Depth of Binary Tree             |
 | 107    | Binary Tree Level Order Traversal II     |
 | 108    | Convert Sorted Array to Binary Search Tree |
+| 109    | Convert Sorted List to Binary Search Tree |
 | 110    | Balanced Binary Tree                     |
 | 111    | Minimum Depth of Binary Tree             |
 | 112    | Path Sum                                 |
 | 114    | Flatten Binary Tree to Linked List       |
 | 118    | Pascal's Triangle                        |
 | 119    | Pascal's Triangle II                     |
+| 133 | Clone Graph |
 | 136    | {% post_link LeetCode-136-Single-Number Single Number %} |
 | 141    | Linked List Cycle                        |
 | 152    | Maximum Product Subarray                 |
