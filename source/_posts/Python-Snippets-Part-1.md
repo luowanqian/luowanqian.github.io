@@ -2,16 +2,17 @@
 title: Python Snippets Part 1
 urlname: python_snippets_part1
 date: 2018-05-02 22:57:40
+list_number: false
 tags:
  - Python
  - 编程语言
 ---
 
-## Introduction
+## 1. Introduction
 
-Python 代码片段
+Python 代码片段，相关代码见 [GitHub](https://github.com/luowanqian/Scripts)
 
-## 判断文件或目录是否存在
+## 2. 判断文件或目录是否存在
 
 创建一个目录和一个文件
 
@@ -48,7 +49,7 @@ False
 
 目录 `dir2` 和文件 `file2.txt` 均不存在，所以函数 `os.path.exists()` 和 `os.path.isfile()` 均返回 False。
 
-## ParameterGrid
+## 3. ParameterGrid
 
 机器学习算法最常见的调参方法是网格搜索，需要将多组参数进行组合，Scikit-learn提供了一个类 `ParametGrid` 可以生成所有的参数组合，这里提取其关键代码单独写成一个生成器：
 
@@ -83,7 +84,7 @@ if __name__ == '__main__':
 {'a': 2, 'b': False}
 ```
 
-## 批量下载图片
+## 4. 批量下载图片
 
 这里使用`requests`库批量下载图片，为了加快下载速度，还实现了多线程下载，同时为了避免一次下载失败，脚本支持自动重试下载。没有处理具体的异常，只是捕获异常后输出异常信息。
 
@@ -143,7 +144,7 @@ if __name__ == '__main__':
         pbar.finish()
 ```
 
-## 遍历文件夹中所有文件
+## 5. 遍历文件夹中所有文件
 
 首先目录结构如下：
 
@@ -188,7 +189,7 @@ for root, dirs, files in os.walk(root_dir, topdown=True):
 /tmp/test/test2
 ```
 
-## 计算函数运行时间
+## 6. 计算函数运行时间
 
 这里使用装饰器来计算函数运行时间
 
@@ -217,4 +218,30 @@ def timethis(func):
 def countdown(n):
     while n > 0:
         n -= 1
+```
+
+## 7. 判断对象是否可迭代
+
+```python
+def isiterable(obj):
+    try:
+        obj = iter(obj)
+    except:
+        return False
+    else:
+        return True
+
+
+if __name__ == "__main__":
+    a = [1, 2]
+    b = 3
+    print(f"'a' is {'iterable' if isiterable(a) else 'not iterable'}")
+    print(f"'b' is {'iterable' if isiterable(b) else 'not iterable'}")
+```
+
+执行结果
+
+```
+'a' is iterable
+'b' is not iterable
 ```
