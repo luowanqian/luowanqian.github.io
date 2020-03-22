@@ -8,11 +8,15 @@ tags:
  - 编程语言
 ---
 
-## 1. Introduction
+- [1. 判断文件或目录是否存在](#1-判断文件或目录是否存在)
+- [2. ParameterGrid](#2-parametergrid)
+- [3. 批量下载图片](#3-批量下载图片)
+- [4. 遍历文件夹中所有文件](#4-遍历文件夹中所有文件)
+- [5. 计算函数运行时间](#5-计算函数运行时间)
+- [6. 判断对象是否可迭代](#6-判断对象是否可迭代)
+- [判断系统类型](#判断系统类型)
 
-Python 代码片段，相关代码见 [GitHub](https://github.com/luowanqian/Scripts)
-
-## 2. 判断文件或目录是否存在
+## 1. 判断文件或目录是否存在
 
 创建一个目录和一个文件
 
@@ -49,7 +53,7 @@ False
 
 目录 `dir2` 和文件 `file2.txt` 均不存在，所以函数 `os.path.exists()` 和 `os.path.isfile()` 均返回 False。
 
-## 3. ParameterGrid
+## 2. ParameterGrid
 
 机器学习算法最常见的调参方法是网格搜索，需要将多组参数进行组合，Scikit-learn提供了一个类 `ParametGrid` 可以生成所有的参数组合，这里提取其关键代码单独写成一个生成器：
 
@@ -84,7 +88,7 @@ if __name__ == '__main__':
 {'a': 2, 'b': False}
 ```
 
-## 4. 批量下载图片
+## 3. 批量下载图片
 
 这里使用`requests`库批量下载图片，为了加快下载速度，还实现了多线程下载，同时为了避免一次下载失败，脚本支持自动重试下载。没有处理具体的异常，只是捕获异常后输出异常信息。
 
@@ -144,7 +148,7 @@ if __name__ == '__main__':
         pbar.finish()
 ```
 
-## 5. 遍历文件夹中所有文件
+## 4. 遍历文件夹中所有文件
 
 首先目录结构如下：
 
@@ -189,7 +193,7 @@ for root, dirs, files in os.walk(root_dir, topdown=True):
 /tmp/test/test2
 ```
 
-## 6. 计算函数运行时间
+## 5. 计算函数运行时间
 
 这里使用装饰器来计算函数运行时间
 
@@ -220,7 +224,7 @@ def countdown(n):
         n -= 1
 ```
 
-## 7. 判断对象是否可迭代
+## 6. 判断对象是否可迭代
 
 ```python
 def isiterable(obj):
@@ -244,4 +248,42 @@ if __name__ == "__main__":
 ```
 'a' is iterable
 'b' is not iterable
+```
+
+## 判断系统类型
+
+可以使用 `sys.platform` 判断当前是什么操作系统。常见的操作系统，其返回值如下
+
+| System | platform value |
+| ---- | ---- |
+| AIX | `'aix'` |
+| Linux | `'linux'` |
+| Windows | `'win32'` |
+| Windows/Cygwin | `'cygwin'` |
+| macOS | `'darwin'` |
+
+官方推荐使用 `startswith()` 判断系统类型 (见 [sys.platform](https://docs.python.org/3/library/sys.html#sys.platform))，这里贴一段测试代码
+
+```python
+import sys
+
+
+def identify_platform():
+    platform = sys.platform
+    if platform.startswith("freebsd"):
+        return "freebsd"
+    elif platform.startswith("linux"):
+        return "linux"
+    elif platform.startswith("aix"):
+        return "aix"
+    elif platform.startswith("win"):
+        return "windows"
+    elif platform.startswith("darwin"):
+        return "macos"
+    else:
+        return "unknown"
+
+
+if __name__ == "__main__":
+    print(f"Platform: {identify_platform()}")
 ```
