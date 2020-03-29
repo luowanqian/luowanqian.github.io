@@ -8,10 +8,11 @@
 工作经历：
 
 * 2018.8 - 2018.10 华为诺亚方舟实验室 实习
-* 2019.7 - 至今 华为诺亚方舟实验室 研发工程师
+* 2019.7 - 至今 华为诺亚方舟实验室 研究工程师
 
 GitHub: [https://github.com/luowanqian](https://github.com/luowanqian) <br>
-E-mail: luowanqian94@gmail.com
+E-mail: luowanqian94@gmail.com<br>
+Linkedin: [https://www.linkedin.com/in/luowanqian/](https://www.linkedin.com/in/luowanqian/)
 
 # 个人爱好
 
