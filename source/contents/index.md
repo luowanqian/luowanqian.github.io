@@ -126,6 +126,7 @@
 | 27     | Remove Element                           |
 | 28     | Implement strStr()                       |
 | 35     | Search Insert Position                   |
+| 36     | Valid Sudoku                             |
 | 45     | Jump Game II                             |
 | 53     | Maximum Subarray                         |
 | 66     | Plus One                                 |
