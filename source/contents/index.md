@@ -120,6 +120,8 @@
 | 13     | {% post_link LeetCode-13-Roman-to-Integer Roman to Integer %} |
 | 14     | Longest Common Prefix                    |
 | 15     | {% post_link LeetCode-15-3Sum 3Sum %}    |
+| 17     | Letter Combinations of a Phone Number    |
+| 19     | Remove Nth Node From End of List         |
 | 20     | Valid Parentheses                        |
 | 21     | Merge Two Sorted Lists                   |
 | 26     | Remove Duplicates from Sorted Array      |
@@ -127,15 +129,18 @@
 | 28     | Implement strStr()                       |
 | 35     | Search Insert Position                   |
 | 36     | Valid Sudoku                             |
+| 43     | Multiply Strings                         |
 | 45     | Jump Game II                             |
+| 50     | {% post_link LeetCode-50-Pow Pow(x, n) %}  |
 | 53     | Maximum Subarray                         |
 | 66     | Plus One                                 |
 | 67     | Add Binary                               |
 | 69     | Sqrt(x)                                  |
 | 70     | Climbing Stairs                          |
+| 75     | Sort Colors                              |
 | 83     | Remove Duplicates from Sorted List       |
 | 88     | {% post_link LeetCode-88-Merge-Sorted-Array Merge Sorted Array %} |
-| 98 | Validate Binary Search Tree |
+| 98     | Validate Binary Search Tree              |
 | 100    | Same Tree                                |
 | 101    | Symmetric Tree                           |
 | 102    | Binary Tree Level Order Traversal        |
