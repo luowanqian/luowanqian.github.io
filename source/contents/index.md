@@ -135,7 +135,7 @@
 | 53     | Maximum Subarray                         |
 | 66     | Plus One                                 |
 | 67     | Add Binary                               |
-| 69     | Sqrt(x)                                  |
+| 69     | {% post_link LeetCode-69-SqrtX Sqrt(x) %} |
 | 70     | Climbing Stairs                          |
 | 75     | Sort Colors                              |
 | 83     | Remove Duplicates from Sorted List       |
