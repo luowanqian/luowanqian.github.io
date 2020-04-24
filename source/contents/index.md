@@ -128,7 +128,7 @@
 | 27     | Remove Element                           |
 | 28     | Implement strStr()                       |
 | 35     | Search Insert Position                   |
-| 36     | Valid Sudoku                             |
+| 36     | {% post_link LeetCode-36-Valid-Sudoku Valid Sudoku %} |
 | 43     | Multiply Strings                         |
 | 45     | Jump Game II                             |
 | 50     | {% post_link LeetCode-50-Pow Pow(x, n) %}  |
