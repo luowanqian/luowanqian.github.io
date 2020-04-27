@@ -156,7 +156,7 @@
 | 119    | Pascal's Triangle II                     |
 | 133 | Clone Graph |
 | 136    | {% post_link LeetCode-136-Single-Number Single Number %} |
-| 141    | Linked List Cycle                        |
+| 141    | {% post_link LeetCode-141-Linked-List-Cycle Linked List Cycle %} |
 | 152    | Maximum Product Subarray                 |
 | 155    | Min Stack                                |
 | 162    | Find Peak Element                        |
