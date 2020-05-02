@@ -121,7 +121,7 @@
 | 14     | Longest Common Prefix                    |
 | 15     | {% post_link LeetCode-15-3Sum 3Sum %}    |
 | 17     | Letter Combinations of a Phone Number    |
-| 19     | Remove Nth Node From End of List         |
+| 19     | {% post_link LeetCode-19-Remove-Nth-Node-From-End-of-List Remove Nth Node From End of List %} |
 | 20     | Valid Parentheses                        |
 | 21     | Merge Two Sorted Lists                   |
 | 26     | Remove Duplicates from Sorted Array      |
@@ -157,8 +157,10 @@
 | 133 | Clone Graph |
 | 136    | {% post_link LeetCode-136-Single-Number Single Number %} |
 | 141    | {% post_link LeetCode-141-Linked-List-Cycle Linked List Cycle %} |
+| 142    | Linked List Cycle II                     |
 | 152    | Maximum Product Subarray                 |
 | 155    | Min Stack                                |
+| 160    | {% post_link LeetCode-160-Intersection-of-Two-Linked-Lists Intersection of Two Linked Lists %} |
 | 162    | Find Peak Element                        |
 | 167    | {% post_link LeetCode-167-Two-Sum-II-Input-array-is-sorted Two Sum II - Input array is sorted %} |
 | 191    | {% post_link LeetCode-191-Number-of-1-Bits Number of 1 Bits %} |
