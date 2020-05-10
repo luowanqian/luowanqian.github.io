@@ -164,15 +164,18 @@
 | 162    | Find Peak Element                        |
 | 167    | {% post_link LeetCode-167-Two-Sum-II-Input-array-is-sorted Two Sum II - Input array is sorted %} |
 | 191    | {% post_link LeetCode-191-Number-of-1-Bits Number of 1 Bits %} |
+| 203    | {% post_link LeetCode-203-Remove-Linked-List-Elements Remove Linked List Elements %} |
 | 206    | Reverse Linked List                      |
-| 207 | Course Schedule |
+| 207    | Course Schedule                          |
 | 215    | {% post_link LeetCode-215-Kth-Largest-Element-in-an-Array Kth Largest Element in an Array %} |
 | 232    | Implement Queue using Stacks             |
 | 237    | {% post_link LeetCode-237-Delete-Node-in-a-Linked-List Delete Node in a Linked List %} |
 | 257    | Binary Tree Paths                        |
+| 328    | {% post_link LeetCode-328-Odd-Even-Linked-List Odd Even Linked List %} |
 | 344    | Reverse String                           |
 | 349    | {% post_link LeetCode-349-Intersection-of-Two-Arrays Intersection of Two Arrays %} |
 | 350    | Intersection of Two Arrays II            |
+| 367    | {% post_link LeetCode-367-Valid-Perfect-Square Valid Perfect Square %} |
 | 383    | {% post_link LeetCode-383-Ransom-Note Ransom Note %} |
 | 387    | {% post_link LeetCode-387-First-Unique-Character-in-a-String First Unique Character in a String %} |
 | 415    | Add Strings                              |
