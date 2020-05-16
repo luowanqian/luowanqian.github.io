@@ -165,7 +165,7 @@
 | 167    | {% post_link LeetCode-167-Two-Sum-II-Input-array-is-sorted Two Sum II - Input array is sorted %} |
 | 191    | {% post_link LeetCode-191-Number-of-1-Bits Number of 1 Bits %} |
 | 203    | {% post_link LeetCode-203-Remove-Linked-List-Elements Remove Linked List Elements %} |
-| 206    | Reverse Linked List                      |
+| 206    | {% post_link LeetCode-206-Reverse-Linked-List Reverse Linked List %} |
 | 207    | Course Schedule                          |
 | 215    | {% post_link LeetCode-215-Kth-Largest-Element-in-an-Array Kth Largest Element in an Array %} |
 | 232    | Implement Queue using Stacks             |
