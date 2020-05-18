@@ -157,9 +157,9 @@
 | 133 | Clone Graph |
 | 136    | {% post_link LeetCode-136-Single-Number Single Number %} |
 | 141    | {% post_link LeetCode-141-Linked-List-Cycle Linked List Cycle %} |
-| 142    | Linked List Cycle II                     |
+| 142    | {% post_link LeetCode-142-Linked-List-Cycle-II Linked List Cycle II %} |
 | 152    | Maximum Product Subarray                 |
-| 155    | Min Stack                                |
+| 155    | {% post_link LeetCode-155-Min-Stack Min Stack %} |
 | 160    | {% post_link LeetCode-160-Intersection-of-Two-Linked-Lists Intersection of Two Linked Lists %} |
 | 162    | Find Peak Element                        |
 | 167    | {% post_link LeetCode-167-Two-Sum-II-Input-array-is-sorted Two Sum II - Input array is sorted %} |
