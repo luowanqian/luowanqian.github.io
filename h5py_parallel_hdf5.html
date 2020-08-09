@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="环境操作系统：OS X 10.11.6 Python版本：3.6.5 安装HDF5使用 Homebrew 安装 HDF5，注意要开启 mpi 编译选项 1$ brew install hdf5 --with-mpi  安装mpi4py官网教程在使用 Parallel HDF5 时会用到 mpi4py 这个包，直接使用 pip 安装即可 1$ pip3 install mpi4py  Note: 安">
+    <meta name="description" content="环境 操作系统：OS X 10.11.6 Python版本：3.6.5 安装HDF5 使用 Homebrew 安装 HDF5，注意要开启 mpi 编译选项 1$ brew install hdf5 --with-mpi 安装mpi4py 官网教程在使用 Parallel HDF5 时会用到 mpi4py 这个包，直接使用 pip 安装即可 1$ pip3 install mpi4py Note:">
 <meta property="og:type" content="article">
 <meta property="og:title" content="H5py支持Parallel HDF5">
 <meta property="og:url" content="http://www.scutmath.com/h5py_parallel_hdf5.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="环境操作系统：OS X 10.11.6 Python版本：3.6.5 安装HDF5使用 Homebrew 安装 HDF5，注意要开启 mpi 编译选项 1$ brew install hdf5 --with-mpi  安装mpi4py官网教程在使用 Parallel HDF5 时会用到 mpi4py 这个包，直接使用 pip 安装即可 1$ pip3 install mpi4py  Note: 安">
+<meta property="og:description" content="环境 操作系统：OS X 10.11.6 Python版本：3.6.5 安装HDF5 使用 Homebrew 安装 HDF5，注意要开启 mpi 编译选项 1$ brew install hdf5 --with-mpi 安装mpi4py 官网教程在使用 Parallel HDF5 时会用到 mpi4py 这个包，直接使用 pip 安装即可 1$ pip3 install mpi4py Note:">
 <meta property="og:locale">
 <meta property="article:published_time" content="2018-04-28T15:14:06.000Z">
 <meta property="article:modified_time" content="2020-08-09T03:49:49.780Z">
@@ -107,24 +107,24 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85HDF5"><span class="toc-number">2.</span> <span class="toc-text">安装HDF5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85mpi4py"><span class="toc-number">3.</span> <span class="toc-text">安装mpi4py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85h5py"><span class="toc-number">4.</span> <span class="toc-text">安装h5py</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85hdf5"><span class="toc-number">2.</span> <span class="toc-text">安装HDF5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85mpi4py"><span class="toc-number">3.</span> <span class="toc-text">安装mpi4py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85h5py"><span class="toc-number">4.</span> <span class="toc-text">安装h5py</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>操作系统：OS X 10.11.6</p>
+		<h2 id="环境">环境</h2>
+<p>操作系统：OS X 10.11.6</p>
 <p>Python版本：3.6.5</p>
-<h2 id="安装HDF5"><a href="#安装HDF5" class="headerlink" title="安装HDF5"></a>安装HDF5</h2><p>使用 Homebrew 安装 HDF5，注意要开启 mpi 编译选项</p>
+<h2 id="安装hdf5">安装HDF5</h2>
+<p>使用 Homebrew 安装 HDF5，注意要开启 mpi 编译选项</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install hdf5 --with-mpi</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装mpi4py"><a href="#安装mpi4py" class="headerlink" title="安装mpi4py"></a>安装mpi4py</h2><p>官网教程在使用 Parallel HDF5 时会用到 mpi4py 这个包，直接使用 pip 安装即可</p>
+<h2 id="安装mpi4py">安装mpi4py</h2>
+<p>官网教程在使用 Parallel HDF5 时会用到 mpi4py 这个包，直接使用 pip 安装即可</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip3 install mpi4py</span><br></pre></td></tr></table></figure>
-
 <p><strong>Note:</strong> 安装遇到一个问题是，如果之前安装过这个包，现在卸载再安装这个包时，pip 不会重新编译这个包，此时需要 <code>--no-cache-dir</code> 这个选项。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip3 install --no-cache-dir mpi4py</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装h5py"><a href="#安装h5py" class="headerlink" title="安装h5py"></a>安装h5py</h2><p>直接使用 pip 安装 h5py 是不会开启 Parallel HDF5 的，需要添加一些编译选项，参考官网安装教程，运行命令</p>
+<h2 id="安装h5py">安装h5py</h2>
+<p>直接使用 pip 安装 h5py 是不会开启 Parallel HDF5 的，需要添加一些编译选项，参考官网安装教程，运行命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ export CC&#x3D;mpicc</span><br><span class="line">$ export HDF5_MPI&#x3D;&quot;ON&quot;</span><br><span class="line">$ pip3 install --no-binary&#x3D;h5py h5py</span><br></pre></td></tr></table></figure>
-
 <p>同前面所诉，如果需要重新编译这个包，需要用到 <code>--no-cache-dir</code> 这个选项</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip3 install --no-cache-dir --no-binary&#x3D;h5py h5py</span><br></pre></td></tr></table></figure>
   
@@ -186,7 +186,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85HDF5"><span class="toc-number">2.</span> <span class="toc-text">安装HDF5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85mpi4py"><span class="toc-number">3.</span> <span class="toc-text">安装mpi4py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85h5py"><span class="toc-number">4.</span> <span class="toc-text">安装h5py</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85hdf5"><span class="toc-number">2.</span> <span class="toc-text">安装HDF5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85mpi4py"><span class="toc-number">3.</span> <span class="toc-text">安装mpi4py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85h5py"><span class="toc-number">4.</span> <span class="toc-text">安装h5py</span></a></li></ol>
  
   </div>
 

@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="介绍斯特林公式 (Stirling’s approximation) 是一条用来取n的阶乘的近似值的数学公式。常见的形式为 $$n! \approx \sqrt{2 \pi n} (\frac{n}{e})^n$$ 对n的阶乘取自然对数，可以得到 $$\ln{(n!)} \approx \frac{1}{2} \ln{(2 \pi)} + (n + \frac{1}{2}) \ln{(n)} -">
+    <meta name="description" content="介绍 斯特林公式 (Stirling&#39;s approximation) 是一条用来取n的阶乘的近似值的数学公式。常见的形式为 \[ n! \approx \sqrt{2 \pi n} (\frac{n}{e})^n \] 对n的阶乘取自然对数，可以得到 \[ \ln{(n!)} \approx \frac{1}{2} \ln{(2 \pi)} + (n + \frac{1}{2}) \ln{(n)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Stirling&#39;s approximation">
 <meta property="og:url" content="http://www.scutmath.com/stirling_approximation.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="介绍斯特林公式 (Stirling’s approximation) 是一条用来取n的阶乘的近似值的数学公式。常见的形式为 $$n! \approx \sqrt{2 \pi n} (\frac{n}{e})^n$$ 对n的阶乘取自然对数，可以得到 $$\ln{(n!)} \approx \frac{1}{2} \ln{(2 \pi)} + (n + \frac{1}{2}) \ln{(n)} -">
+<meta property="og:description" content="介绍 斯特林公式 (Stirling&#39;s approximation) 是一条用来取n的阶乘的近似值的数学公式。常见的形式为 \[ n! \approx \sqrt{2 \pi n} (\frac{n}{e})^n \] 对n的阶乘取自然对数，可以得到 \[ \ln{(n!)} \approx \frac{1}{2} \ln{(2 \pi)} + (n + \frac{1}{2}) \ln{(n)">
 <meta property="og:locale">
 <meta property="article:published_time" content="2018-07-14T13:36:10.000Z">
 <meta property="article:modified_time" content="2020-08-09T03:49:49.805Z">
@@ -110,14 +110,22 @@
 		
 		</div>
 		
-		<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>斯特林公式 (Stirling’s approximation) 是一条用来取n的阶乘的近似值的数学公式。常见的形式为</p>
-<p>$$<br>n! \approx \sqrt{2 \pi n} (\frac{n}{e})^n<br>$$</p>
+		<h2 id="介绍">介绍</h2>
+<p>斯特林公式 (Stirling's approximation) 是一条用来取n的阶乘的近似值的数学公式。常见的形式为</p>
+<p><span class="math display">\[
+n! \approx \sqrt{2 \pi n} (\frac{n}{e})^n
+\]</span></p>
 <p>对n的阶乘取自然对数，可以得到</p>
-<p>$$<br>\ln{(n!)} \approx \frac{1}{2} \ln{(2 \pi)} + (n + \frac{1}{2}) \ln{(n)} - n<br>$$</p>
-<p>一个会经常遇到的问题，那就是计算 $n! / a_n$，单独计算 $n!$ 需要很大的计算量，如果将问题转换为</p>
-<p>$$<br>\frac{n!}{a_n} = e^{\ln{(n!)} - \ln{(a_n)}}<br>$$</p>
-<p>$\ln{(n!)}$ 可以用前面介绍的近似公式进行求解，此时计算量就会小很多。</p>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>这里举一个例子来感受下这个近似公式是如何缩减大量计算量。一个经典的概率问题－Birthday Problem</p>
+<p><span class="math display">\[
+\ln{(n!)} \approx \frac{1}{2} \ln{(2 \pi)} + (n + \frac{1}{2}) \ln{(n)} - n
+\]</span></p>
+<p>一个会经常遇到的问题，那就是计算 <span class="math inline">\(n! / a_n\)</span>，单独计算 <span class="math inline">\(n!\)</span> 需要很大的计算量，如果将问题转换为</p>
+<p><span class="math display">\[
+\frac{n!}{a_n} = e^{\ln{(n!)} - \ln{(a_n)}}
+\]</span></p>
+<p><span class="math inline">\(\ln{(n!)}\)</span> 可以用前面介绍的近似公式进行求解，此时计算量就会小很多。</p>
+<h2 id="例子">例子</h2>
+<p>这里举一个例子来感受下这个近似公式是如何缩减大量计算量。一个经典的概率问题－Birthday Problem</p>
 <blockquote>
 <p><strong>Birthday Prolem</strong></p>
 <p>Calculate the probability p that at least two people in a group of k people will have the same birthday, that is, will have been born on the same day of the same month but not necessarily in the same year.</p>
@@ -127,20 +135,33 @@
 <p>至少两个人的生日相同的概率 = 1 - 所有人的生日不相同的概率</p>
 </blockquote>
 <p>则计算公式为</p>
-<p>$$<br>p = 1 - \frac{P_{365, k}}{365^k}<br>$$</p>
-<p>其中 $P_{365, k}$ 为排列公式，等于 $365! / (365 - k)!$，则概率 $p$ 为</p>
-<p>$$<br>p = 1 - \frac{365!}{(365 - k)!365^k}<br>$$</p>
-<p>如果按照这个式子一个个计算里面的每一项时，需要很大的计算量，尤其是 $365!$，一般计算器估计算不出来。此时，我们将式子用指数，对数进行改写，可写为</p>
-<p>$$<br>p = 1 - e^{\ln{(365)!} - \ln{(365-k)!} - k\ln{(365)}}<br>$$</p>
-<p>其中 $\ln{(365)!}$ 和 $\ln{(365-k)!}$ 可以用Stirling公式进行近似计算，可以得到</p>
-<p>$$<br>\begin{align}<br>&amp; \ln{(365)!} - \ln{(365-k)!} - k \ln{(365)}  \<br>\approx ; &amp; \left[\frac{1}{2} \ln{(2 \pi)} + (365 + \frac{1}{2}) \ln{(365)} - 365 \right] \<br>&amp; - \left[ \frac{1}{2} \ln{(2 \pi)} + (365 - k + \frac{1}{2}) \ln{(365-k)} - 365 + k \right] \<br>&amp; - k \ln{(365)} \<br>\approx ; &amp; (365 + \frac{1}{2}) \ln{(365)} - (365 - k + \frac{1}{2}) \ln{(365-k)} - k - k \ln {(365)}<br>\end{align}<br>$$</p>
+<p><span class="math display">\[
+p = 1 - \frac{P_{365, k}}{365^k}
+\]</span></p>
+<p>其中 <span class="math inline">\(P_{365, k}\)</span> 为排列公式，等于 <span class="math inline">\(365! / (365 - k)!\)</span>，则概率 <span class="math inline">\(p\)</span> 为</p>
+<p><span class="math display">\[
+p = 1 - \frac{365!}{(365 - k)!365^k}
+\]</span></p>
+<p>如果按照这个式子一个个计算里面的每一项时，需要很大的计算量，尤其是 <span class="math inline">\(365!\)</span>，一般计算器估计算不出来。此时，我们将式子用指数，对数进行改写，可写为</p>
+<p><span class="math display">\[
+p = 1 - e^{\ln{(365)!} - \ln{(365-k)!} - k\ln{(365)}}
+\]</span></p>
+<p>其中 <span class="math inline">\(\ln{(365)!}\)</span> 和 <span class="math inline">\(\ln{(365-k)!}\)</span> 可以用Stirling公式进行近似计算，可以得到</p>
+<p><span class="math display">\[
+\begin{align}
+&amp; \ln{(365)!} - \ln{(365-k)!} - k \ln{(365)}  \\
+\approx \; &amp; \left[\frac{1}{2} \ln{(2 \pi)} + (365 + \frac{1}{2}) \ln{(365)} - 365 \right] \\
+&amp; - \left[ \frac{1}{2} \ln{(2 \pi)} + (365 - k + \frac{1}{2}) \ln{(365-k)} - 365 + k \right] \\
+&amp; - k \ln{(365)} \\
+\approx \; &amp; (365 + \frac{1}{2}) \ln{(365)} - (365 - k + \frac{1}{2}) \ln{(365-k)} - k - k \ln {(365)}
+\end{align}
+\]</span></p>
 <p>可见，阶乘和指数部分变成一堆对数的乘积以及求和，这样计算量就小了很多。这里贴一下用Python实现的概率计算程序</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import math</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    k &#x3D; int(sys.argv[1])</span><br><span class="line">    sum &#x3D; ((365 + 0.5) * math.log(365) -</span><br><span class="line">           (365 - k + 0.5) * math.log(365 - k) -</span><br><span class="line">           k - k * math.log(365))</span><br><span class="line">    prob &#x3D; 1.0 - math.exp(sum)</span><br><span class="line">    print(&#39;Probability (k &#x3D; &#123;&#125;) is &#123;&#125;&#39;.format(k, prob))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <p>用程序计算了一些值，得到下面列表</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>k</th>
 <th>prob</th>
 <th></th>
@@ -148,43 +169,45 @@
 <th>prob</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>5</td>
 <td>0.027</td>
 <td></td>
 <td>30</td>
 <td>0.706</td>
 </tr>
-<tr>
+<tr class="even">
 <td>10</td>
 <td>0.117</td>
 <td></td>
 <td>40</td>
 <td>0.891</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>15</td>
 <td>0.253</td>
 <td></td>
 <td>50</td>
 <td>0.970</td>
 </tr>
-<tr>
+<tr class="even">
 <td>20</td>
 <td>0.411</td>
 <td></td>
 <td>60</td>
 <td>0.994</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>25</td>
 <td>0.569</td>
 <td></td>
 <td>70</td>
 <td>0.999</td>
 </tr>
-</tbody></table>
-<p>从表格中可以看到，$k = 70$ 时，概率很接近 $1$ 了，原以为至少需要100多人才可能达到0.999这个概率值，可是现在看来是不需要达到100人就可以了。这让我想起了在班里，有人的生日和我是同一天，整个班的人数大概是50人，根据表格，可以得到概率为0.970，由此可见班里同学生日和我同一天的概率还是挺高的。</p>
+</tbody>
+</table>
+<p>从表格中可以看到，<span class="math inline">\(k = 70\)</span> 时，概率很接近 <span class="math inline">\(1\)</span> 了，原以为至少需要100多人才可能达到0.999这个概率值，可是现在看来是不需要达到100人就可以了。这让我想起了在班里，有人的生日和我是同一天，整个班的人数大概是50人，根据表格，可以得到概率为0.970，由此可见班里同学生日和我同一天的概率还是挺高的。</p>
   
 	</div>
 		<footer class="article-footer clearfix">

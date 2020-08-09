@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="问题描述Given a linked list, remove the n-th node from the end of list and return its head. Example: 123Given linked list: 1-&gt;2-&gt;3-&gt;4-&gt;5, and n &#x3D; 2.After removing the second node from the">
+    <meta name="description" content="问题描述 Given a linked list, remove the n-th node from the end of list and return its head. Example: 123Given linked list: 1-&gt;2-&gt;3-&gt;4-&gt;5, and n &#x3D; 2.After removing the second node from th">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 19 - Remove Nth Node From End of List">
 <meta property="og:url" content="http://www.scutmath.com/leetcode_19.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="问题描述Given a linked list, remove the n-th node from the end of list and return its head. Example: 123Given linked list: 1-&gt;2-&gt;3-&gt;4-&gt;5, and n &#x3D; 2.After removing the second node from the">
+<meta property="og:description" content="问题描述 Given a linked list, remove the n-th node from the end of list and return its head. Example: 123Given linked list: 1-&gt;2-&gt;3-&gt;4-&gt;5, and n &#x3D; 2.After removing the second node from th">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-05-02T06:52:24.000Z">
 <meta property="article:modified_time" content="2020-08-09T03:49:49.793Z">
@@ -112,10 +112,10 @@
 		
 		</div>
 		
-		<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given a linked list, remove the n-th node from the end of list and return its head.</p>
+		<h2 id="问题描述">问题描述</h2>
+<p>Given a linked list, remove the n-th node from the end of list and return its head.</p>
 <p><strong>Example:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Given linked list: 1-&gt;2-&gt;3-&gt;4-&gt;5, and n &#x3D; 2.</span><br><span class="line"></span><br><span class="line">After removing the second node from the end, the linked list becomes 1-&gt;2-&gt;3-&gt;5.</span><br></pre></td></tr></table></figure>
-
 <p><strong>Note:</strong></p>
 <p>Given n will always be valid.</p>
 <p><strong>Follow up:</strong></p>
@@ -123,13 +123,15 @@
 <p><strong>Related Topics:</strong> <code>Linked List</code>, <code>Two Pointers</code></p>
 <p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/">19. Remove Nth Node From End of List</a></p>
 <p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/">19. 删除链表的倒数第N个节点</a></p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>这道题可以使用双指针方法解决，设定两个指针 <code>p1</code> 和 <code>p2</code>，先让指针 <code>p1</code> 遍历 <code>n</code> 个节点，然后指针 <code>p2</code> 开始和指针 <code>p1</code> 同步遍历链表，当指针 <code>p1</code> 遍历完链表后，指针 <code>p2</code> 刚好指向倒数第 <code>n</code> 个节点，此时删除该节点即可。</p>
+<h2 id="解决方案">解决方案</h2>
+<p>这道题可以使用双指针方法解决，设定两个指针 <code>p1</code> 和 <code>p2</code>，先让指针 <code>p1</code> 遍历 <code>n</code> 个节点，然后指针 <code>p2</code> 开始和指针 <code>p1</code> 同步遍历链表，当指针 <code>p1</code> 遍历完链表后，指针 <code>p2</code> 刚好指向倒数第 <code>n</code> 个节点，此时删除该节点即可。</p>
 <details>
-<summary>参考解题代码</summary>
-
+<summary>
+参考解题代码
+</summary>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">removeNthFromEnd</span><span class="params">(ListNode* head, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">NULL</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">        ListNode *pos1, *pos2, *prev;</span><br><span class="line">        <span class="keyword">int</span> step;</span><br><span class="line"></span><br><span class="line">        prev = <span class="literal">NULL</span>;</span><br><span class="line">        pos1 = pos2 = head;</span><br><span class="line">        step = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (pos2 != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            pos2 = pos2-&gt;next;</span><br><span class="line">            step += <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (step &gt; n) &#123;</span><br><span class="line">                prev = pos1;</span><br><span class="line">                pos1 = pos1-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (prev == <span class="literal">NULL</span>)</span><br><span class="line">            head = head-&gt;next;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            prev-&gt;next = pos1-&gt;next;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-</details>  
+</details>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">

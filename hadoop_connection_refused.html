@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="最近在学习Hadoop时候遇到了一个问题，就是操作Hadoop文件系统时遇到 Connection Refused 问题，当时问题显示如下：   遇到这问题时，首先查看了错误信息提示中提到的网址 https:&#x2F;&#x2F;wiki.apache.org&#x2F;hadoop&#x2F;ConnectionRefused，文章中提示说是端口问题，但是经过排查不是端口问题，所以只能排查其他原因了。首先使用Java的 jps 命令">
+    <meta name="description" content="最近在学习Hadoop时候遇到了一个问题，就是操作Hadoop文件系统时遇到 Connection Refused 问题，当时问题显示如下：  遇到这问题时，首先查看了错误信息提示中提到的网址 https:&#x2F;&#x2F;wiki.apache.org&#x2F;hadoop&#x2F;ConnectionRefused，文章中提示说是端口问题，但是经过排查不是端口问题，所以只能排查其他原因了。首先使用Java的 jps 命令查">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop的Connection Refused问题">
 <meta property="og:url" content="http://www.scutmath.com/hadoop_connection_refused.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="最近在学习Hadoop时候遇到了一个问题，就是操作Hadoop文件系统时遇到 Connection Refused 问题，当时问题显示如下：   遇到这问题时，首先查看了错误信息提示中提到的网址 https:&#x2F;&#x2F;wiki.apache.org&#x2F;hadoop&#x2F;ConnectionRefused，文章中提示说是端口问题，但是经过排查不是端口问题，所以只能排查其他原因了。首先使用Java的 jps 命令">
+<meta property="og:description" content="最近在学习Hadoop时候遇到了一个问题，就是操作Hadoop文件系统时遇到 Connection Refused 问题，当时问题显示如下：  遇到这问题时，首先查看了错误信息提示中提到的网址 https:&#x2F;&#x2F;wiki.apache.org&#x2F;hadoop&#x2F;ConnectionRefused，文章中提示说是端口问题，但是经过排查不是端口问题，所以只能排查其他原因了。首先使用Java的 jps 命令查">
 <meta property="og:locale">
 <meta property="og:image" content="http://www.scutmath.com/hadoop_connection_refused/1.png">
 <meta property="og:image" content="http://www.scutmath.com/hadoop_connection_refused/2.png">
@@ -117,16 +117,12 @@
 		
 		<p>最近在学习Hadoop时候遇到了一个问题，就是操作Hadoop文件系统时遇到 <strong>Connection Refused</strong> 问题，当时问题显示如下：</p>
 <img src="/hadoop_connection_refused/1.png" class="">
-
 <p>遇到这问题时，首先查看了错误信息提示中提到的网址 <a target="_blank" rel="noopener" href="https://wiki.apache.org/hadoop/ConnectionRefused">https://wiki.apache.org/hadoop/ConnectionRefused</a>，文章中提示说是端口问题，但是经过排查不是端口问题，所以只能排查其他原因了。首先使用Java的 <strong>jps</strong> 命令查看JVM，查看结果如下：</p>
 <img src="/hadoop_connection_refused/2.png" class="">
-
 <p>发现没有NameNode，然后查看了Hadoop关于NameNode日志（日志文件默认在Hadoop安装目录中的 logs 目录下），发现了一些东西：</p>
 <img src="/hadoop_connection_refused/3.png" class="">
-
 <p>日志说 <strong>/tmp/hadoop-luowanqian/dfs/name</strong> 目录不存在，这个目录是HDFS文件系统的镜像文件保存的地方，HDFS文件系统格式化后其镜像文件默认保存在 <strong>tmp</strong> 目录中，而这个目录中的文件在重启系统后会自动被删除，因此访问HDFS文件系统会失败，重新格式化HDFS文件系统后再访问文件系统正常了。</p>
 <img src="/hadoop_connection_refused/4.png" class="">
-
   
 	</div>
 		<footer class="article-footer clearfix">

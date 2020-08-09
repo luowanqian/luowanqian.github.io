@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="关于 Hadoop Streaming 的使用，可以参考官方网站 Hadoop Streaming。个人觉得使用Steaming这个功能，可以使用其他语言来编写MapReduce程序，相比使用Java来编写程序，工作量小了很多。 根据《Hadoop权威指南》中例子使用python来实现 Max Temperature 这个程序，要分别实现Map函数以及Reduce函数。 Map函数12345678">
+    <meta name="description" content="关于 Hadoop Streaming 的使用，可以参考官方网站 Hadoop Streaming。个人觉得使用Steaming这个功能，可以使用其他语言来编写MapReduce程序，相比使用Java来编写程序，工作量小了很多。 根据《Hadoop权威指南》中例子使用python来实现 Max Temperature 这个程序，要分别实现Map函数以及Reduce函数。 Map函数 1234567">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop Streaming使用">
 <meta property="og:url" content="http://www.scutmath.com/hadoop_streaming_usage.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="关于 Hadoop Streaming 的使用，可以参考官方网站 Hadoop Streaming。个人觉得使用Steaming这个功能，可以使用其他语言来编写MapReduce程序，相比使用Java来编写程序，工作量小了很多。 根据《Hadoop权威指南》中例子使用python来实现 Max Temperature 这个程序，要分别实现Map函数以及Reduce函数。 Map函数12345678">
+<meta property="og:description" content="关于 Hadoop Streaming 的使用，可以参考官方网站 Hadoop Streaming。个人觉得使用Steaming这个功能，可以使用其他语言来编写MapReduce程序，相比使用Java来编写程序，工作量小了很多。 根据《Hadoop权威指南》中例子使用python来实现 Max Temperature 这个程序，要分别实现Map函数以及Reduce函数。 Map函数 1234567">
 <meta property="og:locale">
 <meta property="og:image" content="http://www.scutmath.com/hadoop_streaming_usage/1.png">
 <meta property="og:image" content="http://www.scutmath.com/hadoop_streaming_usage/2.png">
@@ -110,33 +110,28 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Map%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">Map函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reduce%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">Reduce函数</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#map%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">Map函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#reduce%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">Reduce函数</span></a></li></ol>
 		
 		</div>
 		
 		<p>关于 <strong>Hadoop Streaming</strong> 的使用，可以参考官方网站 <a target="_blank" rel="noopener" href="http://hadoop.apache.org/docs/r2.7.3/hadoop-streaming/HadoopStreaming.html">Hadoop Streaming</a>。个人觉得使用Steaming这个功能，可以使用其他语言来编写MapReduce程序，相比使用Java来编写程序，工作量小了很多。</p>
 <p>根据《Hadoop权威指南》中例子使用python来实现 <strong>Max Temperature</strong> 这个程序，要分别实现Map函数以及Reduce函数。</p>
-<h3 id="Map函数"><a href="#Map函数" class="headerlink" title="Map函数"></a>Map函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">    val = line.strip()</span><br><span class="line">    (year, temp, q) = (val[<span class="number">15</span>:<span class="number">19</span>], val[<span class="number">87</span>:<span class="number">92</span>], val[<span class="number">92</span>:<span class="number">93</span>])</span><br><span class="line">    <span class="keyword">if</span> (temp != <span class="string">&quot;+9999&quot;</span> <span class="keyword">and</span> re.match(<span class="string">&quot;[01459]&quot;</span>, q)):</span><br><span class="line">        <span class="keyword">print</span> <span class="string">&quot;%s\t%s&quot;</span> % (year, temp)</span><br></pre></td></tr></table></figure>
-
-<h3 id="Reduce函数"><a href="#Reduce函数" class="headerlink" title="Reduce函数"></a>Reduce函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">(last_key, max_val) = (<span class="literal">None</span>, -sys.maxint)</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">    (key, val) = line.strip().split(<span class="string">&quot;\t&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> last_key <span class="keyword">and</span> last_key != key:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">&quot;%s\t%s&quot;</span> % (last_key, max_val)</span><br><span class="line">        (last_key, max_val) = (key, int(val))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        (last_key, max_val) = (key, max(max_val, int(val)))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> last_key:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">&quot;%s\t%s&quot;</span> % (last_key, max_val)</span><br></pre></td></tr></table></figure>
-
+<h3 id="map函数">Map函数</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">    val = line.strip()</span><br><span class="line">    (year, temp, q) = (val[<span class="number">15</span>:<span class="number">19</span>], val[<span class="number">87</span>:<span class="number">92</span>], val[<span class="number">92</span>:<span class="number">93</span>])</span><br><span class="line">    <span class="keyword">if</span> (temp != <span class="string">&quot;+9999&quot;</span> <span class="keyword">and</span> re.match(<span class="string">&quot;[01459]&quot;</span>, q)):</span><br><span class="line">        <span class="keyword">print</span> <span class="string">&quot;%s\t%s&quot;</span> % (year, temp)</span><br></pre></td></tr></table></figure>
+<h3 id="reduce函数">Reduce函数</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">(last_key, max_val) = (<span class="literal">None</span>, -sys.maxint)</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">    (key, val) = line.strip().split(<span class="string">&quot;\t&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> last_key <span class="keyword">and</span> last_key != key:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">&quot;%s\t%s&quot;</span> % (last_key, max_val)</span><br><span class="line">        (last_key, max_val) = (key, int(val))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        (last_key, max_val) = (key, max(max_val, int(val)))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> last_key:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">&quot;%s\t%s&quot;</span> % (last_key, max_val)</span><br></pre></td></tr></table></figure>
 <p>本文用到的文件如下：</p>
 <img src="/hadoop_streaming_usage/1.png" class="">
-
 <p>其中 <code>1901.txt</code>为数据文件，<code>max_temperature_map.py</code>定义了Map函数，<code>max_temperature_reduce.py</code>定义了Reduce函数</p>
 <p>定义好Map函数以及Reduce函数后，利用unix的管道将Map过程以及Reduce过程连接起来，使用下面命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat 1901.txt | .&#x2F;max_temperature_map.py | sort | .&#x2F;max_temperature_reduce.py</span><br></pre></td></tr></table></figure>
-
 <p>运行结果如下：</p>
 <img src="/hadoop_streaming_usage/2.png" class="">
-
 <p>运行结果正确，此时就可以使用Hadoop的Streaming了，使用下面命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ hadoop jar $HADOOP_HOME&#x2F;share&#x2F;hadoop&#x2F;tools&#x2F;lib&#x2F;hadoop-streaming-2.7.3.jar \</span><br><span class="line">    -fs file:&#x2F;&#x2F;&#x2F;  \</span><br><span class="line">    -input 1901.txt \</span><br><span class="line">    -output output \</span><br><span class="line">    -mapper max_temperature_map.py \</span><br><span class="line">    -reducer max_temperature_reduce.py</span><br></pre></td></tr></table></figure>
-
 <p>注意：如果文件是在本地文件系统中而不是HDFS中时，要使用 <code>-fs file:///</code> 这个命令选项</p>
 <p>运行结果保存到 <code>output</code> 文件夹中</p>
 <img src="/hadoop_streaming_usage/3.png" class="">
-
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -196,7 +191,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Map%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">Map函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reduce%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">Reduce函数</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#map%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">Map函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#reduce%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">Reduce函数</span></a></li></ol>
  
   </div>
 

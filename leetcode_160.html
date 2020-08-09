@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="问题描述Write a program to find the node at which the intersection of two singly linked lists begins. For example, the following two linked lists:   begin to intersect at node c1. Example 1:   123Input: i">
+    <meta name="description" content="问题描述 Write a program to find the node at which the intersection of two singly linked lists begins. For example, the following two linked lists:  begin to intersect at node c1. Example 1:  123Input: in">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 160 - Intersection of Two Linked Lists">
 <meta property="og:url" content="http://www.scutmath.com/leetcode_160.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="问题描述Write a program to find the node at which the intersection of two singly linked lists begins. For example, the following two linked lists:   begin to intersect at node c1. Example 1:   123Input: i">
+<meta property="og:description" content="问题描述 Write a program to find the node at which the intersection of two singly linked lists begins. For example, the following two linked lists:  begin to intersect at node c1. Example 1:  123Input: in">
 <meta property="og:locale">
 <meta property="og:image" content="http://www.scutmath.com/leetcode_160/160_statement.png">
 <meta property="og:image" content="http://www.scutmath.com/leetcode_160/160_example_1.png">
@@ -118,26 +118,20 @@
 		
 		</div>
 		
-		<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Write a program to find the node at which the intersection of two singly linked lists begins.</p>
+		<h2 id="问题描述">问题描述</h2>
+<p>Write a program to find the node at which the intersection of two singly linked lists begins.</p>
 <p>For example, the following two linked lists:</p>
 <img src="/leetcode_160/160_statement.png" class="" width="450">
-
 <p>begin to intersect at node <code>c1</code>.</p>
 <p><strong>Example 1:</strong></p>
 <img src="/leetcode_160/160_example_1.png" class="" width="450">
-
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: intersectVal &#x3D; 8, listA &#x3D; [4,1,8,4,5], listB &#x3D; [5,0,1,8,4,5], skipA &#x3D; 2, skipB &#x3D; 3</span><br><span class="line">Output: Reference of the node with value &#x3D; 8</span><br><span class="line">Input Explanation: The intersected node&#39;s value is 8 (note that this must not be 0 if the two lists intersect). From the head of A, it reads as [4,1,8,4,5]. From the head of B, it reads as [5,0,1,8,4,5]. There are 2 nodes before the intersected node in A; There are 3 nodes before the intersected node in B.</span><br></pre></td></tr></table></figure>
-
 <p><strong>Example 2:</strong></p>
 <img src="/leetcode_160/160_example_2.png" class="" width="400">
-
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: intersectVal &#x3D; 2, listA &#x3D; [0,9,1,2,4], listB &#x3D; [3,2,4], skipA &#x3D; 3, skipB &#x3D; 1</span><br><span class="line">Output: Reference of the node with value &#x3D; 2</span><br><span class="line">Input Explanation: The intersected node&#39;s value is 2 (note that this must not be 0 if the two lists intersect). From the head of A, it reads as [0,9,1,2,4]. From the head of B, it reads as [3,2,4]. There are 3 nodes before the intersected node in A; There are 1 node before the intersected node in B.</span><br></pre></td></tr></table></figure>
-
 <p><strong>Example 3:</strong></p>
 <img src="/leetcode_160/160_example_3.png" class="" width="250">
-
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input: intersectVal &#x3D; 0, listA &#x3D; [2,6,4], listB &#x3D; [1,5], skipA &#x3D; 3, skipB &#x3D; 2</span><br><span class="line">Output: null</span><br><span class="line">Input Explanation: From the head of A, it reads as [2,6,4]. From the head of B, it reads as [1,5]. Since the two lists do not intersect, intersectVal must be 0, while skipA and skipB can be arbitrary values.</span><br><span class="line">Explanation: The two lists do not intersect, so return null.</span><br></pre></td></tr></table></figure>
-
 <p><strong>Notes:</strong></p>
 <ul>
 <li>If the two linked lists have no intersection at all, return <code>null</code>.</li>
@@ -148,23 +142,22 @@
 <p><strong>Related Topics:</strong> <code>Linked List</code></p>
 <p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/intersection-of-two-linked-lists/">160. Intersection of Two Linked Lists</a></p>
 <p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/intersection-of-two-linked-lists/">160. 相交链表</a></p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>这里假设两条链表有相交节点，如下图所示：</p>
+<h2 id="解决方案">解决方案</h2>
+<p>这里假设两条链表有相交节点，如下图所示：</p>
 <img src="/leetcode_160/equation.png" class="" width="400">
-
-<p>图中 <code>AD</code> 线段代表链表1，线段 <code>CB</code> 加 线段 <code>BD</code> 代表链表2，链表1要长于链表2，两条链表相交于节点 <code>B</code>，链表1长度为 <code>|AD| = |AB| + |BD| = p + n</code>，链表2长度为 <code>|CB| + |BD| = m + n</code>（__注明__：这里长度定义为从线段开始节点遍历到结束节点所要移动的节点数）</p>
-<p>现在开始同时遍历链表1和链表2，由于链表2比链表1要短，所以链表2最先遍历完，此时链表1遍历到节点 <code>E</code>，因此 <code>|AE| = m + n</code>，继续遍历链表2直到遍历结束，从节点 <code>E</code> 到节点 <code>D</code> 的长度为 <code>ED = q</code> </p>
+<p>图中 <code>AD</code> 线段代表链表1，线段 <code>CB</code> 加 线段 <code>BD</code> 代表链表2，链表1要长于链表2，两条链表相交于节点 <code>B</code>，链表1长度为 <code>|AD| = |AB| + |BD| = p + n</code>，链表2长度为 <code>|CB| + |BD| = m + n</code>（<strong>注明</strong>：这里长度定义为从线段开始节点遍历到结束节点所要移动的节点数）</p>
+<p>现在开始同时遍历链表1和链表2，由于链表2比链表1要短，所以链表2最先遍历完，此时链表1遍历到节点 <code>E</code>，因此 <code>|AE| = m + n</code>，继续遍历链表2直到遍历结束，从节点 <code>E</code> 到节点 <code>D</code> 的长度为 <code>ED = q</code></p>
 <p>根据图中表示，我们可以得到一个等式，那就是</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">    |AB| + |BD| &#x3D; |AE| + |ED|</span><br><span class="line">&#x3D;&#x3D;&gt;  p + n &#x3D; m + n + q</span><br><span class="line">&#x3D;&#x3D;&gt;  p - m &#x3D; q</span><br></pre></td></tr></table></figure>
-
 <p>从上面等式可以得到 <code>|AB| - |CB| = q</code>，等式说明了链表1头节点 <code>A</code> 到相交节点 <code>B</code> 的长度比链表2头节点 <code>C</code> 到相交节点 <code>B</code> 长度要长 <code>q</code>，这个 <code>q</code> 是已知量，说明链表1第 <code>q</code> 个节点到节点 <code>B</code> 的距离要等于链表2节点 <code>C</code> 到节点 <code>B</code> 的距离。这里就可以得出该题的一个解题思路：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">设定两个指针p1和p2，分别用于遍历链表1和链表2，指针p1先移动到链表1的第q个节点，</span><br><span class="line">然后指针p2开始遍历链表2，直到 p1 &#x3D;&#x3D; p2，此时 p1 为两个链表相交节点</span><br></pre></td></tr></table></figure>
-
 <details>
-<summary>参考解题代码</summary>
-
+<summary>
+参考解题代码
+</summary>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">getIntersectionNode</span><span class="params">(ListNode *headA, ListNode *headB)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">NULL</span> == headA || <span class="literal">NULL</span> == headB)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">if</span> (headA == headB)</span><br><span class="line">            <span class="keyword">return</span> headA;</span><br><span class="line"></span><br><span class="line">        ListNode *prevA, *prevB;</span><br><span class="line">        ListNode *currA, *currB;</span><br><span class="line">        ListNode *posA, *posB;</span><br><span class="line"></span><br><span class="line">        prevA = prevB = <span class="literal">NULL</span>;</span><br><span class="line">        posA = currA = headA;</span><br><span class="line">        posB = currB = headB;</span><br><span class="line">        <span class="keyword">while</span> ((currA != <span class="literal">NULL</span>) || (currB != <span class="literal">NULL</span>)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (currA != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                prevA = currA;</span><br><span class="line">                currA = currA-&gt;next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                posB = posB-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (currB != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                prevB = currB;</span><br><span class="line">                currB = currB-&gt;next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                posA = posA-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// have intersection</span></span><br><span class="line">        <span class="keyword">if</span> (prevA == prevB) &#123;</span><br><span class="line">            <span class="keyword">while</span> (posA != posB) &#123;</span><br><span class="line">                posA = posA-&gt;next;</span><br><span class="line">                posB = posB-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> posA;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-</details>  
+</details>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">

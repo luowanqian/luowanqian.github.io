@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="问题描述Given a group of two strings, you need to find the longest uncommon subsequence of this group of two strings. The longest uncommon subsequence is defined as the longest subsequence of one of these">
+    <meta name="description" content="问题描述 Given a group of two strings, you need to find the longest uncommon subsequence of this group of two strings. The longest uncommon subsequence is defined as the longest subsequence of one of thes">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 521 - Longest Uncommon Subsequence I">
 <meta property="og:url" content="http://www.scutmath.com/leetcode_521.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="问题描述Given a group of two strings, you need to find the longest uncommon subsequence of this group of two strings. The longest uncommon subsequence is defined as the longest subsequence of one of these">
+<meta property="og:description" content="问题描述 Given a group of two strings, you need to find the longest uncommon subsequence of this group of two strings. The longest uncommon subsequence is defined as the longest subsequence of one of thes">
 <meta property="og:locale">
 <meta property="article:published_time" content="2018-04-15T14:26:45.000Z">
 <meta property="article:modified_time" content="2020-08-09T03:49:49.797Z">
@@ -111,25 +111,26 @@
 		
 		</div>
 		
-		<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given a group of two strings, you need to find the longest uncommon subsequence of this group of two strings. The longest uncommon subsequence is defined as the longest subsequence of one of these strings and this subsequence should not be <strong>any</strong> subsequence of the other strings.</p>
+		<h2 id="问题描述">问题描述</h2>
+<p>Given a group of two strings, you need to find the longest uncommon subsequence of this group of two strings. The longest uncommon subsequence is defined as the longest subsequence of one of these strings and this subsequence should not be <strong>any</strong> subsequence of the other strings.</p>
 <p>A <strong>subsequence</strong> is a sequence that can be derived from one sequence by deleting some characters without changing the order of the remaining elements. Trivially, any string is a subsequence of itself and an empty string is a subsequence of any string.</p>
-<p>The input will be two strings, and the output needs to be the length of the longest uncommon subsequence. If the longest uncommon subsequence doesn’t exist, return -1.</p>
+<p>The input will be two strings, and the output needs to be the length of the longest uncommon subsequence. If the longest uncommon subsequence doesn't exist, return -1.</p>
 <p><strong>Example 1:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;aba&quot;, &quot;cdc&quot;</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: The longest uncommon subsequence is &quot;aba&quot; (or &quot;cdc&quot;),</span><br><span class="line">because &quot;aba&quot; is a subsequence of &quot;aba&quot;,</span><br><span class="line">but not a subsequence of any other strings in the group of two strings.</span><br></pre></td></tr></table></figure>
-
 <p><strong>Note:</strong></p>
-<ol>
-<li>Both strings’ lengths will not exceed 100.</li>
+<ol type="1">
+<li>Both strings' lengths will not exceed 100.</li>
 <li>Only letters from a ~ z will appear in input strings.</li>
 </ol>
 <p><strong>Related Topics:</strong> String</p>
 <p>原问题：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-uncommon-subsequence-i/description/">521. Longest Uncommon Subsequence I</a></p>
 <p>中文翻译版：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/longest-uncommon-subsequence-i/description/">521. 最长特殊序列 Ⅰ</a></p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>这道题粗看以为是一道很难的题目，但是解决该问题只需要考虑三种情况：</p>
-<ol>
-<li>$a = b$<br>If both the strings are identical, it is obvious that no subsequence will be uncommon. Hence, return -1.</li>
-<li>$length(a) = length(b)$ and $a \ne b$<br>Example: $abc$ and $abd$. In this case we can consider any string i.e. $abc$ or $abd$ as a required subsequence, as out of these two strings one string will never be a subsequence of other string. Hence, return $length(a)$ or $length(b)$.</li>
-<li>$length(a) \ne length(b)$<br>Example: $abcd$ and $abc$. In this case we can consider bigger string as a required subsequence because bigger string can’t be a subsequence of smaller string. Hence, return $\max{(length(a), length(b))}$.</li>
+<h2 id="解决方案">解决方案</h2>
+<p>这道题粗看以为是一道很难的题目，但是解决该问题只需要考虑三种情况：</p>
+<ol type="1">
+<li><span class="math inline">\(a = b\)</span> If both the strings are identical, it is obvious that no subsequence will be uncommon. Hence, return -1.</li>
+<li><span class="math inline">\(length(a) = length(b)\)</span> and <span class="math inline">\(a \ne b\)</span> Example: <span class="math inline">\(abc\)</span> and <span class="math inline">\(abd\)</span>. In this case we can consider any string i.e. <span class="math inline">\(abc\)</span> or <span class="math inline">\(abd\)</span> as a required subsequence, as out of these two strings one string will never be a subsequence of other string. Hence, return <span class="math inline">\(length(a)\)</span> or <span class="math inline">\(length(b)\)</span>.</li>
+<li><span class="math inline">\(length(a) \ne length(b)\)</span> Example: <span class="math inline">\(abcd\)</span> and <span class="math inline">\(abc\)</span>. In this case we can consider bigger string as a required subsequence because bigger string can't be a subsequence of smaller string. Hence, return <span class="math inline">\(\max{(length(a), length(b))}\)</span>.</li>
 </ol>
 <p>贴上实现代码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    int findLUSlength(string a, string b)</span><br><span class="line">    &#123;</span><br><span class="line">        int i &#x3D; 0, j &#x3D; 0;</span><br><span class="line"></span><br><span class="line">        if (a.size() &#x3D;&#x3D; b.size()) &#123;</span><br><span class="line">            while (i &lt; a.size() &amp;&amp; j &lt; a.size() &amp;&amp; a[i] &#x3D;&#x3D; b[j]) &#123;</span><br><span class="line">                i++;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            if (i &lt; a.size() || j &lt; b.size())</span><br><span class="line">                return a.size();</span><br><span class="line">            else</span><br><span class="line">                return -1;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return a.size() &gt; b.size() ? a.size() : b.size();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    string str1 &#x3D; &quot;abcd&quot;, str2 &#x3D; &quot;abc&quot;;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; solu.findLUSlength(str1, str2) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

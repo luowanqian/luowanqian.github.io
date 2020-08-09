@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="Coordinate Descent在机器学习算法中，我们经常需要解一些优化问题，优化算法有很多，其中坐标下降法 (Coordinate Descent) 是一个很经典的算法，坐标下降法主要思想是每次迭代，只对一个坐标轴方向进行优化，其他坐标轴的值固定不变，使得多变量优化问题变成单变量优化问题。例如需要解决以下优化问题 $$\min_{x} f(x_1, x_2, \cdots,  x_d)$$">
+    <meta name="description" content="Coordinate Descent 在机器学习算法中，我们经常需要解一些优化问题，优化算法有很多，其中坐标下降法 (Coordinate Descent) 是一个很经典的算法，坐标下降法主要思想是每次迭代，只对一个坐标轴方向进行优化，其他坐标轴的值固定不变，使得多变量优化问题变成单变量优化问题。例如需要解决以下优化问题 \[ \min_{x} f(x_1, x_2, \cdots,  x_d)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Coordinate Descent Algorithm for Lasso Problem">
 <meta property="og:url" content="http://www.scutmath.com/coordiante_descent_for_lasso.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="Coordinate Descent在机器学习算法中，我们经常需要解一些优化问题，优化算法有很多，其中坐标下降法 (Coordinate Descent) 是一个很经典的算法，坐标下降法主要思想是每次迭代，只对一个坐标轴方向进行优化，其他坐标轴的值固定不变，使得多变量优化问题变成单变量优化问题。例如需要解决以下优化问题 $$\min_{x} f(x_1, x_2, \cdots,  x_d)$$">
+<meta property="og:description" content="Coordinate Descent 在机器学习算法中，我们经常需要解一些优化问题，优化算法有很多，其中坐标下降法 (Coordinate Descent) 是一个很经典的算法，坐标下降法主要思想是每次迭代，只对一个坐标轴方向进行优化，其他坐标轴的值固定不变，使得多变量优化问题变成单变量优化问题。例如需要解决以下优化问题 \[ \min_{x} f(x_1, x_2, \cdots,  x_d)">
 <meta property="og:locale">
 <meta property="og:image" content="http://www.scutmath.com/coordiante_descent_for_lasso/cd.png">
 <meta property="og:image" content="http://www.scutmath.com/coordiante_descent_for_lasso/flow.png">
@@ -109,62 +109,216 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Coordinate-Descent"><span class="toc-number">1.</span> <span class="toc-text">Coordinate Descent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lasso%E9%97%AE%E9%A2%98%E6%B1%82%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">Lasso问题求解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">变种问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%B8%80"><span class="toc-number">3.1.</span> <span class="toc-text">变种一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%BA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">变种二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%B8%89"><span class="toc-number">3.3.</span> <span class="toc-text">变种三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%8F%E7%BD%AE-bias-%E6%B1%82%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">偏置 bias 求解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">算法实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#coordinate-descent"><span class="toc-number">1.</span> <span class="toc-text">Coordinate Descent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lasso%E9%97%AE%E9%A2%98%E6%B1%82%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">Lasso问题求解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">变种问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%B8%80"><span class="toc-number">3.1.</span> <span class="toc-text">变种一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%BA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">变种二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%B8%89"><span class="toc-number">3.3.</span> <span class="toc-text">变种三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%8F%E7%BD%AE-bias-%E6%B1%82%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">偏置 bias 求解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">算法实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="Coordinate-Descent"><a href="#Coordinate-Descent" class="headerlink" title="Coordinate Descent"></a>Coordinate Descent</h2><p>在机器学习算法中，我们经常需要解一些优化问题，优化算法有很多，其中坐标下降法 (Coordinate Descent) 是一个很经典的算法，坐标下降法主要思想是每次迭代，只对一个坐标轴方向进行优化，其他坐标轴的值固定不变，使得多变量优化问题变成单变量优化问题。例如需要解决以下优化问题</p>
-<p>$$<br>\min_{x} f(x_1, x_2, \cdots,  x_d)<br>$$</p>
-<p>其中 $x = (x_1, x_2, \cdots, x_d)^T \in R^d$。用坐标下降法解决该问题时，大概流程如下：</p>
+		<h2 id="coordinate-descent">Coordinate Descent</h2>
+<p>在机器学习算法中，我们经常需要解一些优化问题，优化算法有很多，其中坐标下降法 (Coordinate Descent) 是一个很经典的算法，坐标下降法主要思想是每次迭代，只对一个坐标轴方向进行优化，其他坐标轴的值固定不变，使得多变量优化问题变成单变量优化问题。例如需要解决以下优化问题</p>
+<p><span class="math display">\[
+\min_{x} f(x_1, x_2, \cdots,  x_d)
+\]</span></p>
+<p>其中 <span class="math inline">\(x = (x_1, x_2, \cdots, x_d)^T \in R^d\)</span>。用坐标下降法解决该问题时，大概流程如下：</p>
 <img src="/coordiante_descent_for_lasso/cd.png" class="" title="coordiante descent flow">
-
-<p>固定其他变量 $x_i (i\ne j)$ 不变，选择一个变量 $x_j$ 进行优化，然后更新该变量的值，接着选择下一个坐标轴方向进行优化，直到算法收敛。在算法中，选择坐标轴 $j$ 的方法有很多，可以随机选取，也可以对所有坐标轴循环一遍。</p>
-<h2 id="Lasso问题求解"><a href="#Lasso问题求解" class="headerlink" title="Lasso问题求解"></a>Lasso问题求解</h2><p>Lasso优化问题通常如下表示：</p>
-<p>$$<br>\min_{\beta} \frac{1}{2} \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$</p>
-<p>其中 $y \in R^{n}$，$X \in R^{n \times p}$，$\beta \in R^p$。令损失函数表示为 $f(\beta) = f(\beta_1, \cdots, \beta_p)$，即</p>
-<p>$$<br>\begin{align}<br>f(\beta) &amp;= \frac{1}{2} \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1 \<br>&amp; = \frac{1}{2} \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j)^2 + \lambda \sum_{j=1}^p \vert \beta_j \vert<br>\end{align}<br>$$</p>
-<p>根据前面描述的坐标下降算法，要求第 $k$ 坐标轴方向的最优值，即求<br>$$<br>\min_{\beta_k} f(\beta_1, \cdots, \beta_{k-1}, \beta_k, \beta_{k+1}, \cdots, \beta_p)<br>$$<br>其中 $\beta_{j} {(j\ne k)}$ 已知且值固定不变。要求解该问题，可以通过梯度等于0来求解。对 $f(\beta)$ 求偏导可以得到：<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} &amp; = -\sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; =- \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik} + \sum_{i=1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; = - r_k + z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}<br>\end{align}<br>$$<br>其中 $r_k =\sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik}$，$z_k = \sum_{i=1}^n x_{ik}^2$，对于 $\frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}$，这里需要引入 subgradient 概念，具体内容可以参考<a target="_blank" rel="noopener" href="http://jocelynchi.com/soft-thresholding-operator-and-the-lasso-solution">这篇文章</a>。</p>
-<p>$$<br>\frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} = \begin{cases}<br>\lambda &amp; \beta_k \gt 0 \<br>[-\lambda, \lambda] &amp; \beta_k = 0 \<br>-\lambda &amp; \beta_k \lt 0<br>\end{cases}<br>$$</p>
-<p>则可以得到 $f(\beta)$ 的偏导为：</p>
-<p>$$<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} = \begin{cases}<br>-r_k + z_k \beta_k + \lambda &amp; \beta_k \gt 0 \<br>[-r_k - \lambda, -r_k + \lambda] &amp; \beta_k = 0 \<br>-r_k + z_k \beta_k - \lambda &amp; \beta_k \lt 0<br>\end{cases}<br>$$</p>
-<p>令 $\frac{\partial{f(\beta)}}{\partial{\beta_k}} = 0$，可以得到极小值点 $\beta_k^*$ ，由于 $\frac{\partial{f(\beta)}}{\partial{\beta_k}}$ 是个分段函数，需要分类讨论：</p>
+<p>固定其他变量 <span class="math inline">\(x_i (i\ne j)\)</span> 不变，选择一个变量 <span class="math inline">\(x_j\)</span> 进行优化，然后更新该变量的值，接着选择下一个坐标轴方向进行优化，直到算法收敛。在算法中，选择坐标轴 <span class="math inline">\(j\)</span> 的方法有很多，可以随机选取，也可以对所有坐标轴循环一遍。</p>
+<h2 id="lasso问题求解">Lasso问题求解</h2>
+<p>Lasso优化问题通常如下表示：</p>
+<p><span class="math display">\[
+\min_{\beta} \frac{1}{2} \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1
+\]</span></p>
+<p>其中 <span class="math inline">\(y \in R^{n}\)</span>，<span class="math inline">\(X \in R^{n \times p}\)</span>，<span class="math inline">\(\beta \in R^p\)</span>。令损失函数表示为 <span class="math inline">\(f(\beta) = f(\beta_1, \cdots, \beta_p)\)</span>，即</p>
+<p><span class="math display">\[
+\begin{align}
+f(\beta) &amp;= \frac{1}{2} \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1 \\
+&amp; = \frac{1}{2} \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j)^2 + \lambda \sum_{j=1}^p \vert \beta_j \vert
+\end{align}
+\]</span></p>
+<p>根据前面描述的坐标下降算法，要求第 <span class="math inline">\(k\)</span> 坐标轴方向的最优值，即求 <span class="math display">\[
+\min_{\beta_k} f(\beta_1, \cdots, \beta_{k-1}, \beta_k, \beta_{k+1}, \cdots, \beta_p)
+\]</span> 其中 <span class="math inline">\(\beta_{j} {(j\ne k)}\)</span> 已知且值固定不变。要求解该问题，可以通过梯度等于0来求解。对 <span class="math inline">\(f(\beta)\)</span> 求偏导可以得到： <span class="math display">\[
+\begin{align}
+\frac{\partial{f(\beta)}}{\partial{\beta_k}} &amp; = -\sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \\
+&amp; =- \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik} + \sum_{i=1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \\
+&amp; = - r_k + z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}
+\end{align}
+\]</span> 其中 <span class="math inline">\(r_k =\sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik}\)</span>，<span class="math inline">\(z_k = \sum_{i=1}^n x_{ik}^2\)</span>，对于 <span class="math inline">\(\frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}\)</span>，这里需要引入 subgradient 概念，具体内容可以参考<a target="_blank" rel="noopener" href="http://jocelynchi.com/soft-thresholding-operator-and-the-lasso-solution">这篇文章</a>。</p>
+<p><span class="math display">\[
+\frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} = \begin{cases}
+\lambda &amp; \beta_k \gt 0 \\
+[-\lambda, \lambda] &amp; \beta_k = 0 \\
+-\lambda &amp; \beta_k \lt 0
+\end{cases}
+\]</span></p>
+<p>则可以得到 <span class="math inline">\(f(\beta)\)</span> 的偏导为：</p>
+<p><span class="math display">\[
+\frac{\partial{f(\beta)}}{\partial{\beta_k}} = \begin{cases}
+-r_k + z_k \beta_k + \lambda &amp; \beta_k \gt 0 \\
+[-r_k - \lambda, -r_k + \lambda] &amp; \beta_k = 0 \\
+-r_k + z_k \beta_k - \lambda &amp; \beta_k \lt 0
+\end{cases}
+\]</span></p>
+<p>令 <span class="math inline">\(\frac{\partial{f(\beta)}}{\partial{\beta_k}} = 0\)</span>，可以得到极小值点 <span class="math inline">\(\beta_k^*\)</span> ，由于 <span class="math inline">\(\frac{\partial{f(\beta)}}{\partial{\beta_k}}\)</span> 是个分段函数，需要分类讨论：</p>
 <ul>
-<li><p>当 $\beta_k \gt 0$ 时<br>$$<br>\begin{align}<br>&amp; -r_k + z_k \beta_k^* + \lambda = 0 \<br>\Rightarrow \quad &amp; \beta_k^* = \frac{r_k - \lambda}{z_k}<br>\end{align}<br>$$<br>由于 $\beta_k \gt 0$，则 $\beta_k^* = \frac{r_k - \lambda}{z_k} \gt 0$，即 $r_k \gt \lambda$</p>
-</li>
-<li><p>当 $\beta_k \lt 0$ 时<br>$$<br>\begin{align}<br>&amp; -r_k + z_k \beta_k^* - \lambda = 0 \<br>\Rightarrow \quad &amp; \beta_k^* =\frac{ r_k + \lambda}{z_k}<br>\end{align}<br>$$<br>由于 $\beta_k \lt 0$，则 $\beta_k^* = r_k + \lambda \lt 0$，即 $r_k \lt -\lambda$</p>
-</li>
-<li><p>当 $\beta_k = 0$ 时，可以得到 $0 \in [-r_k - \lambda, -r_k + \lambda]$，则可以得到<br>$$<br>\begin{cases}<br>-r_k - \lambda \le 0 \<br>-r_k + \lambda \ge 0<br>\end{cases} \Rightarrow -\lambda \le r_k \le \lambda<br>$$</p>
-</li>
+<li><p>当 <span class="math inline">\(\beta_k \gt 0\)</span> 时 <span class="math display">\[
+\begin{align}
+&amp; -r_k + z_k \beta_k^* + \lambda = 0 \\
+\Rightarrow \quad &amp; \beta_k^* = \frac{r_k - \lambda}{z_k}
+\end{align}
+\]</span> 由于 <span class="math inline">\(\beta_k \gt 0\)</span>，则 <span class="math inline">\(\beta_k^* = \frac{r_k - \lambda}{z_k} \gt 0\)</span>，即 <span class="math inline">\(r_k \gt \lambda\)</span></p></li>
+<li><p>当 <span class="math inline">\(\beta_k \lt 0\)</span> 时 <span class="math display">\[
+\begin{align}
+&amp; -r_k + z_k \beta_k^* - \lambda = 0 \\
+\Rightarrow \quad &amp; \beta_k^* =\frac{ r_k + \lambda}{z_k}
+\end{align}
+\]</span> 由于 <span class="math inline">\(\beta_k \lt 0\)</span>，则 <span class="math inline">\(\beta_k^* = r_k + \lambda \lt 0\)</span>，即 <span class="math inline">\(r_k \lt -\lambda\)</span></p></li>
+<li><p>当 <span class="math inline">\(\beta_k = 0\)</span> 时，可以得到 <span class="math inline">\(0 \in [-r_k - \lambda, -r_k + \lambda]\)</span>，则可以得到 <span class="math display">\[
+\begin{cases}
+-r_k - \lambda \le 0 \\
+-r_k + \lambda \ge 0
+\end{cases} \Rightarrow -\lambda \le r_k \le \lambda
+\]</span></p></li>
 </ul>
-<p>综上所有内容，我们可以得到第 $k$ 个坐标轴方向的最优值为：<br>$$<br>\beta_k^* = \begin{cases}<br>\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \<br>0 &amp; -\lambda \le r_k \le \lambda \<br>\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda<br>\end{cases}<br>$$</p>
-<p>定义一个函数 $S(a, \lambda)$，这个函数也称为 <strong>soft thresholding function</strong><br>$$<br>S(a, \lambda) = \begin{cases}<br>a - \lambda &amp; a \gt \lambda \<br>0 &amp; -\lambda \le a \le \lambda \<br>a + \lambda &amp; a \lt -\lambda<br>\end{cases}<br>$$<br>所以 $\beta_k^* = \frac{1}{z_k}S(r_k, \lambda)$，$k = 1, 2, \ldots, n$。这个函数也可以写成另一种形式<br>$$<br>S(a, \lambda) = (a-\lambda)<em>{+} - (-a - \lambda)</em>{+}<br>$$<br>这里 $(x)_{+} = \max(x, 0)$。</p>
-<h2 id="变种问题"><a href="#变种问题" class="headerlink" title="变种问题"></a>变种问题</h2><p>由于Lasso优化问题的表示有很好几种，不同表示的优化问题，对应解的表示也会有所不同，虽然没什么大变化，但是还是罗列一下。</p>
-<h3 id="变种一"><a href="#变种一" class="headerlink" title="变种一"></a>变种一</h3><p>Lasso优化问题表示如下：<br>$$<br>\min_{\beta}  \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$<br>令 $f(\beta) = \Vert y - X \beta \Vert_2^2 + \lambda \Vert \beta \Vert_1$，则 $\frac{\partial{f(\beta)}}{\partial{\beta_k}}$ 为：<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} &amp; = -2 \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; =- 2 \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik} + 2 \sum_{i=1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; = - 2 r_k + 2z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}<br>\end{align}<br>$$<br>其中 $r_k =  \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik}$。使用 subgradient 可以进一步得到<br>$$<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} = \begin{cases}</p>
-<ul>
-<li>2r_k + 2 z_k \beta_k + \lambda &amp; \beta_k \gt 0 \<br>[-2r_k - \lambda, - 2 r_k + \lambda] &amp; \beta_k = 0 \</li>
-<li>2r_k + 2 z_k \beta_k - \lambda &amp; \beta_k \lt 0<br>\end{cases}<br>$$</li>
-</ul>
-<p>根据前面讨论，令偏导为0，求得极值点 $\beta_k^*$ 为</p>
-<p>$$<br>\beta_k^* = \begin{cases}<br>\frac{2r_k - \lambda}{2z_k} &amp; 2r_k \gt \lambda \<br>0 &amp; -\lambda \le 2r_k \le \lambda \<br>\frac{2r_k + \lambda}{2z_k} &amp; 2r_k \lt -\lambda<br>\end{cases}<br>$$</p>
-<p>用 soft thresholding function 表示为 $\beta_k^* = \frac{1}{2z_k} S(2r_k, \lambda)$</p>
-<h3 id="变种二"><a href="#变种二" class="headerlink" title="变种二"></a>变种二</h3><p>Lasso优化问题表示如下：<br>$$<br>\min_{\beta} \Vert X\beta - y\Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$</p>
-<p>令 $f(\beta) = \Vert X \beta - y \Vert^2_2 + \lambda \Vert \beta \Vert_1$，则 $\frac{\partial{f(\beta)}}{\partial{\beta_k}}$ 为：<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} &amp; = 2 \sum_{i=1}^n (\sum_{j=1}^p x_{ij} \beta_j - y_i) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; = 2 \sum_{i=1}^n (\sum_{j \ne k} x_{ij} \beta_j  - y_i)x_{ik} + 2 \sum_{i=1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; = 2 r_k + 2z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}<br>\end{align}<br>$$<br>其中 $r_k = \sum_{i=1}^n (\sum_{j \ne k} x_{ij} \beta_j  - y_i)x_{ik}$。使用 subgradient 可以进一步得到<br>$$<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} = \begin{cases}<br>2r_k + 2 z_k \beta_k + \lambda &amp; \beta_k \gt 0 \<br>[2r_k - \lambda, 2 r_k + \lambda] &amp; \beta_k = 0 \<br>2r_k + 2 z_k \beta_k - \lambda &amp; \beta_k \lt 0<br>\end{cases}<br>$$<br>根据前面讨论，令偏导为0，求得极值点 $\beta_k^*$ 为<br>$$<br>\beta_k^* = \begin{cases}<br>\frac{-2r_k - \lambda}{2z_k} &amp; -2r_k \gt \lambda \<br>0 &amp; -\lambda \le -2r_k \le \lambda \<br>\frac{-2r_k + \lambda}{2z_k} &amp; -2r_k \lt -\lambda<br>\end{cases}<br>$$</p>
-<p>用 soft thresholding function 表示为 $\beta_k^* = \frac{1}{2z_k} S(-2r_k, \lambda)$</p>
-<h3 id="变种三"><a href="#变种三" class="headerlink" title="变种三"></a>变种三</h3><p>Lasso优化问题表示如下：<br>$$<br>\min_{\beta} \frac{1}{2 n} \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$<br>同前面的推导，这里直接给出结果<br>$$<br>\beta_k^* = \begin{cases}<br>\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \<br>0 &amp; -\lambda \le r_k \le \lambda \<br>\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda<br>\end{cases}<br>$$<br>其中 $r_k =\frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik}$，$z_k = \frac{1}{n} \sum_{i=1}^n x_{ik}^2$</p>
-<h2 id="偏置-bias-求解"><a href="#偏置-bias-求解" class="headerlink" title="偏置 bias 求解"></a>偏置 bias 求解</h2><p>前面讨论的模型不包括偏置，如果模型包括偏置 $b$，则优化问题写为<br>$$<br>\min_{\beta, b} \frac{1}{2} \Vert y - X\beta - 1b \Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$<br>这里的 $1$ 代表元素全为 1 的向量，大小为 $R^n$，损失函数 $f(\beta, b)$ 为<br>$$<br>\begin{align}<br>f(\beta, b) &amp;= \frac{1}{2} \Vert y - X\beta - 1 b\Vert^2_2 + \lambda \Vert \beta \Vert_1 \<br>&amp; = \frac{1}{2} \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j - b)^2 + \lambda \sum_{j=1}^p \vert \beta_j \vert<br>\end{align}<br>$$<br>则对 $f(\beta, b)$ 求偏导 $\beta_k$ 可以得到<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta, b)}}{\partial{\beta_k}} &amp; = -\sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j - b) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; =- \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j - b)x_{ik} + \sum_{i=1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; = - r_k + z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}<br>\end{align}<br>$$<br>其中 $r_k =\sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j -b)x_{ik}$，$z_k = \sum_{i=1}^n x_{ik}^2$，令 $\frac{\partial{f(\beta, b)}}{\partial{\beta_k}} = 0$，可以得到<br>$$<br>\beta_k^* = \begin{cases}<br>\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \<br>0 &amp; -\lambda \le r_k \le \lambda \<br>\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda<br>\end{cases}<br>$$<br>对 $f(\beta, b)$ 求偏导 $b$ 可以得到<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta, b)}}{\partial{b}} &amp; = -\sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j - b) \<br>&amp; = n b - \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j)<br>\end{align}<br>$$<br>令 $\frac{\partial{f(\beta, b)}}{\partial{b}} = 0$，可以得到<br>$$<br>b^* = \frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j)<br>$$</p>
-<h2 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h2><p>在本节，要解决的优化问题如下表示</p>
-<p>$$<br>\min_{\beta, b} \frac{1}{2 n} \Vert y - X\beta - 1b\Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$<br>根据前面的讨论，在选定第 $k$ 坐标轴方向，解 $\beta^<em>_k$的表达式为<br>$$<br>\beta_k^</em> = \begin{cases}<br>\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \<br>0 &amp; -\lambda \le r_k \le \lambda \<br>\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda<br>\end{cases}<br>$$</p>
-<p>其中 $r_k =\frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j - b)x_{ik}$，$z_k = \frac{1}{n} \sum_{i=1}^n x_{ik}^2$，解 $b^*$ 的表达式为<br>$$<br>b^* = \frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j)<br>$$</p>
-<p>这里可以将 $r_k$ 写成向量化形式，由于算法每次只更新一个坐标轴方向的值，即</p>
-<p>$$<br>\begin{align}<br>&amp; [\beta_1, \ldots, \beta_{k-1}, \beta_{k}, \beta_{k+1}, \ldots, \beta_p] \<br>\Rightarrow ; &amp; [\beta_1, \ldots, \beta_{k-1}, \beta_{k}^*, \beta_{k+1}, \ldots, \beta_p]<br>\end{align}<br>$$<br>因此 $r_k$ 可以写为<br>$$<br>\begin{align}<br>r_k &amp; =\frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j =1}^p x_{ij} \beta_j - b + x_{ik} \beta_k)x_{ik}<br>\end{align}<br>$$<br>这里的 $\beta_k$ 是未更新之前的值，更新后的值为 $\beta_k^*$，注意区别。用向量表示 $r_k$ 为<br>$$<br>r_k = \frac{1}{n} (X[:, k])^T (y - X\beta - 1 b + \beta_k X[:, k])<br>$$</p>
-<p>其中 $X[:, k]$ 代表矩阵 $X$ 第 $k$ 列。$b^*$ 的表达式写成向量形式可以写为<br>$$<br>b^* = \frac{1}{n} 1^T (y - X\beta)<br>$$<br>算法整体流程如下表示</p>
+<p>综上所有内容，我们可以得到第 <span class="math inline">\(k\)</span> 个坐标轴方向的最优值为： <span class="math display">\[
+\beta_k^* = \begin{cases}
+\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \\
+0 &amp; -\lambda \le r_k \le \lambda \\
+\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda
+\end{cases}
+\]</span></p>
+<p>定义一个函数 <span class="math inline">\(S(a, \lambda)\)</span>，这个函数也称为 <strong>soft thresholding function</strong> <span class="math display">\[
+S(a, \lambda) = \begin{cases}
+a - \lambda &amp; a \gt \lambda \\
+0 &amp; -\lambda \le a \le \lambda \\
+a + \lambda &amp; a \lt -\lambda
+\end{cases}
+\]</span> 所以 <span class="math inline">\(\beta_k^* = \frac{1}{z_k}S(r_k, \lambda)\)</span>，<span class="math inline">\(k = 1, 2, \ldots, n\)</span>。这个函数也可以写成另一种形式 <span class="math display">\[
+S(a, \lambda) = (a-\lambda)_{+} - (-a - \lambda)_{+}
+\]</span> 这里 <span class="math inline">\((x)_{+} = \max(x, 0)\)</span>。</p>
+<h2 id="变种问题">变种问题</h2>
+<p>由于Lasso优化问题的表示有很好几种，不同表示的优化问题，对应解的表示也会有所不同，虽然没什么大变化，但是还是罗列一下。</p>
+<h3 id="变种一">变种一</h3>
+<p>Lasso优化问题表示如下： <span class="math display">\[
+\min_{\beta}  \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1
+\]</span> 令 <span class="math inline">\(f(\beta) = \Vert y - X \beta \Vert_2^2 + \lambda \Vert \beta \Vert_1\)</span>，则 <span class="math inline">\(\frac{\partial{f(\beta)}}{\partial{\beta_k}}\)</span> 为： <span class="math display">\[
+\begin{align}
+\frac{\partial{f(\beta)}}{\partial{\beta_k}} &amp; = -2 \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \\
+&amp; =- 2 \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik} + 2 \sum_{i=1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \\
+&amp; = - 2 r_k + 2z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}
+\end{align}
+\]</span> 其中 <span class="math inline">\(r_k = \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik}\)</span>。使用 subgradient 可以进一步得到 <span class="math display">\[
+\frac{\partial{f(\beta)}}{\partial{\beta_k}} = \begin{cases}
+- 2r_k + 2 z_k \beta_k + \lambda &amp; \beta_k \gt 0 \\
+[-2r_k - \lambda, - 2 r_k + \lambda] &amp; \beta_k = 0 \\
+- 2r_k + 2 z_k \beta_k - \lambda &amp; \beta_k \lt 0
+\end{cases}
+\]</span></p>
+<p>根据前面讨论，令偏导为0，求得极值点 <span class="math inline">\(\beta_k^*\)</span> 为</p>
+<p><span class="math display">\[
+\beta_k^* = \begin{cases}
+\frac{2r_k - \lambda}{2z_k} &amp; 2r_k \gt \lambda \\
+0 &amp; -\lambda \le 2r_k \le \lambda \\
+\frac{2r_k + \lambda}{2z_k} &amp; 2r_k \lt -\lambda
+\end{cases}
+\]</span></p>
+<p>用 soft thresholding function 表示为 <span class="math inline">\(\beta_k^* = \frac{1}{2z_k} S(2r_k, \lambda)\)</span></p>
+<h3 id="变种二">变种二</h3>
+<p>Lasso优化问题表示如下： <span class="math display">\[
+\min_{\beta} \Vert X\beta - y\Vert^2_2 + \lambda \Vert \beta \Vert_1
+\]</span></p>
+<p>令 <span class="math inline">\(f(\beta) = \Vert X \beta - y \Vert^2_2 + \lambda \Vert \beta \Vert_1\)</span>，则 <span class="math inline">\(\frac{\partial{f(\beta)}}{\partial{\beta_k}}\)</span> 为： <span class="math display">\[
+\begin{align}
+\frac{\partial{f(\beta)}}{\partial{\beta_k}} &amp; = 2 \sum_{i=1}^n (\sum_{j=1}^p x_{ij} \beta_j - y_i) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \\
+&amp; = 2 \sum_{i=1}^n (\sum_{j \ne k} x_{ij} \beta_j  - y_i)x_{ik} + 2 \sum_{i=1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \\
+&amp; = 2 r_k + 2z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}
+\end{align}
+\]</span> 其中 <span class="math inline">\(r_k = \sum_{i=1}^n (\sum_{j \ne k} x_{ij} \beta_j - y_i)x_{ik}\)</span>。使用 subgradient 可以进一步得到 <span class="math display">\[
+\frac{\partial{f(\beta)}}{\partial{\beta_k}} = \begin{cases}
+2r_k + 2 z_k \beta_k + \lambda &amp; \beta_k \gt 0 \\
+[2r_k - \lambda, 2 r_k + \lambda] &amp; \beta_k = 0 \\
+2r_k + 2 z_k \beta_k - \lambda &amp; \beta_k \lt 0
+\end{cases}
+\]</span> 根据前面讨论，令偏导为0，求得极值点 <span class="math inline">\(\beta_k^*\)</span> 为 <span class="math display">\[
+\beta_k^* = \begin{cases}
+\frac{-2r_k - \lambda}{2z_k} &amp; -2r_k \gt \lambda \\
+0 &amp; -\lambda \le -2r_k \le \lambda \\
+\frac{-2r_k + \lambda}{2z_k} &amp; -2r_k \lt -\lambda
+\end{cases}
+\]</span></p>
+<p>用 soft thresholding function 表示为 <span class="math inline">\(\beta_k^* = \frac{1}{2z_k} S(-2r_k, \lambda)\)</span></p>
+<h3 id="变种三">变种三</h3>
+<p>Lasso优化问题表示如下： <span class="math display">\[
+\min_{\beta} \frac{1}{2 n} \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1
+\]</span> 同前面的推导，这里直接给出结果 <span class="math display">\[
+\beta_k^* = \begin{cases}
+\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \\
+0 &amp; -\lambda \le r_k \le \lambda \\
+\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda
+\end{cases}
+\]</span> 其中 <span class="math inline">\(r_k =\frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik}\)</span>，<span class="math inline">\(z_k = \frac{1}{n} \sum_{i=1}^n x_{ik}^2\)</span></p>
+<h2 id="偏置-bias-求解">偏置 bias 求解</h2>
+<p>前面讨论的模型不包括偏置，如果模型包括偏置 <span class="math inline">\(b\)</span>，则优化问题写为 <span class="math display">\[
+\min_{\beta, b} \frac{1}{2} \Vert y - X\beta - 1b \Vert^2_2 + \lambda \Vert \beta \Vert_1
+\]</span> 这里的 <span class="math inline">\(1\)</span> 代表元素全为 1 的向量，大小为 <span class="math inline">\(R^n\)</span>，损失函数 <span class="math inline">\(f(\beta, b)\)</span> 为 <span class="math display">\[
+\begin{align}
+f(\beta, b) &amp;= \frac{1}{2} \Vert y - X\beta - 1 b\Vert^2_2 + \lambda \Vert \beta \Vert_1 \\
+&amp; = \frac{1}{2} \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j - b)^2 + \lambda \sum_{j=1}^p \vert \beta_j \vert
+\end{align}
+\]</span> 则对 <span class="math inline">\(f(\beta, b)\)</span> 求偏导 <span class="math inline">\(\beta_k\)</span> 可以得到 <span class="math display">\[
+\begin{align}
+\frac{\partial{f(\beta, b)}}{\partial{\beta_k}} &amp; = -\sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j - b) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \\
+&amp; =- \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j - b)x_{ik} + \sum_{i=1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \\
+&amp; = - r_k + z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}
+\end{align}
+\]</span> 其中 <span class="math inline">\(r_k =\sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j -b)x_{ik}\)</span>，<span class="math inline">\(z_k = \sum_{i=1}^n x_{ik}^2\)</span>，令 <span class="math inline">\(\frac{\partial{f(\beta, b)}}{\partial{\beta_k}} = 0\)</span>，可以得到 <span class="math display">\[
+\beta_k^* = \begin{cases}
+\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \\
+0 &amp; -\lambda \le r_k \le \lambda \\
+\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda
+\end{cases}
+\]</span> 对 <span class="math inline">\(f(\beta, b)\)</span> 求偏导 <span class="math inline">\(b\)</span> 可以得到 <span class="math display">\[
+\begin{align}
+\frac{\partial{f(\beta, b)}}{\partial{b}} &amp; = -\sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j - b) \\
+&amp; = n b - \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j)
+\end{align}
+\]</span> 令 <span class="math inline">\(\frac{\partial{f(\beta, b)}}{\partial{b}} = 0\)</span>，可以得到 <span class="math display">\[
+b^* = \frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j)
+\]</span></p>
+<h2 id="算法实现">算法实现</h2>
+<p>在本节，要解决的优化问题如下表示</p>
+<p><span class="math display">\[
+\min_{\beta, b} \frac{1}{2 n} \Vert y - X\beta - 1b\Vert^2_2 + \lambda \Vert \beta \Vert_1
+\]</span> 根据前面的讨论，在选定第 <span class="math inline">\(k\)</span> 坐标轴方向，解 <span class="math inline">\(\beta^*_k\)</span>的表达式为 <span class="math display">\[
+\beta_k^* = \begin{cases}
+\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \\
+0 &amp; -\lambda \le r_k \le \lambda \\
+\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda
+\end{cases}
+\]</span></p>
+<p>其中 <span class="math inline">\(r_k =\frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j - b)x_{ik}\)</span>，<span class="math inline">\(z_k = \frac{1}{n} \sum_{i=1}^n x_{ik}^2\)</span>，解 <span class="math inline">\(b^*\)</span> 的表达式为 <span class="math display">\[
+b^* = \frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j=1}^p x_{ij} \beta_j)
+\]</span></p>
+<p>这里可以将 <span class="math inline">\(r_k\)</span> 写成向量化形式，由于算法每次只更新一个坐标轴方向的值，即</p>
+<p><span class="math display">\[
+\begin{align}
+&amp; [\beta_1, \ldots, \beta_{k-1}, \beta_{k}, \beta_{k+1}, \ldots, \beta_p] \\
+\Rightarrow \; &amp; [\beta_1, \ldots, \beta_{k-1}, \beta_{k}^*, \beta_{k+1}, \ldots, \beta_p]
+\end{align}
+\]</span> 因此 <span class="math inline">\(r_k\)</span> 可以写为 <span class="math display">\[
+\begin{align}
+r_k &amp; =\frac{1}{n} \sum_{i=1}^n (y_i - \sum_{j =1}^p x_{ij} \beta_j - b + x_{ik} \beta_k)x_{ik}
+\end{align}
+\]</span> 这里的 <span class="math inline">\(\beta_k\)</span> 是未更新之前的值，更新后的值为 <span class="math inline">\(\beta_k^*\)</span>，注意区别。用向量表示 <span class="math inline">\(r_k\)</span> 为 <span class="math display">\[
+r_k = \frac{1}{n} (X[:, k])^T (y - X\beta - 1 b + \beta_k X[:, k])
+\]</span></p>
+<p>其中 <span class="math inline">\(X[:, k]\)</span> 代表矩阵 <span class="math inline">\(X\)</span> 第 <span class="math inline">\(k\)</span> 列。<span class="math inline">\(b^*\)</span> 的表达式写成向量形式可以写为 <span class="math display">\[
+b^* = \frac{1}{n} 1^T (y - X\beta)
+\]</span> 算法整体流程如下表示</p>
 <img src="/coordiante_descent_for_lasso/flow.png" class="" title="coordiante descent flow">
-
 <p>核心代码如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line">class Lasso:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    The optimization objective of Lasso is</span><br><span class="line">        1&#x2F;(2 * n) * ||y - Xw||^2_2 + alpha * ||w||_1</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self, alpha&#x3D;1.0, fit_intercept&#x3D;True, normalize&#x3D;False,</span><br><span class="line">                 copy_X&#x3D;True, max_iter&#x3D;1000, tol&#x3D;0.0001, selection&#x3D;&#39;cyclic&#39;):</span><br><span class="line">        self._alpha &#x3D; alpha</span><br><span class="line">        self._fit_intercept &#x3D; fit_intercept</span><br><span class="line">        self._normalize &#x3D; normalize</span><br><span class="line">        self._copy_X &#x3D; copy_X</span><br><span class="line">        self._max_iter &#x3D; max_iter</span><br><span class="line">        self._tol &#x3D; tol</span><br><span class="line">        self._selection &#x3D; selection</span><br><span class="line"></span><br><span class="line">        if normalize:</span><br><span class="line">            self._scaler &#x3D; preprocessing.StandardScaler()</span><br><span class="line"></span><br><span class="line">    def compute_step(self, k, X, y, coef, intercept, alpha):</span><br><span class="line">        n, p &#x3D; X.shape</span><br><span class="line">        y_predict &#x3D; np.dot(X, coef) + intercept</span><br><span class="line">        rk &#x3D; np.dot(X[:, k], y - y_predict + X[:, k] * coef[k])</span><br><span class="line">        rk &#x3D; rk &#x2F; (1.0 * n)</span><br><span class="line">        zk &#x3D; np.linalg.norm(X[:, k], ord&#x3D;2) ** 2</span><br><span class="line">        zk &#x3D; zk &#x2F; (1.0 * n)</span><br><span class="line">        coef_k &#x3D; (np.amax([rk-alpha, 0]) - np.amax([-rk-alpha, 0]))</span><br><span class="line">        coef_k &#x3D; coef_k &#x2F; (1.0 * zk)</span><br><span class="line"></span><br><span class="line">        return coef_k</span><br><span class="line"></span><br><span class="line">    def objective(self, X, y, coef, intercept, alpha):</span><br><span class="line">        n, p &#x3D; X.shape</span><br><span class="line">        total &#x3D; 0</span><br><span class="line"></span><br><span class="line">        y_predict &#x3D; np.dot(X, coef) + intercept</span><br><span class="line">        total +&#x3D; \</span><br><span class="line">            1&#x2F;(2.0*n) * np.linalg.norm(y-y_predict, ord&#x3D;2) ** 2</span><br><span class="line">        total +&#x3D; alpha * np.linalg.norm(coef, ord&#x3D;1)</span><br><span class="line"></span><br><span class="line">        return total</span><br><span class="line"></span><br><span class="line">    def fit(self, X, y):</span><br><span class="line">        if self._copy_X:</span><br><span class="line">            X &#x3D; X.copy()</span><br><span class="line">        if self._normalize:</span><br><span class="line">            X &#x3D; self._scaler.fit_transform(X)</span><br><span class="line">        self._objectives &#x3D; []</span><br><span class="line"></span><br><span class="line">        # initialize data</span><br><span class="line">        num_samples, num_features &#x3D; X.shape</span><br><span class="line">        coef &#x3D; np.zeros(num_features)</span><br><span class="line">        old_coef &#x3D; np.zeros(num_features)</span><br><span class="line">        intercept &#x3D; 0</span><br><span class="line">        if self._fit_intercept:</span><br><span class="line">            tmp &#x3D; y - np.dot(X, coef)</span><br><span class="line">            intercept &#x3D; np.sum(tmp) &#x2F; (1.0 * num_samples)</span><br><span class="line">        num_iters &#x3D; 0</span><br><span class="line">        for iter in range(self._max_iter):</span><br><span class="line">            num_iters &#x3D; num_iters + 1</span><br><span class="line">            if (self._selection &#x3D;&#x3D; &#39;cyclic&#39;):</span><br><span class="line">                for k in range(num_features):</span><br><span class="line">                    old_coef[k] &#x3D; coef[k]</span><br><span class="line">                    coef[k] &#x3D; self.compute_step(k, X, y, coef,</span><br><span class="line">                                                intercept, self._alpha)</span><br><span class="line">                if self._fit_intercept:</span><br><span class="line">                    tmp &#x3D; y - np.dot(X, coef)</span><br><span class="line">                    intercept &#x3D; np.sum(tmp) &#x2F; (1.0 * num_samples)</span><br><span class="line"></span><br><span class="line">                # check condition of convergence</span><br><span class="line">                coef_updates &#x3D; np.abs(coef - old_coef)</span><br><span class="line">                if np.amax(coef_updates) &lt; self._tol:</span><br><span class="line">                    break</span><br><span class="line">            self._objectives.append(self.objective(X, y, coef,</span><br><span class="line">                                                   intercept, self._alpha))</span><br><span class="line"></span><br><span class="line">        self._coef &#x3D; coef</span><br><span class="line">        self._intercept &#x3D; intercept</span><br><span class="line">        self._num_iters &#x3D; num_iters</span><br><span class="line"></span><br><span class="line">        return self</span><br><span class="line"></span><br><span class="line">    def predict(self, X):</span><br><span class="line">        if self._copy_X:</span><br><span class="line">            X &#x3D; X.copy()</span><br><span class="line">        if self._normalize:</span><br><span class="line">            X &#x3D; self._scaler.transform(X)</span><br><span class="line"></span><br><span class="line">        y_predict &#x3D; np.dot(X, self._coef) + self._intercept</span><br><span class="line"></span><br><span class="line">        return y_predict</span><br><span class="line"></span><br><span class="line">    def score(self, X, y):</span><br><span class="line">        y_predict &#x3D; self.predict(X)</span><br><span class="line"></span><br><span class="line">        return r2_score(y, y_predict)</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def coef_(self):</span><br><span class="line">        return self._coef</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def intercept_(self):</span><br><span class="line">        return self._intercept</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def n_iter_(self):</span><br><span class="line">        return self._num_iters</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def objectives_(self):</span><br><span class="line">        return self._objectives</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return (&#39;Lasso(alpha&#x3D;&#123;&#125;, copy_X&#x3D;&#123;&#125;, &#39;</span><br><span class="line">                &#39;fit_intercept&#x3D;&#123;&#125;, max_iter&#x3D;&#123;&#125;, &#39;</span><br><span class="line">                &#39;normalize&#x3D;&#123;&#125;, selection&#x3D;\&#39;&#123;&#125;\&#39;, &#39;</span><br><span class="line">                &#39;tol&#x3D;&#123;&#125;)&#39;).format(self._alpha, self._copy_X,</span><br><span class="line">                                  self._fit_intercept, self._max_iter,</span><br><span class="line">                                  self._normalize, self._selection,</span><br><span class="line">                                  self._tol)</span><br></pre></td></tr></table></figure>
-
 <p>相关代码在：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/CoordinateDescent/Lasso">GitHub</a></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<h2 id="参考">参考</h2>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="http://jocelynchi.com/a-coordinate-descent-algorithm-for-the-lasso-problem">A COORDINATE DESCENT ALGORITHM FOR THE LASSO PROBLEM</a></li>
 <li><a target="_blank" rel="noopener" href="http://jocelynchi.com/soft-thresholding-operator-and-the-lasso-solution">SOFT-THRESHOLDING OPERATOR AND THE LASSO SOLUTION</a></li>
 </ol>
@@ -227,7 +381,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Coordinate-Descent"><span class="toc-number">1.</span> <span class="toc-text">Coordinate Descent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lasso%E9%97%AE%E9%A2%98%E6%B1%82%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">Lasso问题求解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">变种问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%B8%80"><span class="toc-number">3.1.</span> <span class="toc-text">变种一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%BA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">变种二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%B8%89"><span class="toc-number">3.3.</span> <span class="toc-text">变种三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%8F%E7%BD%AE-bias-%E6%B1%82%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">偏置 bias 求解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">算法实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#coordinate-descent"><span class="toc-number">1.</span> <span class="toc-text">Coordinate Descent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lasso%E9%97%AE%E9%A2%98%E6%B1%82%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">Lasso问题求解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">变种问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%B8%80"><span class="toc-number">3.1.</span> <span class="toc-text">变种一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%BA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">变种二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E7%A7%8D%E4%B8%89"><span class="toc-number">3.3.</span> <span class="toc-text">变种三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%8F%E7%BD%AE-bias-%E6%B1%82%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">偏置 bias 求解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">算法实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
  
   </div>
 

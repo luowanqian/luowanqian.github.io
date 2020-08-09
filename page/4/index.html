@@ -100,114 +100,116 @@
 </header>
     <div class="article-content">
         
-        <h2 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h2><p>关于 VGG 的详细内容，可以去看论文 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1409.1556">Very Deep Convolutional Networks for Large-Scale Image Recognition</a>，这里贴出网络结构图。</p>
+        <h2 id="网络结构">网络结构</h2>
+<p>关于 VGG 的详细内容，可以去看论文 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1409.1556">Very Deep Convolutional Networks for Large-Scale Image Recognition</a>，这里贴出网络结构图。</p>
 <img src="/vgg_network_implementation/vgg.png" class="" width="600">
-
 <p>卷积层表示为 <code>conv&lt;receptive field size&gt;-&lt;number of channels&gt;</code>，卷积步长 (stride) 为 1，填充 (padding) 大小为 1，Pooling层的窗口大小为 2x2，步长 (stride) 为 2。为了显示简洁，图中未显示ReLU层。从图中可以看出网络输入的图片的大小为 224x224x3，经过每一层后，大小变化如下所示 (以下为VGG16网络，也就是图中的网络 D)</p>
 <table>
 <thead>
-<tr>
-<th align="left">网络层</th>
-<th align="left">大小</th>
+<tr class="header">
+<th style="text-align: left;">网络层</th>
+<th style="text-align: left;">大小</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left">输入层</td>
-<td align="left">224x224x3</td>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">输入层</td>
+<td style="text-align: left;">224x224x3</td>
 </tr>
-<tr>
-<td align="left">conv3-64</td>
-<td align="left">224x224x64</td>
+<tr class="even">
+<td style="text-align: left;">conv3-64</td>
+<td style="text-align: left;">224x224x64</td>
 </tr>
-<tr>
-<td align="left">conv3-64</td>
-<td align="left">224x224x64</td>
+<tr class="odd">
+<td style="text-align: left;">conv3-64</td>
+<td style="text-align: left;">224x224x64</td>
 </tr>
-<tr>
-<td align="left">maxpool</td>
-<td align="left">112x112x64</td>
+<tr class="even">
+<td style="text-align: left;">maxpool</td>
+<td style="text-align: left;">112x112x64</td>
 </tr>
-<tr>
-<td align="left">conv3-128</td>
-<td align="left">112x112x128</td>
+<tr class="odd">
+<td style="text-align: left;">conv3-128</td>
+<td style="text-align: left;">112x112x128</td>
 </tr>
-<tr>
-<td align="left">conv3-128</td>
-<td align="left">112x112x128</td>
+<tr class="even">
+<td style="text-align: left;">conv3-128</td>
+<td style="text-align: left;">112x112x128</td>
 </tr>
-<tr>
-<td align="left">maxpool</td>
-<td align="left">56x56x128</td>
+<tr class="odd">
+<td style="text-align: left;">maxpool</td>
+<td style="text-align: left;">56x56x128</td>
 </tr>
-<tr>
-<td align="left">conv3-256</td>
-<td align="left">56x56x256</td>
+<tr class="even">
+<td style="text-align: left;">conv3-256</td>
+<td style="text-align: left;">56x56x256</td>
 </tr>
-<tr>
-<td align="left">conv3-256</td>
-<td align="left">56x56x256</td>
+<tr class="odd">
+<td style="text-align: left;">conv3-256</td>
+<td style="text-align: left;">56x56x256</td>
 </tr>
-<tr>
-<td align="left">conv3-256</td>
-<td align="left">56x56x256</td>
+<tr class="even">
+<td style="text-align: left;">conv3-256</td>
+<td style="text-align: left;">56x56x256</td>
 </tr>
-<tr>
-<td align="left">maxpool</td>
-<td align="left">28x28x256</td>
+<tr class="odd">
+<td style="text-align: left;">maxpool</td>
+<td style="text-align: left;">28x28x256</td>
 </tr>
-<tr>
-<td align="left">conv3-512</td>
-<td align="left">28x28x512</td>
+<tr class="even">
+<td style="text-align: left;">conv3-512</td>
+<td style="text-align: left;">28x28x512</td>
 </tr>
-<tr>
-<td align="left">conv3-512</td>
-<td align="left">28x28x512</td>
+<tr class="odd">
+<td style="text-align: left;">conv3-512</td>
+<td style="text-align: left;">28x28x512</td>
 </tr>
-<tr>
-<td align="left">conv3-512</td>
-<td align="left">28x28x512</td>
+<tr class="even">
+<td style="text-align: left;">conv3-512</td>
+<td style="text-align: left;">28x28x512</td>
 </tr>
-<tr>
-<td align="left">maxpool</td>
-<td align="left">14x14x512</td>
+<tr class="odd">
+<td style="text-align: left;">maxpool</td>
+<td style="text-align: left;">14x14x512</td>
 </tr>
-<tr>
-<td align="left">conv3-512</td>
-<td align="left">14x14x512</td>
+<tr class="even">
+<td style="text-align: left;">conv3-512</td>
+<td style="text-align: left;">14x14x512</td>
 </tr>
-<tr>
-<td align="left">conv3-512</td>
-<td align="left">14x14x512</td>
+<tr class="odd">
+<td style="text-align: left;">conv3-512</td>
+<td style="text-align: left;">14x14x512</td>
 </tr>
-<tr>
-<td align="left">conv3-512</td>
-<td align="left">14x14x512</td>
+<tr class="even">
+<td style="text-align: left;">conv3-512</td>
+<td style="text-align: left;">14x14x512</td>
 </tr>
-<tr>
-<td align="left">maxpool</td>
-<td align="left">7x7x512</td>
+<tr class="odd">
+<td style="text-align: left;">maxpool</td>
+<td style="text-align: left;">7x7x512</td>
 </tr>
-<tr>
-<td align="left">FC</td>
-<td align="left">1x1x4096</td>
+<tr class="even">
+<td style="text-align: left;">FC</td>
+<td style="text-align: left;">1x1x4096</td>
 </tr>
-<tr>
-<td align="left">FC</td>
-<td align="left">1x1x4096</td>
+<tr class="odd">
+<td style="text-align: left;">FC</td>
+<td style="text-align: left;">1x1x4096</td>
 </tr>
-<tr>
-<td align="left">FC</td>
-<td align="left">1x1x1000</td>
+<tr class="even">
+<td style="text-align: left;">FC</td>
+<td style="text-align: left;">1x1x1000</td>
 </tr>
-</tbody></table>
-<h2 id="PyTorch实现"><a href="#PyTorch实现" class="headerlink" title="PyTorch实现"></a>PyTorch实现</h2><p>VGG 网络的 PyTorch 实现可以在 <a target="_blank" rel="noopener" href="https://github.com/pytorch/vision/blob/master/torchvision/models/vgg.py">vgg.py</a> 中找到，里面实现了网络 <code>A, B, D, E</code> 即 VGG11, VGG13, VGG16 以及 VGG19，同时还有相对应的 Batch Normalization 版本。如果要将 VGG 网络应用到其他大小输入的图片，主要修改的参数就是最后几个全连接层的大小即可，也就是只用修改类 VGG 中 <code>classifier</code> 属性即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class VGG(nn.Module):</span><br><span class="line">    def __init__(self, features, num_classes&#x3D;1000, init_weights&#x3D;True):</span><br><span class="line">        super(VGG, self).__init__()</span><br><span class="line">        self.features &#x3D; features</span><br><span class="line">        self.classifier &#x3D; nn.Sequential(</span><br><span class="line">            nn.Linear(512 * 7 * 7, 4096),</span><br><span class="line">            nn.ReLU(True),</span><br><span class="line">            nn.Dropout(),</span><br><span class="line">            nn.Linear(4096, 4096),</span><br><span class="line">            nn.ReLU(True),</span><br><span class="line">            nn.Dropout(),</span><br><span class="line">            nn.Linear(4096, num_classes),</span><br><span class="line">        )</span><br><span class="line">        if init_weights:</span><br><span class="line">            self._initialize_weights()</span><br></pre></td></tr></table></figure>
-
+</tbody>
+</table>
+<h2 id="pytorch实现">PyTorch实现</h2>
+<p>VGG 网络的 PyTorch 实现可以在 <a target="_blank" rel="noopener" href="https://github.com/pytorch/vision/blob/master/torchvision/models/vgg.py">vgg.py</a> 中找到，里面实现了网络 <code>A, B, D, E</code> 即 VGG11, VGG13, VGG16 以及 VGG19，同时还有相对应的 Batch Normalization 版本。如果要将 VGG 网络应用到其他大小输入的图片，主要修改的参数就是最后几个全连接层的大小即可，也就是只用修改类 VGG 中 <code>classifier</code> 属性即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class VGG(nn.Module):</span><br><span class="line">  def __init__(self, features, num_classes&#x3D;1000, init_weights&#x3D;True):</span><br><span class="line">        super(VGG, self).__init__()</span><br><span class="line">        self.features &#x3D; features</span><br><span class="line">        self.classifier &#x3D; nn.Sequential(</span><br><span class="line">            nn.Linear(512 * 7 * 7, 4096),</span><br><span class="line">            nn.ReLU(True),</span><br><span class="line">            nn.Dropout(),</span><br><span class="line">            nn.Linear(4096, 4096),</span><br><span class="line">            nn.ReLU(True),</span><br><span class="line">            nn.Dropout(),</span><br><span class="line">            nn.Linear(4096, num_classes),</span><br><span class="line">        )</span><br><span class="line">        if init_weights:</span><br><span class="line">            self._initialize_weights()</span><br></pre></td></tr></table></figure>
 <p>如果输入图片来自于CIFAR-10数据集，即大小为 32x32，类别数为10，经过网络的最后一个Pooling层后，输出大小为 1x1x512，因此修改类的 <code>classifier</code> 属性为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">self.classifier &#x3D; nn.Sequential(</span><br><span class="line">    nn.Linear(512 * 1 * 1, 512),</span><br><span class="line">    nn.ReLU(True),</span><br><span class="line">    nn.Dropout(),</span><br><span class="line">    nn.Linear(512, 512),</span><br><span class="line">    nn.ReLU(True),</span><br><span class="line">    nn.Dropout(),</span><br><span class="line">    nn.Linear(512, num_classes),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
 <p>同时在使用函数生成对应版本的网络时，设置函数参数 <code>num_classes=10</code>。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<h2 id="参考">参考</h2>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="http://noahsnail.com/2017/08/17/2017-8-17-VGG%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%94%E4%B8%AD%E6%96%87%E7%89%88/">VGG论文翻译——中文版</a></li>
 <li><a target="_blank" rel="noopener" href="https://guanfuchen.github.io/post/markdown_blog_ws/markdown_blog_2017_11/pytorch%E5%AE%9E%E7%8E%B0%E7%9A%84vgg%E7%BD%91%E7%BB%9C/">Pytorch实现的Vgg网络</a></li>
 </ol>
@@ -265,20 +267,20 @@
 </header>
     <div class="article-content">
         
-        <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>操作系统：OS X 10.11.6</p>
+        <h2 id="环境">环境</h2>
+<p>操作系统：OS X 10.11.6</p>
 <p>Python版本：3.6.5</p>
-<h2 id="安装HDF5"><a href="#安装HDF5" class="headerlink" title="安装HDF5"></a>安装HDF5</h2><p>使用 Homebrew 安装 HDF5，注意要开启 mpi 编译选项</p>
+<h2 id="安装hdf5">安装HDF5</h2>
+<p>使用 Homebrew 安装 HDF5，注意要开启 mpi 编译选项</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install hdf5 --with-mpi</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装mpi4py"><a href="#安装mpi4py" class="headerlink" title="安装mpi4py"></a>安装mpi4py</h2><p>官网教程在使用 Parallel HDF5 时会用到 mpi4py 这个包，直接使用 pip 安装即可</p>
+<h2 id="安装mpi4py">安装mpi4py</h2>
+<p>官网教程在使用 Parallel HDF5 时会用到 mpi4py 这个包，直接使用 pip 安装即可</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip3 install mpi4py</span><br></pre></td></tr></table></figure>
-
 <p><strong>Note:</strong> 安装遇到一个问题是，如果之前安装过这个包，现在卸载再安装这个包时，pip 不会重新编译这个包，此时需要 <code>--no-cache-dir</code> 这个选项。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip3 install --no-cache-dir mpi4py</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装h5py"><a href="#安装h5py" class="headerlink" title="安装h5py"></a>安装h5py</h2><p>直接使用 pip 安装 h5py 是不会开启 Parallel HDF5 的，需要添加一些编译选项，参考官网安装教程，运行命令</p>
+<h2 id="安装h5py">安装h5py</h2>
+<p>直接使用 pip 安装 h5py 是不会开启 Parallel HDF5 的，需要添加一些编译选项，参考官网安装教程，运行命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ export CC&#x3D;mpicc</span><br><span class="line">$ export HDF5_MPI&#x3D;&quot;ON&quot;</span><br><span class="line">$ pip3 install --no-binary&#x3D;h5py h5py</span><br></pre></td></tr></table></figure>
-
 <p>同前面所诉，如果需要重新编译这个包，需要用到 <code>--no-cache-dir</code> 这个选项</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip3 install --no-cache-dir --no-binary&#x3D;h5py h5py</span><br></pre></td></tr></table></figure>
 
@@ -335,20 +337,22 @@
 </header>
     <div class="article-content">
         
-        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>在使用 Caffe 时，一个经常使用的数据输入来源就是LMDB数据库，通常我们手头的数据是一堆图片，此时需要将图片数据放入到LMDB数据库中。Caffe 有自个的转换程序，是一个用 C++ 编写的程序，需要编译，由于本文主要使用 Python语言，因此使用[3]提供的包来做数据转换。</p>
+        <h2 id="介绍">介绍</h2>
+<p>在使用 Caffe 时，一个经常使用的数据输入来源就是LMDB数据库，通常我们手头的数据是一堆图片，此时需要将图片数据放入到LMDB数据库中。Caffe 有自个的转换程序，是一个用 C++ 编写的程序，需要编译，由于本文主要使用 Python语言，因此使用[3]提供的包来做数据转换。</p>
 <p><strong>Note:</strong> 相关的代码和图片数据在 <a target="_blank" rel="noopener" href="https://github.com/luowanqian/CaffeTutorials/tree/master/LMDB">GitHub</a></p>
-<h2 id="LMDB读写"><a href="#LMDB读写" class="headerlink" title="LMDB读写"></a>LMDB读写</h2><h3 id="数据描述"><a href="#数据描述" class="headerlink" title="数据描述"></a>数据描述</h3><p>已有 10 张图片，放在目录 <code>data</code> 中，图片文件名列表为：</p>
+<h2 id="lmdb读写">LMDB读写</h2>
+<h3 id="数据描述">数据描述</h3>
+<p>已有 10 张图片，放在目录 <code>data</code> 中，图片文件名列表为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ ls data | sort -n</span><br><span class="line">1.png</span><br><span class="line">2.png</span><br><span class="line">3.png</span><br><span class="line">4.png</span><br><span class="line">5.png</span><br><span class="line">6.png</span><br><span class="line">7.png</span><br><span class="line">8.png</span><br><span class="line">9.png</span><br><span class="line">10.png</span><br></pre></td></tr></table></figure>
-
 <p>每张图片都有一个类别，存在文件 <code>labels.csv</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ cat labels.csv</span><br><span class="line">id,label</span><br><span class="line">1,frog</span><br><span class="line">2,truck</span><br><span class="line">3,truck</span><br><span class="line">4,deer</span><br><span class="line">5,automobile</span><br><span class="line">6,automobile</span><br><span class="line">7,bird</span><br><span class="line">8,horse</span><br><span class="line">9,ship</span><br><span class="line">10,cat</span><br></pre></td></tr></table></figure>
-
 <p>文件中第一列是图片文件名 (不包含后缀名)，第二列是图片的类别。</p>
-<h3 id="LMDB写入"><a href="#LMDB写入" class="headerlink" title="LMDB写入"></a>LMDB写入</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import pandas as pd</span><br><span class="line">from skimage import io</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">import os</span><br><span class="line">import lmdb</span><br><span class="line">import caffe</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def make_datum(image, label, channels, height, width):</span><br><span class="line">    datum &#x3D; caffe.proto.caffe_pb2.Datum()</span><br><span class="line">    datum.channels &#x3D; channels</span><br><span class="line">    datum.label &#x3D; int(label)</span><br><span class="line">    datum.height &#x3D; height</span><br><span class="line">    datum.width &#x3D; width</span><br><span class="line">    datum.data &#x3D; image.tobytes()</span><br><span class="line"></span><br><span class="line">    return datum</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># data path and lmdb path</span><br><span class="line">dataset_path &#x3D; &#39;.&#x2F;data&#39;</span><br><span class="line">label_file &#x3D; &#39;labels.csv&#39;</span><br><span class="line">lmdb_path &#x3D; &#39;cifar10_lmdb&#39;</span><br><span class="line"></span><br><span class="line"># labels mapping</span><br><span class="line">labels_mapping &#x3D; &#123;&#39;airplane&#39;: 0, &#39;automobile&#39;: 1,</span><br><span class="line">                  &#39;bird&#39;: 2, &#39;cat&#39;: 3, &#39;deer&#39;: 4, &#39;dog&#39;: 5,</span><br><span class="line">                  &#39;frog&#39;: 6, &#39;horse&#39;: 7, &#39;ship&#39;: 8, &#39;truck&#39;: 9&#125;</span><br><span class="line">classes &#x3D; &#123;&#125;</span><br><span class="line">for key in labels_mapping:</span><br><span class="line">    classes[labels_mapping[key]] &#x3D; key</span><br><span class="line"></span><br><span class="line"># load data</span><br><span class="line">df &#x3D; pd.read_csv(label_file)</span><br><span class="line">df[&#39;label&#39;] &#x3D; df[&#39;label&#39;].map(labels_mapping)</span><br><span class="line">images &#x3D; list(df.id)</span><br><span class="line">labels &#x3D; list(df.label)</span><br><span class="line"></span><br><span class="line"># write data to LMDB</span><br><span class="line">map_size &#x3D; 1e6</span><br><span class="line">batch_size &#x3D; 4</span><br><span class="line"></span><br><span class="line">count &#x3D; 0</span><br><span class="line">lmdb_env &#x3D; lmdb.open(lmdb_path, map_size&#x3D;map_size)</span><br><span class="line">lmdb_txn &#x3D; lmdb_env.begin(write&#x3D;True)</span><br><span class="line"></span><br><span class="line">for image_id, label in zip(images, labels):</span><br><span class="line">    count &#x3D; count + 1</span><br><span class="line">    image_file &#x3D; os.path.join(dataset_path, str(image_id) + &#39;.png&#39;)</span><br><span class="line">    image &#x3D; io.imread(image_file)</span><br><span class="line">    height, width, channels &#x3D; image.shape</span><br><span class="line">    datum &#x3D; make_datum(image, label, channels, height, width)</span><br><span class="line">    str_id &#x3D; &#39;&#123;:08&#125;&#39;.format(count)</span><br><span class="line">    lmdb_txn.put(str_id, datum.SerializeToString())</span><br><span class="line"></span><br><span class="line">    if count % batch_size &#x3D;&#x3D; 0:</span><br><span class="line">        lmdb_txn.commit()</span><br><span class="line">        lmdb_txn &#x3D; lmdb_env.begin(write&#x3D;True)</span><br><span class="line"></span><br><span class="line">lmdb_txn.commit()</span><br><span class="line">lmdb_env.close()</span><br></pre></td></tr></table></figure>
-
-<h3 id="LMDB读取"><a href="#LMDB读取" class="headerlink" title="LMDB读取"></a>LMDB读取</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">lmdb_env &#x3D; lmdb.open(lmdb_path)</span><br><span class="line">lmdb_txn &#x3D; lmdb_env.begin()</span><br><span class="line">lmdb_cursor &#x3D; lmdb_txn.cursor()</span><br><span class="line">datum &#x3D; caffe.proto.caffe_pb2.Datum()</span><br><span class="line"></span><br><span class="line">count &#x3D; 0</span><br><span class="line">for key, value in lmdb_cursor:</span><br><span class="line">    datum.ParseFromString(value)</span><br><span class="line">    label &#x3D; datum.label</span><br><span class="line">    height &#x3D; datum.height</span><br><span class="line">    width &#x3D; datum.width</span><br><span class="line">    channels &#x3D; datum.channels</span><br><span class="line">    data &#x3D; datum.data</span><br><span class="line">    count &#x3D; count + 1</span><br><span class="line"></span><br><span class="line">    if count &#x3D;&#x3D; 2:</span><br><span class="line">        image &#x3D; np.frombuffer(data, dtype&#x3D;np.uint8)</span><br><span class="line">        image &#x3D; np.reshape(image, (height, width, channels))</span><br><span class="line">        print(&#39;Label: &#123;&#125;, Class: &#123;&#125;&#39;.format(label, classes[label]))</span><br><span class="line">        plt.imshow(image)</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">print(&#39;Number of items: &#123;&#125;&#39;.format(count))</span><br><span class="line"></span><br><span class="line">lmdb_env.close()</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<h3 id="lmdb写入">LMDB写入</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import pandas as pd</span><br><span class="line">from skimage import io</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">import os</span><br><span class="line">import lmdb</span><br><span class="line">import caffe</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def make_datum(image, label, channels, height, width):</span><br><span class="line">    datum &#x3D; caffe.proto.caffe_pb2.Datum()</span><br><span class="line">    datum.channels &#x3D; channels</span><br><span class="line">    datum.label &#x3D; int(label)</span><br><span class="line">    datum.height &#x3D; height</span><br><span class="line">    datum.width &#x3D; width</span><br><span class="line">    datum.data &#x3D; image.tobytes()</span><br><span class="line"></span><br><span class="line">    return datum</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># data path and lmdb path</span><br><span class="line">dataset_path &#x3D; &#39;.&#x2F;data&#39;</span><br><span class="line">label_file &#x3D; &#39;labels.csv&#39;</span><br><span class="line">lmdb_path &#x3D; &#39;cifar10_lmdb&#39;</span><br><span class="line"></span><br><span class="line"># labels mapping</span><br><span class="line">labels_mapping &#x3D; &#123;&#39;airplane&#39;: 0, &#39;automobile&#39;: 1,</span><br><span class="line">                  &#39;bird&#39;: 2, &#39;cat&#39;: 3, &#39;deer&#39;: 4, &#39;dog&#39;: 5,</span><br><span class="line">                  &#39;frog&#39;: 6, &#39;horse&#39;: 7, &#39;ship&#39;: 8, &#39;truck&#39;: 9&#125;</span><br><span class="line">classes &#x3D; &#123;&#125;</span><br><span class="line">for key in labels_mapping:</span><br><span class="line">    classes[labels_mapping[key]] &#x3D; key</span><br><span class="line"></span><br><span class="line"># load data</span><br><span class="line">df &#x3D; pd.read_csv(label_file)</span><br><span class="line">df[&#39;label&#39;] &#x3D; df[&#39;label&#39;].map(labels_mapping)</span><br><span class="line">images &#x3D; list(df.id)</span><br><span class="line">labels &#x3D; list(df.label)</span><br><span class="line"></span><br><span class="line"># write data to LMDB</span><br><span class="line">map_size &#x3D; 1e6</span><br><span class="line">batch_size &#x3D; 4</span><br><span class="line"></span><br><span class="line">count &#x3D; 0</span><br><span class="line">lmdb_env &#x3D; lmdb.open(lmdb_path, map_size&#x3D;map_size)</span><br><span class="line">lmdb_txn &#x3D; lmdb_env.begin(write&#x3D;True)</span><br><span class="line"></span><br><span class="line">for image_id, label in zip(images, labels):</span><br><span class="line">    count &#x3D; count + 1</span><br><span class="line">    image_file &#x3D; os.path.join(dataset_path, str(image_id) + &#39;.png&#39;)</span><br><span class="line">    image &#x3D; io.imread(image_file)</span><br><span class="line">    height, width, channels &#x3D; image.shape</span><br><span class="line">    datum &#x3D; make_datum(image, label, channels, height, width)</span><br><span class="line">    str_id &#x3D; &#39;&#123;:08&#125;&#39;.format(count)</span><br><span class="line">    lmdb_txn.put(str_id, datum.SerializeToString())</span><br><span class="line"></span><br><span class="line">    if count % batch_size &#x3D;&#x3D; 0:</span><br><span class="line">        lmdb_txn.commit()</span><br><span class="line">        lmdb_txn &#x3D; lmdb_env.begin(write&#x3D;True)</span><br><span class="line"></span><br><span class="line">lmdb_txn.commit()</span><br><span class="line">lmdb_env.close()</span><br></pre></td></tr></table></figure>
+<h3 id="lmdb读取">LMDB读取</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">lmdb_env &#x3D; lmdb.open(lmdb_path)</span><br><span class="line">lmdb_txn &#x3D; lmdb_env.begin()</span><br><span class="line">lmdb_cursor &#x3D; lmdb_txn.cursor()</span><br><span class="line">datum &#x3D; caffe.proto.caffe_pb2.Datum()</span><br><span class="line"></span><br><span class="line">count &#x3D; 0</span><br><span class="line">for key, value in lmdb_cursor:</span><br><span class="line">    datum.ParseFromString(value)</span><br><span class="line">    label &#x3D; datum.label</span><br><span class="line">    height &#x3D; datum.height</span><br><span class="line">    width &#x3D; datum.width</span><br><span class="line">    channels &#x3D; datum.channels</span><br><span class="line">    data &#x3D; datum.data</span><br><span class="line">    count &#x3D; count + 1</span><br><span class="line"></span><br><span class="line">    if count &#x3D;&#x3D; 2:</span><br><span class="line">        image &#x3D; np.frombuffer(data, dtype&#x3D;np.uint8)</span><br><span class="line">        image &#x3D; np.reshape(image, (height, width, channels))</span><br><span class="line">        print(&#39;Label: &#123;&#125;, Class: &#123;&#125;&#39;.format(label, classes[label]))</span><br><span class="line">        plt.imshow(image)</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">print(&#39;Number of items: &#123;&#125;&#39;.format(count))</span><br><span class="line"></span><br><span class="line">lmdb_env.close()</span><br></pre></td></tr></table></figure>
+<h2 id="参考">参考</h2>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="http://deepdish.io/2015/04/28/creating-lmdb-in-python/">Creating an LMDB database in Python</a></li>
 <li><a target="_blank" rel="noopener" href="https://gist.github.com/twmht/ad0769dde3b1e1d002752207a207e6dc">Write mnist image to lmdb with python</a></li>
 <li><a target="_blank" rel="noopener" href="https://lmdb.readthedocs.io/en/release/">lmdb</a></li>
@@ -410,47 +414,38 @@
         <p>本文主要是记录一些h5py的使用方法。</p>
 <p><strong>Note:</strong> 如果没有特别说明，<code>np</code> 指的是 <code>numpy</code>，代表导入的 numpy</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
-
-<h2 id="存储浮点数采用单精度浮点数"><a href="#存储浮点数采用单精度浮点数" class="headerlink" title="存储浮点数采用单精度浮点数"></a>存储浮点数采用单精度浮点数</h2><p>在HDF5文件中存储浮点数时，可以选择单精度浮点数和双精度浮点数，常见是用单精度浮点数来存储浮点数，相比于双精度浮点数，单精度浮点数存储空间为双精度浮点数的一半，这样可以缩小一半的存储空间。不同于文件存储，在内存中需要使用双精度浮点数来保证计算的准确性，因此一个通常的操作是，在内存中使用双精度浮点数，然后存储到HDF5文件时，使用单精度浮点数，两者的使用只需要进行数据类型转换。</p>
+<h2 id="存储浮点数采用单精度浮点数">存储浮点数采用单精度浮点数</h2>
+<p>在HDF5文件中存储浮点数时，可以选择单精度浮点数和双精度浮点数，常见是用单精度浮点数来存储浮点数，相比于双精度浮点数，单精度浮点数存储空间为双精度浮点数的一半，这样可以缩小一半的存储空间。不同于文件存储，在内存中需要使用双精度浮点数来保证计算的准确性，因此一个通常的操作是，在内存中使用双精度浮点数，然后存储到HDF5文件时，使用单精度浮点数，两者的使用只需要进行数据类型转换。</p>
 <p>在内存中，我们使用Numpy创建一个数组，数据类型为双精度浮点数</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata = np.ones((<span class="number">100</span>, <span class="number">1000</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata.shape</span><br><span class="line">(<span class="number">100</span>, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
-
 <p>直接使用赋值方式将数组存储到HDF5文件中，存储的浮点数为双精度浮点数</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> h5py.File(<span class="string">&#x27;big1.hdf5&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f1:</span><br><span class="line"><span class="meta">... </span>    f1[<span class="string">&#x27;big&#x27;</span>] = bigdata</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1 = h5py.File(<span class="string">&#x27;big1.hdf5&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1[<span class="string">&#x27;big&#x27;</span>].dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
 <p>文件大小为 783K</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ls -lh big1.hdf5</span></span><br><span class="line">-rw-r--r--  1 luowanqian  staff   783K  4 29 10:44 big1.hdf5</span><br></pre></td></tr></table></figure>
-
 <p>我们可以使用 <code>create_dataset</code> 函数来指定存储单精度浮点数</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> h5py.File(<span class="string">&#x27;big2.hdf5&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f2:</span><br><span class="line"><span class="meta">... </span>    f2.create_dataset(<span class="string">&#x27;big&#x27;</span>, data=bigdata, dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f2 = h5py.File(<span class="string">&#x27;big2.hdf5&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f2[<span class="string">&#x27;big&#x27;</span>].dtype</span><br><span class="line">dtype(<span class="string">&#x27;float32&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
 <p>文件大小为 393K</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ls -lh big2.hdf5</span></span><br><span class="line">-rw-r--r--  1 luowanqian  staff   393K  4 29 11:02 big2.hdf5</span><br></pre></td></tr></table></figure>
-
-<h2 id="读取数据时进行数据转换"><a href="#读取数据时进行数据转换" class="headerlink" title="读取数据时进行数据转换"></a>读取数据时进行数据转换</h2><p>假设有个存储单精度浮点数的HDF5文件，我们想将数据读入到内存时是双精度浮点数。HDF5文件的数据如下</p>
+<h2 id="读取数据时进行数据转换">读取数据时进行数据转换</h2>
+<p>假设有个存储单精度浮点数的HDF5文件，我们想将数据读入到内存时是双精度浮点数。HDF5文件的数据如下</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> h5py</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata = np.ones((<span class="number">100</span>, <span class="number">1000</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> h5py.File(<span class="string">&#x27;big.hdf5&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line"><span class="meta">... </span>    f.create_dataset(<span class="string">&#x27;big&#x27;</span>, data=bigdata, dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f = h5py.File(<span class="string">&#x27;big.hdf5&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset = f[<span class="string">&#x27;big&#x27;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float32&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.shape</span><br><span class="line">(<span class="number">100</span>, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h3><p>使用 <code>np.empty</code> 创建一个空数组，然后使用 <code>read_direct</code> 函数</p>
+<h3 id="方案1">方案1</h3>
+<p>使用 <code>np.empty</code> 创建一个空数组，然后使用 <code>read_direct</code> 函数</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = np.empty((<span class="number">100</span>, <span class="number">1000</span>), dtype=np.float64)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.read_direct(out)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
 <p>如果不想读取全部数据，可以设置函数 <code>read_direct</code> 的 <code>source_sel</code> 和 <code>dest_sel</code> 参数。假设要将 <code>dset[0, :]</code> 的数据读入到 <code>out[50, :]</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = np.empty((<span class="number">100</span>, <span class="number">1000</span>), dtype=np.float64)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.read_direct(out, source_sel=np.s_[<span class="number">0</span>, :], dest_sel=np.s_[<span class="number">50</span>, :])</span><br></pre></td></tr></table></figure>
-
 <p>其中使用 <code>np.s_</code> 返回是 Numpy 的 <code>slice</code> 对象，该对象包含索引信息。如果省略 <code>dset_sel</code> 参数，则采用类似 Numpy 的广播规则进行赋值</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = np.empty((<span class="number">100</span>, <span class="number">50</span>), dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.read_direct(out, source_sel=np.s_[:, <span class="number">0</span>:<span class="number">50</span>])</span><br></pre></td></tr></table></figure>
-
-<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><p>如果要读取多次同样大小的数据时，使用 <code>read_direct</code> 可以节省很多时间，因为只需要申请一次空间，后面数据读入直接覆盖到这个空间。做一个Benchmark：</p>
+<h4 id="优势">优势</h4>
+<p>如果要读取多次同样大小的数据时，使用 <code>read_direct</code> 可以节省很多时间，因为只需要申请一次空间，后面数据读入直接覆盖到这个空间。做一个Benchmark：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> h5py</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> timeit <span class="keyword">import</span> timeit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">filename = <span class="string">&#x27;test.hdf5&#x27;</span></span><br><span class="line">n = <span class="number">10000</span></span><br><span class="line"></span><br><span class="line">f = h5py.File(filename, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">dset = f.create_dataset(<span class="string">&#x27;perftest&#x27;</span>, (n, n), dtype=np.float32)</span><br><span class="line">dset[:] = np.random.random(n)</span><br><span class="line">out = np.empty((n, <span class="number">500</span>), dtype=np.float32)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">time_simple</span>():</span></span><br><span class="line">    dset[:, <span class="number">0</span>:<span class="number">500</span>].mean(axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">time_direct</span>():</span></span><br><span class="line">    dset.read_direct(out, np.s_[:, <span class="number">0</span>:<span class="number">500</span>])</span><br><span class="line">    out.mean(axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">print(<span class="string">&#x27;Time simple: &#123;&#125;&#x27;</span>.format(timeit(time_simple, number=<span class="number">500</span>)))</span><br><span class="line">print(<span class="string">&#x27;Time direct: &#123;&#125;&#x27;</span>.format(timeit(time_direct, number=<span class="number">500</span>)))</span><br><span class="line"></span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
-
 <p>运行结果</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Time simple: 41.33699381200131</span><br><span class="line">Time direct: 39.005692337988876</span><br></pre></td></tr></table></figure>
-
-<h3 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h3><p>使用 <code>Dataset.astype</code> 这个上下文管理器</p>
+<h3 id="方案2">方案2</h3>
+<p>使用 <code>Dataset.astype</code> 这个上下文管理器</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> dset.astype(<span class="string">&#x27;float64&#x27;</span>):</span><br><span class="line"><span class="meta">... </span>    out = dset[...]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.shape</span><br><span class="line">(<span class="number">100</span>, <span class="number">1000</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
 <p>当然，也适合读取部分数据</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> dset.astype(<span class="string">&#x27;float64&#x27;</span>):</span><br><span class="line"><span class="meta">... </span>    out = dset[<span class="number">0</span>, :]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
 
         
         
@@ -505,27 +500,25 @@
 </header>
     <div class="article-content">
         
-        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Non-Maximum Suppression，简称NMS，在计算视觉领域有着非常重要的应用，主要应用在冗余的检测框的去除，例如在人脸检测应用中，检测出多个人脸框，此时需要去除冗余的检测框，保留最好的一个，还有在目标检测算法中会遇到一个物体有多个检测框，此时也需要去除冗余的检测框。</p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>利用参考[1]中提供的例子来简单阐述算法的流程。已知图片中有一辆汽车</p>
+        <h2 id="介绍">介绍</h2>
+<p>Non-Maximum Suppression，简称NMS，在计算视觉领域有着非常重要的应用，主要应用在冗余的检测框的去除，例如在人脸检测应用中，检测出多个人脸框，此时需要去除冗余的检测框，保留最好的一个，还有在目标检测算法中会遇到一个物体有多个检测框，此时也需要去除冗余的检测框。</p>
+<h2 id="原理">原理</h2>
+<p>利用参考[1]中提供的例子来简单阐述算法的流程。已知图片中有一辆汽车</p>
 <img src="/non_maximum_suppression/car.png" class="" width="500">
-
 <p>目标检测算法定位该汽车的位置时找出了一堆检测框，此时我们需要去除冗余的检测框。假设目标算法找到了6个检测框，而且算法还提供了每个框中内容属于汽车的概率或者得分 (在RCNN中，使用SVM计算检测框属于该类别的得分)，NMS方法首先根据得分大小对检测框进行排序，假设从小到大的排序为 <code>A, B, C, D, E, F</code>。</p>
-<ol>
-<li><p>从最大得分的检测框 <code>F</code> 开始，分别判断 <code>A~E</code> 与 <code>F</code> 的重叠度IoU是否大于某个设定的阈值。</p>
-</li>
-<li><p>假设检测框 <code>B、D</code> 与 <code>F</code>  的重叠度超过阈值，那么就抛弃 <code>B、D</code>，并将检测框 <code>F</code> 标记为要保留的检测框。</p>
-</li>
-<li><p>第2步去掉 <code>B</code> 和 <code>D</code> 后，剩余检测框 <code>A、C、E</code>，接着在剩下的检测框中选择得分最大检测框 <code>E</code>，然后判断 <code>E</code> 和 <code>A、C</code> 的重叠度，如果重叠度大于设定阈值，那就抛弃该检测框，否则留到下一轮的筛选过程，并将检测框 <code>E</code> 标记为要保留的检测框。</p>
-</li>
+<ol type="1">
+<li><p>从最大得分的检测框 <code>F</code> 开始，分别判断 <code>A~E</code> 与 <code>F</code> 的重叠度IoU是否大于某个设定的阈值。</p></li>
+<li><p>假设检测框 <code>B、D</code> 与 <code>F</code> 的重叠度超过阈值，那么就抛弃 <code>B、D</code>，并将检测框 <code>F</code> 标记为要保留的检测框。</p></li>
+<li><p>第2步去掉 <code>B</code> 和 <code>D</code> 后，剩余检测框 <code>A、C、E</code>，接着在剩下的检测框中选择得分最大检测框 <code>E</code>，然后判断 <code>E</code> 和 <code>A、C</code> 的重叠度，如果重叠度大于设定阈值，那就抛弃该检测框，否则留到下一轮的筛选过程，并将检测框 <code>E</code> 标记为要保留的检测框。</p></li>
 </ol>
 <p>重复步骤 3，直到剩余待筛选的框个数为 0。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>关于单类别的NMS的实现，网上已经有实现好的，这里贴出 Ross Girshick (RCNN提出者) 写的Python实现 <a target="_blank" rel="noopener" href="https://github.com/rbgirshick/py-faster-rcnn/blob/master/lib/nms/py_cpu_nms.py">py_cpu_nms.py</a>，并且加了个人的标注。</p>
+<h2 id="实现">实现</h2>
+<p>关于单类别的NMS的实现，网上已经有实现好的，这里贴出 Ross Girshick (RCNN提出者) 写的Python实现 <a target="_blank" rel="noopener" href="https://github.com/rbgirshick/py-faster-rcnn/blob/master/lib/nms/py_cpu_nms.py">py_cpu_nms.py</a>，并且加了个人的标注。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def py_cpu_nms(dets, thresh):</span><br><span class="line">    &quot;&quot;&quot;Pure Python NMS baseline.&quot;&quot;&quot;</span><br><span class="line">    x1 &#x3D; dets[:, 0]</span><br><span class="line">    y1 &#x3D; dets[:, 1]</span><br><span class="line">    x2 &#x3D; dets[:, 2]</span><br><span class="line">    y2 &#x3D; dets[:, 3]</span><br><span class="line">    scores &#x3D; dets[:, 4]</span><br><span class="line"></span><br><span class="line">    # 每个框 (bounding box) 的面积</span><br><span class="line">    areas &#x3D; (x2 - x1 + 1) * (y2 - y1 + 1)</span><br><span class="line">    # 根据得分 (score) 的大小进行降序排序</span><br><span class="line">    order &#x3D; scores.argsort()[::-1]</span><br><span class="line"></span><br><span class="line">    keep &#x3D; []</span><br><span class="line">    while order.size &gt; 0:</span><br><span class="line">        # 保留剩余框中得分最高的那个</span><br><span class="line">        i &#x3D; order[0]</span><br><span class="line">        keep.append(i)</span><br><span class="line"></span><br><span class="line">        # 计算相交区域位置，左上以及右下</span><br><span class="line">        xx1 &#x3D; np.maximum(x1[i], x1[order[1:]])</span><br><span class="line">        yy1 &#x3D; np.maximum(y1[i], y1[order[1:]])</span><br><span class="line">        xx2 &#x3D; np.minimum(x2[i], x2[order[1:]])</span><br><span class="line">        yy2 &#x3D; np.minimum(y2[i], y2[order[1:]])</span><br><span class="line"></span><br><span class="line">        # 计算相交区域面积</span><br><span class="line">        w &#x3D; np.maximum(0.0, xx2 - xx1 + 1)</span><br><span class="line">        h &#x3D; np.maximum(0.0, yy2 - yy1 + 1)</span><br><span class="line"></span><br><span class="line">        # 计算IoU，即 重叠面积 &#x2F; (框1面积 + 框2面积 - 重叠面积)</span><br><span class="line">        inter &#x3D; w * h</span><br><span class="line">        ovr &#x3D; inter &#x2F; (areas[i] + areas[order[1:]] - inter)</span><br><span class="line"></span><br><span class="line">        # 保留IoU小于阈值的框</span><br><span class="line">        inds &#x3D; np.where(ovr &lt;&#x3D; thresh)[0]</span><br><span class="line"></span><br><span class="line">        # 因为ovr数组的长度比order长度小1，所以这里要将所有下标后移一位</span><br><span class="line">        order &#x3D; order[inds + 1]</span><br><span class="line"></span><br><span class="line">    return keep</span><br></pre></td></tr></table></figure>
-
 <p>关于该代码的使用，我写了一个简单的测试脚本，在 <a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/Non-MaximumSuppression">GitHub</a>，测试了一张图片，实现效果如下：</p>
 <img src="/non_maximum_suppression/nms.png" class="" width="500">
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<h2 id="参考">参考</h2>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/makefile/p/nms.html">非极大值抑制（Non-Maximum Suppression，NMS）</a></li>
 </ol>
 
@@ -582,31 +575,32 @@
 </header>
     <div class="article-content">
         
-        <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Shell Snippets</p>
-<h2 id="列出目录里面文件名并进行排序"><a href="#列出目录里面文件名并进行排序" class="headerlink" title="列出目录里面文件名并进行排序"></a>列出目录里面文件名并进行排序</h2><p>在目录 <code>train</code> 里面有大量的图片 (扩展名为 png)</p>
+        <h2 id="introduction">Introduction</h2>
+<p>Shell Snippets</p>
+<h2 id="列出目录里面文件名并进行排序">列出目录里面文件名并进行排序</h2>
+<p>在目录 <code>train</code> 里面有大量的图片 (扩展名为 png)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l train&#x2F; | head</span><br><span class="line">total 400000</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2455 10 19  2013 1.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2101 10 19  2013 10.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2466 10 19  2013 100.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2171 10 19  2013 1000.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2031 10 19  2013 10000.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2051 10 19  2013 10001.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2317 10 19  2013 10002.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2511 10 19  2013 10003.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2460 10 19  2013 10004.png</span><br></pre></td></tr></table></figure>
-
 <p>提取该目录下的所有图片的文件名并进行排序</p>
-<h3 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l train&#x2F; | grep &quot;.png&quot; | tr -s &#39; &#39; | cut -d &#39; &#39; -f 9 | sort -n &gt; list.txt</span><br><span class="line">$ head list.txt</span><br><span class="line">1.png</span><br><span class="line">2.png</span><br><span class="line">3.png</span><br><span class="line">4.png</span><br><span class="line">5.png</span><br><span class="line">6.png</span><br><span class="line">7.png</span><br><span class="line">8.png</span><br><span class="line">9.png</span><br><span class="line">10.png</span><br></pre></td></tr></table></figure>
-
+<h3 id="方案1">方案1</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l train&#x2F; | grep &quot;.png&quot; | tr -s &#39; &#39; | cut -d &#39; &#39; -f 9 | sort -n &gt; list.txt</span><br><span class="line">$ head list.txt</span><br><span class="line">1.png</span><br><span class="line">2.png</span><br><span class="line">3.png</span><br><span class="line">4.png</span><br><span class="line">5.png</span><br><span class="line">6.png</span><br><span class="line">7.png</span><br><span class="line">8.png</span><br><span class="line">9.png</span><br><span class="line">10.png</span><br></pre></td></tr></table></figure>
 <p>其中</p>
 <ul>
-<li><code>tr -s &#39; &#39;</code> 是为了将多个space压缩成一个space</li>
-<li><code>cut -d &#39; &#39; -f 9</code> 是为了取出最后一列的文件名</li>
+<li><code>tr -s ' '</code> 是为了将多个space压缩成一个space</li>
+<li><code>cut -d ' ' -f 9</code> 是为了取出最后一列的文件名</li>
 <li><code>sort -n</code> 是将文件进行排序，由于文件名里面有数字，所以用<code>-n</code>选项</li>
 </ul>
-<h3 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ ls train&#x2F; | sort -n &gt; list.txt</span><br><span class="line">$ head list.txt</span><br><span class="line">1.png</span><br><span class="line">2.png</span><br><span class="line">3.png</span><br><span class="line">4.png</span><br><span class="line">5.png</span><br><span class="line">6.png</span><br><span class="line">7.png</span><br><span class="line">8.png</span><br><span class="line">9.png</span><br><span class="line">10.png</span><br></pre></td></tr></table></figure>
-
-<h2 id="pip升级所有包"><a href="#pip升级所有包" class="headerlink" title="pip升级所有包"></a>pip升级所有包</h2><p>pip 升级所有Python包，命令如下</p>
+<h3 id="方案2">方案2</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ ls train&#x2F; | sort -n &gt; list.txt</span><br><span class="line">$ head list.txt</span><br><span class="line">1.png</span><br><span class="line">2.png</span><br><span class="line">3.png</span><br><span class="line">4.png</span><br><span class="line">5.png</span><br><span class="line">6.png</span><br><span class="line">7.png</span><br><span class="line">8.png</span><br><span class="line">9.png</span><br><span class="line">10.png</span><br></pre></td></tr></table></figure>
+<h2 id="pip升级所有包">pip升级所有包</h2>
+<p>pip 升级所有Python包，命令如下</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 list --outdated --format=freeze | cut -d = -f 1 | xargs pip3 install -U&#x27;</span><br></pre></td></tr></table></figure>
-
 <p>其中 <code>pip3</code> 可以根据 pip 版本替换。</p>
-<h2 id="rsync断点续传"><a href="#rsync断点续传" class="headerlink" title="rsync断点续传"></a>rsync断点续传</h2><p>主要使用的是 rsync 的 <code>-P</code> 的选项，传输命令写为</p>
+<h2 id="rsync断点续传">rsync断点续传</h2>
+<p>主要使用的是 rsync 的 <code>-P</code> 的选项，传输命令写为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rsync -P ubuntu&#x2F;ubuntu-16.04.4-desktop-amd64.iso lab217server:&#x2F;home&#x2F;luowanqian&#x2F;Downloads&#x2F;</span><br></pre></td></tr></table></figure>
-
 <p>如果传输过程中网络中断或者使用了 <code>Ctrl + C</code>，此时可以再次使用该命令进行断点续传。</p>
 <p><strong>参考：</strong></p>
-<ol>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://www.ostechnix.com/how-to-resume-partially-downloaded-or-transferred-files-using-rsync/">How To Resume Partially Transferred Files Over SSH Using Rsync</a></li>
 </ol>
 
@@ -663,33 +657,37 @@
 </header>
     <div class="article-content">
         
-        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>关于ROC曲线的详细介绍，可以参考周志华的西瓜书 (《机器学习》)，本文主要介绍如何使用Python绘制该曲线。ROC曲线的纵轴是“真正例率” (True Positive Rate，简称TPR)，横轴是“假正例率” (False Positive Rate，简称FPR)，两者定义为：<br>$$<br>\begin{align}<br>TPR &amp; = \frac{TP}{TP + FN} \<br>FPR &amp; = \frac{FP}{TN + FP}<br>\end{align}<br>$$<br>相关的符号定义为：</p>
+        <h2 id="介绍">介绍</h2>
+<p>关于ROC曲线的详细介绍，可以参考周志华的西瓜书 (《机器学习》)，本文主要介绍如何使用Python绘制该曲线。ROC曲线的纵轴是“真正例率” (True Positive Rate，简称TPR)，横轴是“假正例率” (False Positive Rate，简称FPR)，两者定义为： <span class="math display">\[
+\begin{align}
+TPR &amp; = \frac{TP}{TP + FN} \\
+FPR &amp; = \frac{FP}{TN + FP}
+\end{align}
+\]</span> 相关的符号定义为：</p>
 <img src="/roc_curve_draw/matrix.png" class="" width="500">
-
-<p>在现实任务中，我们获取有限个 (FPR, TPR) 坐标对来勾勒出ROC曲线。要获得多个坐标对需要多组二分类结果，而我们做二分类任务时，通常只能获取一组分类结果，此时我们利用这组结果生成多组分类结果，具体做法是：给定 $m$ 个正例和 $n$ 个反例，根据分类器的预测值对样例进行从大到小排序，然后把分类阈值设为样例预测值中最大的那个，将样例进行正反例分类，计算相应的TPR和FPR，然后令分类阈值依次设为每个样例的预测值，将样例进行正反例分类，接着计算TPR和FPR，重复这个操作，直到分类阈值取完所有样例的预测值。</p>
+<p>在现实任务中，我们获取有限个 (FPR, TPR) 坐标对来勾勒出ROC曲线。要获得多个坐标对需要多组二分类结果，而我们做二分类任务时，通常只能获取一组分类结果，此时我们利用这组结果生成多组分类结果，具体做法是：给定 <span class="math inline">\(m\)</span> 个正例和 <span class="math inline">\(n\)</span> 个反例，根据分类器的预测值对样例进行从大到小排序，然后把分类阈值设为样例预测值中最大的那个，将样例进行正反例分类，计算相应的TPR和FPR，然后令分类阈值依次设为每个样例的预测值，将样例进行正反例分类，接着计算TPR和FPR，重复这个操作，直到分类阈值取完所有样例的预测值。</p>
 <p>关于分类器对样例的预测值，我们可以用分类器判定样例为正例的概率值，也可以用分类器对样例的评分值，预测值大于等于分类阈值时，分类器判定样例为正例，否则判定为负例。</p>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>已知10样例的真实标签 (0: 反例，1: 正例) 以及分类器对该样例的评分值</p>
+<h2 id="例子">例子</h2>
+<p>已知10样例的真实标签 (0: 反例，1: 正例) 以及分类器对该样例的评分值</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y_true &#x3D; [0, 1, 1, 0, 1, 0, 1, 1, 1, 0]</span><br><span class="line">y_score &#x3D; [0.505, 0.6, 0.8, 0.52, 0.55, 0.53, 0.54, 0.9, 0.51, 0.7]</span><br></pre></td></tr></table></figure>
-
 <p>根据评分值将样例进行从大到小排序，可以得到</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y_true &#x3D; [1, 1, 0, 1, 1, 1, 0, 0, 1, 0]</span><br><span class="line">y_score &#x3D; [0.9, 0.8, 0.7, 0.6, 0.55, 0.54, 0.53, 0.52, 0.51, 0.505]</span><br></pre></td></tr></table></figure>
-
 <p>将分类阈值设为 0.9，此时样例的分类为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y_true &#x3D; [1, 1, 0, 1, 1, 1, 0, 0, 1, 0]</span><br><span class="line">y_predict &#x3D; [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]</span><br></pre></td></tr></table></figure>
-
 <p>可以得到 TP = 1，FP = 0，FN = 5，TN = 4，则可得到 TPR = 1/(1+5) = 1/6 以及 FPR = 0。接着将分类阈值设为 0.8，然后将样例进行正反例分类，接着计算相应的TPR和FPR，直到分类阈值取完所有评分值，最终可以得到下面的TPR和FPR列表</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TPR &#x3D; [0.16666667, 0.33333333, 0.33333333, 0.5, 0.66666667, 0.83333333, 0.83333333, 0.83333333, 1.0, 1.0]</span><br><span class="line">FPR &#x3D; [0.0, 0.0, 0.25, 0.25, 0.25, 0.25, 0.5, 0.75, 0.75, 1.0]</span><br></pre></td></tr></table></figure>
-
 <p>然后根据这一系列的 (FPR, TPR) 坐标对画出ROC曲线。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>相关代码以及运用可以参考：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/Metrics">GitHub</a></p>
-<h3 id="Scikit-learn实现"><a href="#Scikit-learn实现" class="headerlink" title="Scikit-learn实现"></a>Scikit-learn实现</h3><p>Scikit-learn库提供了一个名为 <code>roc_curve</code> 函数来获取FPR以及TRP，函数原型如下</p>
+<h2 id="实现">实现</h2>
+<p>相关代码以及运用可以参考：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/Metrics">GitHub</a></p>
+<h3 id="scikit-learn实现">Scikit-learn实现</h3>
+<p>Scikit-learn库提供了一个名为 <code>roc_curve</code> 函数来获取FPR以及TRP，函数原型如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sklearn.metrics.roc_curve(y_true, y_score, pos_label&#x3D;None, sample_weight&#x3D;None, drop_intermediate&#x3D;True)</span><br></pre></td></tr></table></figure>
-
 <p>要想得到上面例子的计算结果，需要把 <code>drop_intermediate</code> 设为 False。</p>
-<h3 id="个人实现"><a href="#个人实现" class="headerlink" title="个人实现"></a>个人实现</h3><p>我这里直接照搬[1]中的实现，贴出代码如下</p>
+<h3 id="个人实现">个人实现</h3>
+<p>我这里直接照搬[1]中的实现，贴出代码如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">def binary_clf_curve(y_true, y_score, pos_label&#x3D;None):</span><br><span class="line">    if pos_label is None:</span><br><span class="line">        pos_label &#x3D; 1.0</span><br><span class="line"></span><br><span class="line">    # make y_true a boolean vector</span><br><span class="line">    y_true &#x3D; (y_true &#x3D;&#x3D; pos_label)</span><br><span class="line"></span><br><span class="line">    # sort scores</span><br><span class="line">    desc_score_indices &#x3D; np.argsort(y_score)[::-1]</span><br><span class="line">    thresholds &#x3D; y_score[desc_score_indices]</span><br><span class="line"></span><br><span class="line">    fps &#x3D; []</span><br><span class="line">    tps &#x3D; []</span><br><span class="line">    for threshold in thresholds:</span><br><span class="line">        # 大于等于阈值判定为 1 (正类)，否则为 0 (负类)</span><br><span class="line">        y_predict &#x3D; [1 if i &gt;&#x3D; threshold else 0 for i in y_score]</span><br><span class="line">        # 预测值是否等于真实值</span><br><span class="line">        result &#x3D; [i &#x3D;&#x3D; j for i, j in zip(y_true, y_predict)]</span><br><span class="line">        # 预测值是否为 1 (正类)</span><br><span class="line">        positive &#x3D; [i &#x3D;&#x3D; 1 for i in y_predict]</span><br><span class="line"></span><br><span class="line">        # 预测为正类且预测错误</span><br><span class="line">        fp &#x3D; [(not i) and j for i, j in zip(result, positive)].count(True)</span><br><span class="line">        # 预测为正类且预测正确</span><br><span class="line">        tp &#x3D; [i and j for i, j in zip(result, positive)].count(True)</span><br><span class="line"></span><br><span class="line">        fps.append(fp)</span><br><span class="line">        tps.append(tp)</span><br><span class="line">    fps &#x3D; np.array(fps)</span><br><span class="line">    tps &#x3D; np.array(tps)</span><br><span class="line"></span><br><span class="line">    return fps, tps, thresholds</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def roc_curve(y_true, y_score, pos_label&#x3D;None):</span><br><span class="line">    fps, tps, thresholds &#x3D; binary_clf_curve(y_true, y_score, pos_label)</span><br><span class="line"></span><br><span class="line">    fpr &#x3D; fps &#x2F; fps[-1]</span><br><span class="line">    tpr &#x3D; tps &#x2F; tps[-1]</span><br><span class="line"></span><br><span class="line">    return fpr, tpr, thresholds</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<h2 id="参考">参考</h2>
+<ol type="1">
 <li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/40748327">通过一个例子来绘制一条ROC曲线?</a></li>
 <li><a target="_blank" rel="noopener" href="http://nphard.me/2017/08/17/roc-auc/">roc-auc</a></li>
 <li><a target="_blank" rel="noopener" href="http://alexkong.net/2013/06/introduction-to-auc-and-roc/">ROC和AUC介绍以及如何计算AUC</a></li>
@@ -748,8 +746,10 @@
 </header>
     <div class="article-content">
         
-        <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>C++ Snippets</p>
-<h2 id="A-string-tokenizer"><a href="#A-string-tokenizer" class="headerlink" title="A string tokenizer"></a>A string tokenizer</h2><p>字符串分隔</p>
+        <h2 id="introduction">Introduction</h2>
+<p>C++ Snippets</p>
+<h2 id="a-string-tokenizer">A string tokenizer</h2>
+<p>字符串分隔</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">void tokenize(const string &amp;str, vector&lt;string&gt; &amp;tokens, const string &amp;delimiters &#x3D; &quot; &quot;)</span><br><span class="line">&#123;</span><br><span class="line">    &#x2F;&#x2F; Skip delimiters at beginning.</span><br><span class="line">    string::size_type lastPos &#x3D; str.find_first_not_of(delimiters, 0);</span><br><span class="line">    &#x2F;&#x2F; Find first &quot;non-delimiter&quot;.</span><br><span class="line">    string::size_type pos &#x3D; str.find_first_of(delimiters, lastPos);</span><br><span class="line"></span><br><span class="line">    while (string::npos !&#x3D; pos || string::npos !&#x3D; lastPos) &#123;</span><br><span class="line">        &#x2F;&#x2F; Found a token, add it to the vector.</span><br><span class="line">        tokens.push_back(str.substr(lastPos, pos - lastPos));</span><br><span class="line">        &#x2F;&#x2F; Skip delimiters.  Note the &quot;not_of&quot;</span><br><span class="line">        lastPos &#x3D; str.find_first_not_of(delimiters, pos);</span><br><span class="line">        &#x2F;&#x2F; Find next &quot;non-delimiter&quot;</span><br><span class="line">        pos &#x3D; str.find_first_of(delimiters, lastPos);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    vector&lt;string&gt; tokens;</span><br><span class="line">    string str(&quot;Split me up! Word1 Word2 Word3.&quot;);</span><br><span class="line"></span><br><span class="line">    tokenize(str, tokens);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; &quot;String: &quot; &lt;&lt; str &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; &quot;Tokens: &quot; &lt;&lt; endl;</span><br><span class="line">    for (auto it &#x3D; tokens.begin(); it !&#x3D; tokens.end(); it++)</span><br><span class="line">        cout &lt;&lt; *it &lt;&lt; endl;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
         
@@ -805,23 +805,24 @@
 </header>
     <div class="article-content">
         
-        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given two arrays, write a function to compute their intersection.</p>
+        <h2 id="问题描述">问题描述</h2>
+<p>Given two arrays, write a function to compute their intersection.</p>
 <p><strong>Example:</strong></p>
 <p>Given nums1 = <code>[1, 2, 2, 1]</code>, nums2 = <code>[2, 2]</code>, return <code>[2]</code>.</p>
 <p><strong>Note:</strong></p>
 <ul>
-<li>Each element in the result must be unique.</li>
-</ul>
-<ul>
-<li>The result can be in any order.</li>
+<li><p>Each element in the result must be unique.</p></li>
+<li><p>The result can be in any order.</p></li>
 </ul>
 <p><strong>Related Topics:</strong> Hash Table, Two Pointers, Binary Search, Sort</p>
 <p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/intersection-of-two-arrays/description/">349. Intersection of Two Arrays</a></p>
 <p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/intersection-of-two-arrays/description/">349. 两个数组的交集</a></p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h3><p>可以创建两个哈希表，首先遍历数组 nums1，将数组元素添加到第一个哈希表中，然后遍历数组 nums2，如果数组元素在第一个哈希表中不存在，则将该数组元素添加到第二个哈希表中，遍历完数组 nums2 后，将第二个哈希表的中元素作为结果输出。实现代码如下：</p>
+<h2 id="解决方案">解决方案</h2>
+<h3 id="方案1">方案1</h3>
+<p>可以创建两个哈希表，首先遍历数组 nums1，将数组元素添加到第一个哈希表中，然后遍历数组 nums2，如果数组元素在第一个哈希表中不存在，则将该数组元素添加到第二个哈希表中，遍历完数组 nums2 后，将第二个哈希表的中元素作为结果输出。实现代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    vector&lt;int&gt; intersection(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2)</span><br><span class="line">    &#123;</span><br><span class="line">        unordered_set&lt;int&gt; unique_nums1;</span><br><span class="line">        for (auto it&#x3D;nums1.begin(); it!&#x3D;nums1.end(); it++)</span><br><span class="line">            unique_nums1.insert(*it);</span><br><span class="line"></span><br><span class="line">        unordered_set&lt;int&gt; unique_nums;</span><br><span class="line">        for (auto it&#x3D;nums2.begin(); it!&#x3D;nums2.end(); it++) &#123;</span><br><span class="line">            if (unique_nums1.find(*it) !&#x3D; unique_nums1.end())</span><br><span class="line">                unique_nums.insert(*it);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        vector&lt;int&gt; ret;</span><br><span class="line">        for (auto it&#x3D;unique_nums.begin(); it!&#x3D;unique_nums.end(); it++)</span><br><span class="line">            ret.push_back(*it);</span><br><span class="line"></span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    vector&lt;int&gt; nums1 &#x3D; &#123;1, 2, 2, 1&#125;;</span><br><span class="line">    vector&lt;int&gt; nums2 &#x3D; &#123;2, 2&#125;;</span><br><span class="line">    vector&lt;int&gt; ret &#x3D; solu.intersection(nums1, nums2);</span><br><span class="line"></span><br><span class="line">    for (auto it&#x3D;ret.begin(); it!&#x3D;ret.end(); it++)</span><br><span class="line">        cout &lt;&lt; *it &lt;&lt; &quot; &quot;;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h3><p>将数组 nums1 和数组 nums2 进行从小到大排序，设置两个指针 p1 和 p2 分别指向数组 nums1 和数组 nums2 的第一个元素。开始遍历数组时，如果指针 p1 和指针 p2 指向的元素不相等，则移动指向元素中较小值的指针，如果指针 p1 和指针 p2 指向的元素相等，则同时移动指针 p1 和 p2，并记录该相等的元素 (找到相等元素时先判断该元素是否和这个记录值相等，如果相等则说明交集已经存在该元素，不需要添加到交集中，否则添加到交集中)，依次操作，直到其中一个集合没有元素可比较为止。实现代码如下：</p>
+<h3 id="方案2">方案2</h3>
+<p>将数组 nums1 和数组 nums2 进行从小到大排序，设置两个指针 p1 和 p2 分别指向数组 nums1 和数组 nums2 的第一个元素。开始遍历数组时，如果指针 p1 和指针 p2 指向的元素不相等，则移动指向元素中较小值的指针，如果指针 p1 和指针 p2 指向的元素相等，则同时移动指针 p1 和 p2，并记录该相等的元素 (找到相等元素时先判断该元素是否和这个记录值相等，如果相等则说明交集已经存在该元素，不需要添加到交集中，否则添加到交集中)，依次操作，直到其中一个集合没有元素可比较为止。实现代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    vector&lt;int&gt; intersection(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2)</span><br><span class="line">    &#123;</span><br><span class="line">        vector&lt;int&gt; ret;</span><br><span class="line">        if (nums1.size() &#x3D;&#x3D; 0)</span><br><span class="line">            return ret;</span><br><span class="line">        else if (nums2.size() &#x3D;&#x3D; 0)</span><br><span class="line">            return ret;</span><br><span class="line"></span><br><span class="line">        sort(nums1.begin(), nums1.end());</span><br><span class="line">        sort(nums2.begin(), nums2.end());</span><br><span class="line"></span><br><span class="line">        int p1, p2, repeat;</span><br><span class="line">        p1 &#x3D; p2 &#x3D; 0;</span><br><span class="line">        repeat &#x3D; nums1[0] &lt; nums2[0] ? nums1[0] - 1 : nums2[0] - 1;</span><br><span class="line">        while (p1 &lt; nums1.size() &amp;&amp; p2 &lt; nums2.size()) &#123;</span><br><span class="line">            if (nums1[p1] &lt; nums2[p2]) &#123;</span><br><span class="line">                p1++;</span><br><span class="line">            &#125; else if (nums1[p1] &gt; nums2[p2]) &#123;</span><br><span class="line">                p2++;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (repeat !&#x3D; nums1[p1])</span><br><span class="line">                    ret.push_back(nums1[p1]);</span><br><span class="line">                repeat &#x3D; nums1[p1];</span><br><span class="line">                p1++;</span><br><span class="line">                p2++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    vector&lt;int&gt; nums1 &#x3D; &#123;1, 2, 2, 1&#125;;</span><br><span class="line">    vector&lt;int&gt; nums2 &#x3D; &#123;2, 2&#125;;</span><br><span class="line">    vector&lt;int&gt; ret &#x3D; solu.intersection(nums1, nums2);</span><br><span class="line"></span><br><span class="line">    for (auto it&#x3D;ret.begin(); it!&#x3D;ret.end(); it++)</span><br><span class="line">        cout &lt;&lt; *it &lt;&lt; &quot; &quot;;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
         
@@ -877,27 +878,24 @@
 </header>
     <div class="article-content">
         
-        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Give a string <code>s</code>, count the number of non-empty (contiguous) substrings that have the same number of 0’s and 1’s, and all the 0’s and all the 1’s in these substrings are grouped consecutively.</p>
+        <h2 id="问题描述">问题描述</h2>
+<p>Give a string <code>s</code>, count the number of non-empty (contiguous) substrings that have the same number of 0's and 1's, and all the 0's and all the 1's in these substrings are grouped consecutively.</p>
 <p>Substrings that occur multiple times are counted the number of times they occur.</p>
 <p><strong>Example 1:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;00110011&quot;</span><br><span class="line">Output: 6</span><br><span class="line">Explanation: There are 6 substrings that have equal number of consecutive 1&#39;s and 0&#39;s: &quot;0011&quot;, &quot;01&quot;, &quot;1100&quot;, &quot;10&quot;, &quot;0011&quot;, and &quot;01&quot;.</span><br><span class="line"></span><br><span class="line">Notice that some of these substrings repeat and are counted the number of times they occur.</span><br><span class="line"></span><br><span class="line">Also, &quot;00110011&quot; is not a valid substring because all the 0&#39;s (and 1&#39;s) are not grouped together.</span><br></pre></td></tr></table></figure>
-
 <p><strong>Example 2:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;10101&quot;</span><br><span class="line">Output: 4</span><br><span class="line">Explanation: There are 4 substrings: &quot;10&quot;, &quot;01&quot;, &quot;10&quot;, &quot;01&quot; that have equal number of consecutive 1&#39;s and 0&#39;s.</span><br></pre></td></tr></table></figure>
-
 <p><strong>Note:</strong></p>
 <ul>
-<li>s.length will be between 1 and 50,000.</li>
-</ul>
-<ul>
-<li>s will only consist of “0” or “1” characters.</li>
+<li><p>s.length will be between 1 and 50,000.</p></li>
+<li><p>s will only consist of "0" or "1" characters.</p></li>
 </ul>
 <p><strong>Related Topics:</strong> String</p>
 <p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/count-binary-substrings/description/">696. Count Binary Substrings</a></p>
 <p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/count-binary-substrings/description/">696. 计数二进制子串</a></p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>如果使用暴力方法进行解决，很容易超时，因为字符串 <code>s</code> 最长为 50000，因此需要考虑一些取巧的方法。这里可以创建一个数组，数组元素存储每个连续子串的长度，例如，将字符串 <code>1111000011010001011</code> 转化为数组 <code>[4, 4, 2, 1, 1, 3, 1, 1, 2]</code>，根据这个数组，我们可以很方便地获得满足条件的子串个数，只需要将数组中相邻元素之间最小的那个求和即可，即</p>
+<h2 id="解决方案">解决方案</h2>
+<p>如果使用暴力方法进行解决，很容易超时，因为字符串 <code>s</code> 最长为 50000，因此需要考虑一些取巧的方法。这里可以创建一个数组，数组元素存储每个连续子串的长度，例如，将字符串 <code>1111000011010001011</code> 转化为数组 <code>[4, 4, 2, 1, 1, 3, 1, 1, 2]</code>，根据这个数组，我们可以很方便地获得满足条件的子串个数，只需要将数组中相邻元素之间最小的那个求和即可，即</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">n &#x3D; min(4, 4) + min(4, 2) + min(2, 1) + min(1, 1)</span><br><span class="line">    + min(1, 3) + min(3, 1) + min(1, 1) + min(1, 2)</span><br><span class="line">  &#x3D; 4 + 2 + 1 + 1 + 1 + 1 + 1 + 1</span><br><span class="line">  &#x3D; 12</span><br></pre></td></tr></table></figure>
-
 <p>实现代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    int countBinarySubstrings(string s)</span><br><span class="line">    &#123;</span><br><span class="line">        vector&lt;int&gt; trans;</span><br><span class="line">        int num_bs &#x3D; 0;</span><br><span class="line">        int count;</span><br><span class="line"></span><br><span class="line">        count &#x3D; 0;</span><br><span class="line">        for (int i&#x3D;0; i&lt;s.size(); i++) &#123;</span><br><span class="line">            count++;</span><br><span class="line">            if (i+1 &lt; s.size() &amp;&amp; s[i] !&#x3D; s[i+1]) &#123;</span><br><span class="line">                trans.push_back(count);</span><br><span class="line">                count &#x3D; 0;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (count &gt; 0)</span><br><span class="line">            trans.push_back(count);</span><br><span class="line"></span><br><span class="line">        for (int i&#x3D;0; i&lt;trans.size()-1; i++)</span><br><span class="line">            num_bs +&#x3D; trans[i] &gt; trans[i+1] ? trans[i+1] : trans[i];</span><br><span class="line"></span><br><span class="line">        return num_bs;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line"></span><br><span class="line">    string str1 &#x3D; &quot;00110011&quot;;</span><br><span class="line">    cout &lt;&lt; str1 &lt;&lt; &quot;: &quot; &lt;&lt; solu.countBinarySubstrings(str1) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    string str2 &#x3D; &quot;10101&quot;;</span><br><span class="line">    cout &lt;&lt; str2 &lt;&lt; &quot;: &quot; &lt;&lt; solu.countBinarySubstrings(str2) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 

@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="问题描述Give a string s, count the number of non-empty (contiguous) substrings that have the same number of 0’s and 1’s, and all the 0’s and all the 1’s in these substrings are grouped consecutively. Subs">
+    <meta name="description" content="问题描述 Give a string s, count the number of non-empty (contiguous) substrings that have the same number of 0&#39;s and 1&#39;s, and all the 0&#39;s and all the 1&#39;s in these substrings are grouped consecutively. Sub">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 696 - Count Binary Substrings">
 <meta property="og:url" content="http://www.scutmath.com/leetcode_696.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="问题描述Give a string s, count the number of non-empty (contiguous) substrings that have the same number of 0’s and 1’s, and all the 0’s and all the 1’s in these substrings are grouped consecutively. Subs">
+<meta property="og:description" content="问题描述 Give a string s, count the number of non-empty (contiguous) substrings that have the same number of 0&#39;s and 1&#39;s, and all the 0&#39;s and all the 1&#39;s in these substrings are grouped consecutively. Sub">
 <meta property="og:locale">
 <meta property="article:published_time" content="2018-04-21T14:35:26.000Z">
 <meta property="article:modified_time" content="2020-08-09T03:49:49.798Z">
@@ -111,27 +111,24 @@
 		
 		</div>
 		
-		<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Give a string <code>s</code>, count the number of non-empty (contiguous) substrings that have the same number of 0’s and 1’s, and all the 0’s and all the 1’s in these substrings are grouped consecutively.</p>
+		<h2 id="问题描述">问题描述</h2>
+<p>Give a string <code>s</code>, count the number of non-empty (contiguous) substrings that have the same number of 0's and 1's, and all the 0's and all the 1's in these substrings are grouped consecutively.</p>
 <p>Substrings that occur multiple times are counted the number of times they occur.</p>
 <p><strong>Example 1:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;00110011&quot;</span><br><span class="line">Output: 6</span><br><span class="line">Explanation: There are 6 substrings that have equal number of consecutive 1&#39;s and 0&#39;s: &quot;0011&quot;, &quot;01&quot;, &quot;1100&quot;, &quot;10&quot;, &quot;0011&quot;, and &quot;01&quot;.</span><br><span class="line"></span><br><span class="line">Notice that some of these substrings repeat and are counted the number of times they occur.</span><br><span class="line"></span><br><span class="line">Also, &quot;00110011&quot; is not a valid substring because all the 0&#39;s (and 1&#39;s) are not grouped together.</span><br></pre></td></tr></table></figure>
-
 <p><strong>Example 2:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;10101&quot;</span><br><span class="line">Output: 4</span><br><span class="line">Explanation: There are 4 substrings: &quot;10&quot;, &quot;01&quot;, &quot;10&quot;, &quot;01&quot; that have equal number of consecutive 1&#39;s and 0&#39;s.</span><br></pre></td></tr></table></figure>
-
 <p><strong>Note:</strong></p>
 <ul>
-<li>s.length will be between 1 and 50,000.</li>
-</ul>
-<ul>
-<li>s will only consist of “0” or “1” characters.</li>
+<li><p>s.length will be between 1 and 50,000.</p></li>
+<li><p>s will only consist of "0" or "1" characters.</p></li>
 </ul>
 <p><strong>Related Topics:</strong> String</p>
 <p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/count-binary-substrings/description/">696. Count Binary Substrings</a></p>
 <p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/count-binary-substrings/description/">696. 计数二进制子串</a></p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>如果使用暴力方法进行解决，很容易超时，因为字符串 <code>s</code> 最长为 50000，因此需要考虑一些取巧的方法。这里可以创建一个数组，数组元素存储每个连续子串的长度，例如，将字符串 <code>1111000011010001011</code> 转化为数组 <code>[4, 4, 2, 1, 1, 3, 1, 1, 2]</code>，根据这个数组，我们可以很方便地获得满足条件的子串个数，只需要将数组中相邻元素之间最小的那个求和即可，即</p>
+<h2 id="解决方案">解决方案</h2>
+<p>如果使用暴力方法进行解决，很容易超时，因为字符串 <code>s</code> 最长为 50000，因此需要考虑一些取巧的方法。这里可以创建一个数组，数组元素存储每个连续子串的长度，例如，将字符串 <code>1111000011010001011</code> 转化为数组 <code>[4, 4, 2, 1, 1, 3, 1, 1, 2]</code>，根据这个数组，我们可以很方便地获得满足条件的子串个数，只需要将数组中相邻元素之间最小的那个求和即可，即</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">n &#x3D; min(4, 4) + min(4, 2) + min(2, 1) + min(1, 1)</span><br><span class="line">    + min(1, 3) + min(3, 1) + min(1, 1) + min(1, 2)</span><br><span class="line">  &#x3D; 4 + 2 + 1 + 1 + 1 + 1 + 1 + 1</span><br><span class="line">  &#x3D; 12</span><br></pre></td></tr></table></figure>
-
 <p>实现代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    int countBinarySubstrings(string s)</span><br><span class="line">    &#123;</span><br><span class="line">        vector&lt;int&gt; trans;</span><br><span class="line">        int num_bs &#x3D; 0;</span><br><span class="line">        int count;</span><br><span class="line"></span><br><span class="line">        count &#x3D; 0;</span><br><span class="line">        for (int i&#x3D;0; i&lt;s.size(); i++) &#123;</span><br><span class="line">            count++;</span><br><span class="line">            if (i+1 &lt; s.size() &amp;&amp; s[i] !&#x3D; s[i+1]) &#123;</span><br><span class="line">                trans.push_back(count);</span><br><span class="line">                count &#x3D; 0;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (count &gt; 0)</span><br><span class="line">            trans.push_back(count);</span><br><span class="line"></span><br><span class="line">        for (int i&#x3D;0; i&lt;trans.size()-1; i++)</span><br><span class="line">            num_bs +&#x3D; trans[i] &gt; trans[i+1] ? trans[i+1] : trans[i];</span><br><span class="line"></span><br><span class="line">        return num_bs;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line"></span><br><span class="line">    string str1 &#x3D; &quot;00110011&quot;;</span><br><span class="line">    cout &lt;&lt; str1 &lt;&lt; &quot;: &quot; &lt;&lt; solu.countBinarySubstrings(str1) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    string str2 &#x3D; &quot;10101&quot;;</span><br><span class="line">    cout &lt;&lt; str2 &lt;&lt; &quot;: &quot; &lt;&lt; solu.countBinarySubstrings(str2) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
   

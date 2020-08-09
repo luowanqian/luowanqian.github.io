@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="问题描述Given a linked list, return the node where the cycle begins. If there is no cycle, return null. To represent a cycle in the given linked list, we use an integer pos which represents the position (">
+    <meta name="description" content="问题描述 Given a linked list, return the node where the cycle begins. If there is no cycle, return null. To represent a cycle in the given linked list, we use an integer pos which represents the position">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 142 - Linked List Cycle II">
 <meta property="og:url" content="http://www.scutmath.com/leetcode_142.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="问题描述Given a linked list, return the node where the cycle begins. If there is no cycle, return null. To represent a cycle in the given linked list, we use an integer pos which represents the position (">
+<meta property="og:description" content="问题描述 Given a linked list, return the node where the cycle begins. If there is no cycle, return null. To represent a cycle in the given linked list, we use an integer pos which represents the position">
 <meta property="og:locale">
 <meta property="og:image" content="http://www.scutmath.com/leetcode_142/1.png">
 <meta property="og:image" content="http://www.scutmath.com/leetcode_142/2.png">
@@ -116,49 +116,47 @@
 		
 		</div>
 		
-		<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given a linked list, return the node where the cycle begins. If there is no cycle, return <code>null</code>.</p>
+		<h2 id="问题描述">问题描述</h2>
+<p>Given a linked list, return the node where the cycle begins. If there is no cycle, return <code>null</code>.</p>
 <p>To represent a cycle in the given linked list, we use an integer <code>pos</code> which represents the position (0-indexed) in the linked list where tail connects to. If <code>pos</code> is <code>-1</code>, then there is no cycle in the linked list.</p>
 <p>Note: Do not modify the linked list.</p>
 <p><strong>Example 1:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: head &#x3D; [3,2,0,-4], pos &#x3D; 1</span><br><span class="line">Output: tail connects to node index 1</span><br><span class="line">Explanation: There is a cycle in the linked list, where tail connects to the second node.</span><br></pre></td></tr></table></figure>
-
 <img src="/leetcode_142/1.png" class="" width="350">
-
 <p><strong>Example 2:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: head &#x3D; [1,2], pos &#x3D; 0</span><br><span class="line">Output: tail connects to node index 0</span><br><span class="line">Explanation: There is a cycle in the linked list, where tail connects to the first node.</span><br></pre></td></tr></table></figure>
-
 <img src="/leetcode_142/2.png" class="" width="170">
-
 <p><strong>Example 3:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: head &#x3D; [1], pos &#x3D; -1</span><br><span class="line">Output: no cycle</span><br><span class="line">Explanation: There is no cycle in the linked list.</span><br></pre></td></tr></table></figure>
-
 <img src="/leetcode_142/3.png" class="" width="50">
-
 <p><strong>Follow-up:</strong></p>
 <p>Can you solve it without using extra space?</p>
 <p><strong>Related Topics:</strong> <code>Linked List</code>, <code>Two Pointers</code></p>
 <p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/linked-list-cycle-ii/">142. Linked List Cycle II</a></p>
 <p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/linked-list-cycle-ii/">142. 环形链表 II</a></p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="解决方案1"><a href="#解决方案1" class="headerlink" title="解决方案1"></a>解决方案1</h3><p>用一个 <code>Set</code> 保存已访问的节点，此时可以遍历整个链表并返回第一个出现重复的节点。时间复杂度为 <code>O(n)</code>，空间复杂度为 <code>O(n)</code></p>
+<h2 id="解决方案">解决方案</h2>
+<h3 id="解决方案1">解决方案1</h3>
+<p>用一个 <code>Set</code> 保存已访问的节点，此时可以遍历整个链表并返回第一个出现重复的节点。时间复杂度为 <code>O(n)</code>，空间复杂度为 <code>O(n)</code></p>
 <details>
-<summary>参考解题代码</summary>
-
+<summary>
+参考解题代码
+</summary>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">detectCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">set</span>&lt;ListNode*&gt; node_set;</span><br><span class="line">        ListNode *node;</span><br><span class="line"></span><br><span class="line">        node = head;</span><br><span class="line">        <span class="keyword">while</span> (node != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (node_set.find(node) == node_set.end())</span><br><span class="line">                node_set.insert(node);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> node;</span><br><span class="line">            node = node-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
 </details>
-
-<h3 id="解决方案2"><a href="#解决方案2" class="headerlink" title="解决方案2"></a>解决方案2</h3><p>方案2是 LeetCode 141 解题思路的进一步改进，算法分为两个阶段：</p>
+<h3 id="解决方案2">解决方案2</h3>
+<p>方案2是 LeetCode 141 解题思路的进一步改进，算法分为两个阶段：</p>
 <ul>
 <li>阶段1 : 首先使用快指针 <code>fast</code> 和慢指针 <code>slow</code> 遍历链表，如果链表有环，两指针最终会相遇到某个节点</li>
 <li>阶段2 : 初始化额外的两个指针，<code>ptr1</code> 指向链表的头节点，<code>ptr2</code> 指向相遇节点。然后，我们每次将它们往前移动一步，直到它们相遇，它们相遇的点就是环的入口，返回这个节点</li>
 </ul>
 <p>关于阶段2的实现原理，这里提供一个不错的解答说明：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/linked-list-cycle-ii/solution/huan-xing-lian-biao-ii-by-leetcode/">LeetCode: 环形链表 II 官方解答</a></p>
 <details>
-<summary>参考解题代码</summary>
-
+<summary>
+参考解题代码
+</summary>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">detectCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">NULL</span> == head || <span class="literal">NULL</span> == head-&gt;next)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">        ListNode *slow, *fast;</span><br><span class="line"></span><br><span class="line">        slow = fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="literal">NULL</span> &amp;&amp; fast-&gt;next != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            slow = slow-&gt;next;</span><br><span class="line">            fast = fast-&gt;next-&gt;next;</span><br><span class="line">            <span class="keyword">if</span> (slow == fast)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// no cycle</span></span><br><span class="line">        <span class="keyword">if</span> (slow != fast)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">        slow = head;</span><br><span class="line">        <span class="keyword">while</span> (slow != fast) &#123;</span><br><span class="line">            slow = slow-&gt;next;</span><br><span class="line">            fast = fast-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> fast;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-</details>  
+</details>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">

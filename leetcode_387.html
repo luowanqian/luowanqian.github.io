@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="问题描述Given a string, find the first non-repeating character in it and return it’s index. If it doesn’t exist, return -1. Examples: 12345s &#x3D; &quot;leetcode&quot;return 0.s &#x3D; &quot;loveleetcode">
+    <meta name="description" content="问题描述 Given a string, find the first non-repeating character in it and return it&#39;s index. If it doesn&#39;t exist, return -1. Examples: 12345s &#x3D; &quot;leetcode&quot;return 0.s &#x3D; &quot;loveleetcod">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 387 - First Unique Character in a String">
 <meta property="og:url" content="http://www.scutmath.com/leetcode_387.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="问题描述Given a string, find the first non-repeating character in it and return it’s index. If it doesn’t exist, return -1. Examples: 12345s &#x3D; &quot;leetcode&quot;return 0.s &#x3D; &quot;loveleetcode">
+<meta property="og:description" content="问题描述 Given a string, find the first non-repeating character in it and return it&#39;s index. If it doesn&#39;t exist, return -1. Examples: 12345s &#x3D; &quot;leetcode&quot;return 0.s &#x3D; &quot;loveleetcod">
 <meta property="og:locale">
 <meta property="article:published_time" content="2018-04-21T13:23:56.000Z">
 <meta property="article:modified_time" content="2020-08-09T03:49:49.797Z">
@@ -111,15 +111,16 @@
 		
 		</div>
 		
-		<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given a string, find the first non-repeating character in it and return it’s index. If it doesn’t exist, return -1.</p>
+		<h2 id="问题描述">问题描述</h2>
+<p>Given a string, find the first non-repeating character in it and return it's index. If it doesn't exist, return -1.</p>
 <p><strong>Examples:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s &#x3D; &quot;leetcode&quot;</span><br><span class="line">return 0.</span><br><span class="line"></span><br><span class="line">s &#x3D; &quot;loveleetcode&quot;,</span><br><span class="line">return 2.</span><br></pre></td></tr></table></figure>
-
 <p><strong>Note:</strong> You may assume the string contain only lowercase letters.</p>
 <p><strong>Related Topics:</strong> Hash Table, String</p>
 <p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/first-unique-character-in-a-string/description/">387. First Unique Character in a String</a></p>
 <p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/first-unique-character-in-a-string/description/">387. 字符串中的第一个唯一字符</a></p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>本题需要找到第一个不重复出现的字符的位置，因此在遍历字符串时需要保存字符的位置。由于字符串中只有小写字母，因此可以创建一个大小为 26 的数组，存储 26 个字母在字符串中出现位置，由于还需要判断该字母是否重复出现，这时可以用一个特殊值表示该字母在字符串中重复出现。数组元素的值分三种情况：</p>
+<h2 id="解决方案">解决方案</h2>
+<p>本题需要找到第一个不重复出现的字符的位置，因此在遍历字符串时需要保存字符的位置。由于字符串中只有小写字母，因此可以创建一个大小为 26 的数组，存储 26 个字母在字符串中出现位置，由于还需要判断该字母是否重复出现，这时可以用一个特殊值表示该字母在字符串中重复出现。数组元素的值分三种情况：</p>
 <ul>
 <li>-1 表示该字母已经重复出现</li>
 <li>0 表示该字母未在字符串中出现</li>

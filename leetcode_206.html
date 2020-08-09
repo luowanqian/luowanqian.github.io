@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="1. 问题描述Reverse a singly linked list. Example: 12Input: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULLOutput: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL  Follow up: A linked list can be reversed either iteratively or recu">
+    <meta name="description" content="1. 问题描述 Reverse a singly linked list. Example: 12Input: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULLOutput: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL Follow up: A linked list can be reversed either iteratively or recu">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 206 - Reverse Linked List">
 <meta property="og:url" content="http://www.scutmath.com/leetcode_206.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="1. 问题描述Reverse a singly linked list. Example: 12Input: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULLOutput: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL  Follow up: A linked list can be reversed either iteratively or recu">
+<meta property="og:description" content="1. 问题描述 Reverse a singly linked list. Example: 12Input: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULLOutput: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL Follow up: A linked list can be reversed either iteratively or recu">
 <meta property="og:locale">
 <meta property="og:image" content="http://www.scutmath.com/leetcode_206/no_recur_1.png">
 <meta property="og:image" content="http://www.scutmath.com/leetcode_206/no_recur_2.png">
@@ -112,57 +112,53 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-text">1. 问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">2. 解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E9%9D%9E%E9%80%92%E5%BD%92"><span class="toc-text">2.1 非递归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%80%92%E5%BD%92"><span class="toc-text">2.2 递归</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-text">1. 问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">2. 解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E9%80%92%E5%BD%92"><span class="toc-text">2.1 非递归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%92%E5%BD%92"><span class="toc-text">2.2 递归</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h2 id="1-问题描述"><a href="#1-问题描述" class="headerlink" title="1. 问题描述"></a>1. 问题描述</h2><p>Reverse a singly linked list.</p>
+		<h2 id="问题描述">1. 问题描述</h2>
+<p>Reverse a singly linked list.</p>
 <p><strong>Example</strong>:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL</span><br><span class="line">Output: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL</span><br></pre></td></tr></table></figure>
-
 <p><strong>Follow up</strong>:</p>
 <p>A linked list can be reversed either iteratively or recursively. Could you implement both?</p>
 <p><strong>Related Topics:</strong> <code>Linked List</code></p>
 <p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/reverse-linked-list/">206. Reverse Linked List</a></p>
 <p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/reverse-linked-list/">206. 反转链表</a></p>
-<h2 id="2-解决方案"><a href="#2-解决方案" class="headerlink" title="2. 解决方案"></a>2. 解决方案</h2><h3 id="2-1-非递归"><a href="#2-1-非递归" class="headerlink" title="2.1 非递归"></a>2.1 非递归</h3><p>非递归的解决方案是按原始顺序迭代节点，并将它们逐个移动到链表的头部。以下举个例子进行说明</p>
+<h2 id="解决方案">2. 解决方案</h2>
+<h3 id="非递归">2.1 非递归</h3>
+<p>非递归的解决方案是按原始顺序迭代节点，并将它们逐个移动到链表的头部。以下举个例子进行说明</p>
 <img src="/leetcode_206/no_recur_1.png" class="" width="400">
-
 <p>黑色节点23是原始头节点。</p>
-<ol>
+<ol type="1">
 <li><p>首先，我们将黑色节点的下一个节点（即节点6）移动到链表的头部：</p>
- <img src="/leetcode_206/no_recur_2.png" class="" width="500">
-</li>
+<p><img src="/leetcode_206/no_recur_2.png" class="" width="500"></p></li>
 <li><p>然后，我们将黑色节点的下一个节点（即节点15）移动到链表的头部：</p>
- <img src="/leetcode_206/no_recur_3.png" class="" width="500">
-</li>
-<li><p>黑色结点的下一个结点现在是空。因此，我们停止这一过程并返回新的头结点15</p>
-</li>
+<p><img src="/leetcode_206/no_recur_3.png" class="" width="500"></p></li>
+<li><p>黑色结点的下一个结点现在是空。因此，我们停止这一过程并返回新的头结点15</p></li>
 </ol>
 <p>从以上流程可以知道该算法的时间复杂度为 <code>O(N)</code>，空间复杂度为 <code>O(1)</code></p>
 <details>
-<summary>参考解题代码</summary>
-
+<summary>
+参考解题代码
+</summary>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        ListNode *cur, *next;</span><br><span class="line"></span><br><span class="line">        cur = head;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="literal">NULL</span> &amp;&amp; cur-&gt;next != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            next = cur-&gt;next;</span><br><span class="line">            cur-&gt;next = next-&gt;next;</span><br><span class="line">            next-&gt;next = head;</span><br><span class="line">            head = next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
 </details>
-
-<h3 id="2-2-递归"><a href="#2-2-递归" class="headerlink" title="2.2 递归"></a>2.2 递归</h3><p>用递归解此题时，此时递归的函数返回的是反转链表后的新的头节点 <code>new_head</code>，进行整合时，只需要将头节点 <code>head</code> 添加到反转链表的尾部即可。拿前面例子来说，头节点23后部分都已经反转完毕，此时链表构造为</p>
+<h3 id="递归">2.2 递归</h3>
+<p>用递归解此题时，此时递归的函数返回的是反转链表后的新的头节点 <code>new_head</code>，进行整合时，只需要将头节点 <code>head</code> 添加到反转链表的尾部即可。拿前面例子来说，头节点23后部分都已经反转完毕，此时链表构造为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">23 -&gt; 6 &lt;- 15</span><br></pre></td></tr></table></figure>
-
 <p>此时 <code>new_head</code> 指向节点15，<code>head</code> 指向节点23，要将节点23添加到反转链表尾部，执行以下操作即可：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">head-&gt;next-&gt;next = head</span><br><span class="line">head-&gt;next = <span class="literal">NULL</span></span><br></pre></td></tr></table></figure>
-
 <p>经过以上操作以后，链表构造变为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NULL &lt;- 23 &lt;- 6 &lt;- 15</span><br></pre></td></tr></table></figure>
-
 <p>最后返回新的头节点 <code>new_head</code> 即可</p>
 <details>
-<summary>参考解题代码</summary>
-
+<summary>
+参考解题代码
+</summary>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">NULL</span> || head-&gt;next == <span class="literal">NULL</span>)</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line"></span><br><span class="line">        ListNode *new_head;</span><br><span class="line"></span><br><span class="line">        new_head = reverseList(head-&gt;next);</span><br><span class="line">        head-&gt;next-&gt;next = head;</span><br><span class="line">        head-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> new_head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-</details>  
+</details>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -221,7 +217,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-text">1. 问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">2. 解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E9%9D%9E%E9%80%92%E5%BD%92"><span class="toc-text">2.1 非递归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%80%92%E5%BD%92"><span class="toc-text">2.2 递归</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-text">1. 问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">2. 解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E9%80%92%E5%BD%92"><span class="toc-text">2.1 非递归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%92%E5%BD%92"><span class="toc-text">2.2 递归</span></a></li></ol></li></ol>
  
   </div>
 

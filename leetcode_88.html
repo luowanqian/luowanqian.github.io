@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="问题描述： Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array. Note:You may assume that nums1 has enough space (size that is greater or equal to m + n) to hold add">
+    <meta name="description" content="问题描述： Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array. Note: You may assume that nums1 has enough space (size that is greater or equal to m + n) to hold ad">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode 88 - Merge Sorted Array">
 <meta property="og:url" content="http://www.scutmath.com/leetcode_88.html">
 <meta property="og:site_name" content="清风的技术小屋">
-<meta property="og:description" content="问题描述： Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array. Note:You may assume that nums1 has enough space (size that is greater or equal to m + n) to hold add">
+<meta property="og:description" content="问题描述： Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array. Note: You may assume that nums1 has enough space (size that is greater or equal to m + n) to hold ad">
 <meta property="og:locale">
 <meta property="article:published_time" content="2018-03-10T07:54:23.000Z">
 <meta property="article:modified_time" content="2020-08-09T03:49:49.799Z">
@@ -107,28 +107,30 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B8%BA-O-nm-%E7%9A%84%E8%A7%A3%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">时间复杂度为 O(nm) 的解法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B8%BA-O-n-m-%E7%9A%84%E8%A7%A3%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">时间复杂度为 O(n + m) 的解法</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B8%BA-onm-%E7%9A%84%E8%A7%A3%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">时间复杂度为 O(nm) 的解法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B8%BA-on-m-%E7%9A%84%E8%A7%A3%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">时间复杂度为 O(n + m) 的解法</span></a></li></ol>
 		
 		</div>
 		
 		<blockquote>
 <p>问题描述：</p>
 <p>Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array.</p>
-<p><strong>Note:</strong><br>You may assume that nums1 has enough space (size that is greater or equal to m + n) to hold additional elements from nums2. The number of elements initialized in nums1 and nums2 are m and n respectively.</p>
+<p><strong>Note:</strong> You may assume that nums1 has enough space (size that is greater or equal to m + n) to hold additional elements from nums2. The number of elements initialized in nums1 and nums2 are m and n respectively.</p>
 </blockquote>
 <p>题目中说数组nums1大小为 m，数组nums2的大小为 n，要将数组nums2中的元素全部放到数组nums1中且保证数组nums1有序（这里有序假设是从小到大）。</p>
-<h2 id="时间复杂度为-O-nm-的解法"><a href="#时间复杂度为-O-nm-的解法" class="headerlink" title="时间复杂度为 O(nm) 的解法"></a>时间复杂度为 O(nm) 的解法</h2><p>初看到这个题目，一个最直观的想法就是设定两个指针分别指向两个数组开始的元素（令指针p1指向数组nums1，p2指向数组p2），然后从头开始遍历两个数组。</p>
+<h2 id="时间复杂度为-onm-的解法">时间复杂度为 O(nm) 的解法</h2>
+<p>初看到这个题目，一个最直观的想法就是设定两个指针分别指向两个数组开始的元素（令指针p1指向数组nums1，p2指向数组p2），然后从头开始遍历两个数组。</p>
 <ul>
 <li>如果指针p1指向的元素小于等于指针p2指向的元素，指针p1加一。</li>
 <li>如果指针p1指向的元素大于指针p2指向的元素，将指针p2指向的元素插入到指针p1指向的位置，指针p1指向的位置后面的元素都后移一位，指针p1和指针p2都加一。</li>
 </ul>
-<p>这样操作直到数组nums1或数组nums2的元素遍历完，如果是数组nums1的元素先被遍历完，则将数组nums2剩下的元素都复制到数组nums1中，如果是数组nums2的元素先被遍历完，算法停止。在最坏的情况下，数组nums2的元素都小于数组nums1的元素，每次插入数组nums2的元素，都要移动数组nums1的 $O(m)$ 个字符，那么算法复杂度为 $O(nm)$。</p>
-<h2 id="时间复杂度为-O-n-m-的解法"><a href="#时间复杂度为-O-n-m-的解法" class="headerlink" title="时间复杂度为 O(n + m) 的解法"></a>时间复杂度为 O(n + m) 的解法</h2><p>换个思路，我们不从头开始遍历数组，而是从数组后面开始遍历数组。这里我们准备三个指针：p、p1和p2，指针p指向数组nums1的第 n + m 个元素，指针p1指向数组nums1最后一个元素，指针p2指向数组nums2的最后一个元素。</p>
+<p>这样操作直到数组nums1或数组nums2的元素遍历完，如果是数组nums1的元素先被遍历完，则将数组nums2剩下的元素都复制到数组nums1中，如果是数组nums2的元素先被遍历完，算法停止。在最坏的情况下，数组nums2的元素都小于数组nums1的元素，每次插入数组nums2的元素，都要移动数组nums1的 <span class="math inline">\(O(m)\)</span> 个字符，那么算法复杂度为 <span class="math inline">\(O(nm)\)</span>。</p>
+<h2 id="时间复杂度为-on-m-的解法">时间复杂度为 O(n + m) 的解法</h2>
+<p>换个思路，我们不从头开始遍历数组，而是从数组后面开始遍历数组。这里我们准备三个指针：p、p1和p2，指针p指向数组nums1的第 n + m 个元素，指针p1指向数组nums1最后一个元素，指针p2指向数组nums2的最后一个元素。</p>
 <ul>
 <li>如果指针p1指向的元素小于指针p2指向的元素，将指针p2指向的元素复制到指针p指向的位置，指针p和p2减一。</li>
 <li>如果指针p1指向的元素大于等于指针p2指向的元素，将指针p1指向的元素复制到指针p指向的位置，指针p和p1减一。</li>
 </ul>
-<p>这样操作直到数组nums1或数组nums2被遍历完，如果是数组nums1先被遍历完，将数组nums2剩余的元素复制到数组nums1中，如果是数组nums2先被遍历完，则算法停止。从上面分析我们可以看出，只需要遍历一次数组nums1和数组nums2就行，不需要移动元素，因此这个算法的时间复杂度为 $O(n + m)$。</p>
+<p>这样操作直到数组nums1或数组nums2被遍历完，如果是数组nums1先被遍历完，将数组nums2剩余的元素复制到数组nums1中，如果是数组nums2先被遍历完，则算法停止。从上面分析我们可以看出，只需要遍历一次数组nums1和数组nums2就行，不需要移动元素，因此这个算法的时间复杂度为 <span class="math inline">\(O(n + m)\)</span>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    void merge(vector&lt;int&gt;&amp; nums1, int m, vector&lt;int&gt;&amp; nums2, int n) &#123;</span><br><span class="line"></span><br><span class="line">        if (m &lt;&#x3D; 0)</span><br><span class="line">            nums1 &#x3D; nums2;</span><br><span class="line">        if (n &lt;&#x3D; 0)</span><br><span class="line">            return;</span><br><span class="line"></span><br><span class="line">        int p, p1, p2;</span><br><span class="line">        p1 &#x3D; m - 1;</span><br><span class="line">        p2 &#x3D; n - 1;</span><br><span class="line">        p &#x3D; m + n - 1;</span><br><span class="line"></span><br><span class="line">        while (p &gt;&#x3D; 0 &amp;&amp; p1 &gt;&#x3D; 0 &amp;&amp; p2 &gt;&#x3D; 0) &#123;</span><br><span class="line">            if (nums1[p1] &gt;&#x3D; nums2[p2]) &#123;</span><br><span class="line">                nums1[p] &#x3D; nums1[p1];</span><br><span class="line">                p1--;</span><br><span class="line">            &#125; else if (nums1[p1] &lt; nums2[p2]) &#123;</span><br><span class="line">                nums1[p] &#x3D; nums2[p2];</span><br><span class="line">                p2--;</span><br><span class="line">            &#125;</span><br><span class="line">            p--;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (p2 &gt;&#x3D; 0) &#123;</span><br><span class="line">            while (p &gt;&#x3D;0 &amp;&amp; p2 &gt;&#x3D;0)</span><br><span class="line">                nums1[p--] &#x3D; nums2[p2--];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line"></span><br><span class="line">    vector&lt;int&gt; nums1 &#x3D; &#123;1, 3, 5, 7, 0, 0, 0&#125;;</span><br><span class="line">    vector&lt;int&gt; nums2 &#x3D; &#123;2, 4, 6&#125;;</span><br><span class="line">    solu.merge(nums1, 4, nums2, nums2.size());</span><br><span class="line"></span><br><span class="line">    for (auto it&#x3D;nums1.begin(); it!&#x3D;nums1.end(); ++it)</span><br><span class="line">        cout &lt;&lt; *it &lt;&lt; &quot; &quot;;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    vector&lt;int&gt; nums3 &#x3D; &#123;0, 0, 3, 0, 0, 0, 0, 0, 0&#125;;</span><br><span class="line">    vector&lt;int&gt; nums4 &#x3D; &#123;-1, 1, 1, 1, 2, 3&#125;;</span><br><span class="line">    solu.merge(nums3, 3, nums4, nums4.size());</span><br><span class="line"></span><br><span class="line">    for (auto it&#x3D;nums3.begin(); it!&#x3D;nums3.end(); ++it)</span><br><span class="line">        cout &lt;&lt; *it &lt;&lt; &quot; &quot;;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
   
 	</div>
@@ -189,7 +191,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B8%BA-O-nm-%E7%9A%84%E8%A7%A3%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">时间复杂度为 O(nm) 的解法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B8%BA-O-n-m-%E7%9A%84%E8%A7%A3%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">时间复杂度为 O(n + m) 的解法</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B8%BA-onm-%E7%9A%84%E8%A7%A3%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">时间复杂度为 O(nm) 的解法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B8%BA-on-m-%E7%9A%84%E8%A7%A3%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">时间复杂度为 O(n + m) 的解法</span></a></li></ol>
  
   </div>
 
