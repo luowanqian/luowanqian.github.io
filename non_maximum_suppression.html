@@ -1,0 +1,560 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Non-Maximum Suppression | 清风的技术小屋</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="罗万千">
+    
+
+    
+    <meta name="description" content="介绍Non-Maximum Suppression，简称NMS，在计算视觉领域有着非常重要的应用，主要应用在冗余的检测框的去除，例如在人脸检测应用中，检测出多个人脸框，此时需要去除冗余的检测框，保留最好的一个，还有在目标检测算法中会遇到一个物体有多个检测框，此时也需要去除冗余的检测框。 原理利用参考[1]中提供的例子来简单阐述算法的流程。已知图片中有一辆汽车   目标检测算法定位该汽车的位置时找出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Non-Maximum Suppression">
+<meta property="og:url" content="http://www.scutmath.com/non_maximum_suppression.html">
+<meta property="og:site_name" content="清风的技术小屋">
+<meta property="og:description" content="介绍Non-Maximum Suppression，简称NMS，在计算视觉领域有着非常重要的应用，主要应用在冗余的检测框的去除，例如在人脸检测应用中，检测出多个人脸框，此时需要去除冗余的检测框，保留最好的一个，还有在目标检测算法中会遇到一个物体有多个检测框，此时也需要去除冗余的检测框。 原理利用参考[1]中提供的例子来简单阐述算法的流程。已知图片中有一辆汽车   目标检测算法定位该汽车的位置时找出">
+<meta property="og:locale">
+<meta property="og:image" content="http://www.scutmath.com/non_maximum_suppression/car.png">
+<meta property="og:image" content="http://www.scutmath.com/non_maximum_suppression/nms.png">
+<meta property="article:published_time" content="2018-04-25T14:03:48.000Z">
+<meta property="article:modified_time" content="2020-08-09T03:49:49.800Z">
+<meta property="article:author" content="罗万千">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.scutmath.com/non_maximum_suppression/car.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="清风的技术小屋" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="清风的技术小屋" title="清风的技术小屋"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="清风的技术小屋">清风的技术小屋</a></h1>
+				<h2 class="blog-motto">不为所动, 做更专业的自己</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/contents">Contents</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/tags">Tags</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:www.scutmath.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/non_maximum_suppression.html" title="Non-Maximum Suppression" itemprop="url">Non-Maximum Suppression</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-25T14:03:48.000Z" itemprop="datePublished"> Published 2018-04-25</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Non-Maximum Suppression，简称NMS，在计算视觉领域有着非常重要的应用，主要应用在冗余的检测框的去除，例如在人脸检测应用中，检测出多个人脸框，此时需要去除冗余的检测框，保留最好的一个，还有在目标检测算法中会遇到一个物体有多个检测框，此时也需要去除冗余的检测框。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>利用参考[1]中提供的例子来简单阐述算法的流程。已知图片中有一辆汽车</p>
+<img src="/non_maximum_suppression/car.png" class="" width="500">
+
+<p>目标检测算法定位该汽车的位置时找出了一堆检测框，此时我们需要去除冗余的检测框。假设目标算法找到了6个检测框，而且算法还提供了每个框中内容属于汽车的概率或者得分 (在RCNN中，使用SVM计算检测框属于该类别的得分)，NMS方法首先根据得分大小对检测框进行排序，假设从小到大的排序为 <code>A, B, C, D, E, F</code>。</p>
+<ol>
+<li><p>从最大得分的检测框 <code>F</code> 开始，分别判断 <code>A~E</code> 与 <code>F</code> 的重叠度IoU是否大于某个设定的阈值。</p>
+</li>
+<li><p>假设检测框 <code>B、D</code> 与 <code>F</code>  的重叠度超过阈值，那么就抛弃 <code>B、D</code>，并将检测框 <code>F</code> 标记为要保留的检测框。</p>
+</li>
+<li><p>第2步去掉 <code>B</code> 和 <code>D</code> 后，剩余检测框 <code>A、C、E</code>，接着在剩下的检测框中选择得分最大检测框 <code>E</code>，然后判断 <code>E</code> 和 <code>A、C</code> 的重叠度，如果重叠度大于设定阈值，那就抛弃该检测框，否则留到下一轮的筛选过程，并将检测框 <code>E</code> 标记为要保留的检测框。</p>
+</li>
+</ol>
+<p>重复步骤 3，直到剩余待筛选的框个数为 0。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>关于单类别的NMS的实现，网上已经有实现好的，这里贴出 Ross Girshick (RCNN提出者) 写的Python实现 <a target="_blank" rel="noopener" href="https://github.com/rbgirshick/py-faster-rcnn/blob/master/lib/nms/py_cpu_nms.py">py_cpu_nms.py</a>，并且加了个人的标注。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def py_cpu_nms(dets, thresh):</span><br><span class="line">    &quot;&quot;&quot;Pure Python NMS baseline.&quot;&quot;&quot;</span><br><span class="line">    x1 &#x3D; dets[:, 0]</span><br><span class="line">    y1 &#x3D; dets[:, 1]</span><br><span class="line">    x2 &#x3D; dets[:, 2]</span><br><span class="line">    y2 &#x3D; dets[:, 3]</span><br><span class="line">    scores &#x3D; dets[:, 4]</span><br><span class="line"></span><br><span class="line">    # 每个框 (bounding box) 的面积</span><br><span class="line">    areas &#x3D; (x2 - x1 + 1) * (y2 - y1 + 1)</span><br><span class="line">    # 根据得分 (score) 的大小进行降序排序</span><br><span class="line">    order &#x3D; scores.argsort()[::-1]</span><br><span class="line"></span><br><span class="line">    keep &#x3D; []</span><br><span class="line">    while order.size &gt; 0:</span><br><span class="line">        # 保留剩余框中得分最高的那个</span><br><span class="line">        i &#x3D; order[0]</span><br><span class="line">        keep.append(i)</span><br><span class="line"></span><br><span class="line">        # 计算相交区域位置，左上以及右下</span><br><span class="line">        xx1 &#x3D; np.maximum(x1[i], x1[order[1:]])</span><br><span class="line">        yy1 &#x3D; np.maximum(y1[i], y1[order[1:]])</span><br><span class="line">        xx2 &#x3D; np.minimum(x2[i], x2[order[1:]])</span><br><span class="line">        yy2 &#x3D; np.minimum(y2[i], y2[order[1:]])</span><br><span class="line"></span><br><span class="line">        # 计算相交区域面积</span><br><span class="line">        w &#x3D; np.maximum(0.0, xx2 - xx1 + 1)</span><br><span class="line">        h &#x3D; np.maximum(0.0, yy2 - yy1 + 1)</span><br><span class="line"></span><br><span class="line">        # 计算IoU，即 重叠面积 &#x2F; (框1面积 + 框2面积 - 重叠面积)</span><br><span class="line">        inter &#x3D; w * h</span><br><span class="line">        ovr &#x3D; inter &#x2F; (areas[i] + areas[order[1:]] - inter)</span><br><span class="line"></span><br><span class="line">        # 保留IoU小于阈值的框</span><br><span class="line">        inds &#x3D; np.where(ovr &lt;&#x3D; thresh)[0]</span><br><span class="line"></span><br><span class="line">        # 因为ovr数组的长度比order长度小1，所以这里要将所有下标后移一位</span><br><span class="line">        order &#x3D; order[inds + 1]</span><br><span class="line"></span><br><span class="line">    return keep</span><br></pre></td></tr></table></figure>
+
+<p>关于该代码的使用，我写了一个简单的测试脚本，在 <a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/Non-MaximumSuppression">GitHub</a>，测试了一张图片，实现效果如下：</p>
+<img src="/non_maximum_suppression/nms.png" class="" width="500">
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/makefile/p/nms.html">非极大值抑制（Non-Maximum Suppression，NMS）</a></li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/机器学习/">机器学习</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.scutmath.com/non_maximum_suppression.html" data-title="Non-Maximum Suppression | 清风的技术小屋" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/h5py_memo.html" title="H5py备忘录">
+  <strong>上一篇：</strong><br/>
+  <span>
+  H5py备忘录</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/shell_snippets_part1.html"  title="Shell Snippets Part 1">
+ <strong>下一篇：</strong><br/> 
+ <span>Shell Snippets Part 1
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>34</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LeetCode/" title="LeetCode">LeetCode<sup>31</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/机器学习/" title="机器学习">机器学习<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hadoop/" title="Hadoop">Hadoop<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程语言/" title="编程语言">编程语言<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HDF5/" title="HDF5">HDF5<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔试/" title="笔试">笔试<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/软件配置/" title="软件配置">软件配置<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Numpy/" title="Numpy">Numpy<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Pandas/" title="Pandas">Pandas<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Shell/" title="Shell">Shell<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数学/" title="数学">数学<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Software-Installation/" title="Software Installation">Software Installation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Caffe/" title="Caffe">Caffe<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Makefile/" title="Makefile">Makefile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/C/" title="C++">C++<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Cython/" title="Cython">Cython<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		
+		<a href="/about" target="_blank" title="罗万千">罗万千</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

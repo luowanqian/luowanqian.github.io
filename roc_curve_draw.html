@@ -1,0 +1,567 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ROC曲线绘制 | 清风的技术小屋</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="罗万千">
+    
+
+    
+    <meta name="description" content="介绍关于ROC曲线的详细介绍，可以参考周志华的西瓜书 (《机器学习》)，本文主要介绍如何使用Python绘制该曲线。ROC曲线的纵轴是“真正例率” (True Positive Rate，简称TPR)，横轴是“假正例率” (False Positive Rate，简称FPR)，两者定义为：$$\begin{align}TPR &amp; &#x3D; \frac{TP}{TP + FN} \FPR &amp;amp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROC曲线绘制">
+<meta property="og:url" content="http://www.scutmath.com/roc_curve_draw.html">
+<meta property="og:site_name" content="清风的技术小屋">
+<meta property="og:description" content="介绍关于ROC曲线的详细介绍，可以参考周志华的西瓜书 (《机器学习》)，本文主要介绍如何使用Python绘制该曲线。ROC曲线的纵轴是“真正例率” (True Positive Rate，简称TPR)，横轴是“假正例率” (False Positive Rate，简称FPR)，两者定义为：$$\begin{align}TPR &amp; &#x3D; \frac{TP}{TP + FN} \FPR &amp;amp">
+<meta property="og:locale">
+<meta property="og:image" content="http://www.scutmath.com/roc_curve_draw/matrix.png">
+<meta property="article:published_time" content="2018-04-23T02:50:53.000Z">
+<meta property="article:modified_time" content="2020-08-09T03:49:49.804Z">
+<meta property="article:author" content="罗万千">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.scutmath.com/roc_curve_draw/matrix.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="清风的技术小屋" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="清风的技术小屋" title="清风的技术小屋"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="清风的技术小屋">清风的技术小屋</a></h1>
+				<h2 class="blog-motto">不为所动, 做更专业的自己</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/contents">Contents</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/tags">Tags</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:www.scutmath.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/roc_curve_draw.html" title="ROC曲线绘制" itemprop="url">ROC曲线绘制</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-23T02:50:53.000Z" itemprop="datePublished"> Published 2018-04-23</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-number">2.</span> <span class="toc-text">例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Scikit-learn%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.1.</span> <span class="toc-text">Scikit-learn实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.2.</span> <span class="toc-text">个人实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>关于ROC曲线的详细介绍，可以参考周志华的西瓜书 (《机器学习》)，本文主要介绍如何使用Python绘制该曲线。ROC曲线的纵轴是“真正例率” (True Positive Rate，简称TPR)，横轴是“假正例率” (False Positive Rate，简称FPR)，两者定义为：<br>$$<br>\begin{align}<br>TPR &amp; = \frac{TP}{TP + FN} \<br>FPR &amp; = \frac{FP}{TN + FP}<br>\end{align}<br>$$<br>相关的符号定义为：</p>
+<img src="/roc_curve_draw/matrix.png" class="" width="500">
+
+<p>在现实任务中，我们获取有限个 (FPR, TPR) 坐标对来勾勒出ROC曲线。要获得多个坐标对需要多组二分类结果，而我们做二分类任务时，通常只能获取一组分类结果，此时我们利用这组结果生成多组分类结果，具体做法是：给定 $m$ 个正例和 $n$ 个反例，根据分类器的预测值对样例进行从大到小排序，然后把分类阈值设为样例预测值中最大的那个，将样例进行正反例分类，计算相应的TPR和FPR，然后令分类阈值依次设为每个样例的预测值，将样例进行正反例分类，接着计算TPR和FPR，重复这个操作，直到分类阈值取完所有样例的预测值。</p>
+<p>关于分类器对样例的预测值，我们可以用分类器判定样例为正例的概率值，也可以用分类器对样例的评分值，预测值大于等于分类阈值时，分类器判定样例为正例，否则判定为负例。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>已知10样例的真实标签 (0: 反例，1: 正例) 以及分类器对该样例的评分值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y_true &#x3D; [0, 1, 1, 0, 1, 0, 1, 1, 1, 0]</span><br><span class="line">y_score &#x3D; [0.505, 0.6, 0.8, 0.52, 0.55, 0.53, 0.54, 0.9, 0.51, 0.7]</span><br></pre></td></tr></table></figure>
+
+<p>根据评分值将样例进行从大到小排序，可以得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y_true &#x3D; [1, 1, 0, 1, 1, 1, 0, 0, 1, 0]</span><br><span class="line">y_score &#x3D; [0.9, 0.8, 0.7, 0.6, 0.55, 0.54, 0.53, 0.52, 0.51, 0.505]</span><br></pre></td></tr></table></figure>
+
+<p>将分类阈值设为 0.9，此时样例的分类为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y_true &#x3D; [1, 1, 0, 1, 1, 1, 0, 0, 1, 0]</span><br><span class="line">y_predict &#x3D; [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]</span><br></pre></td></tr></table></figure>
+
+<p>可以得到 TP = 1，FP = 0，FN = 5，TN = 4，则可得到 TPR = 1/(1+5) = 1/6 以及 FPR = 0。接着将分类阈值设为 0.8，然后将样例进行正反例分类，接着计算相应的TPR和FPR，直到分类阈值取完所有评分值，最终可以得到下面的TPR和FPR列表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TPR &#x3D; [0.16666667, 0.33333333, 0.33333333, 0.5, 0.66666667, 0.83333333, 0.83333333, 0.83333333, 1.0, 1.0]</span><br><span class="line">FPR &#x3D; [0.0, 0.0, 0.25, 0.25, 0.25, 0.25, 0.5, 0.75, 0.75, 1.0]</span><br></pre></td></tr></table></figure>
+
+<p>然后根据这一系列的 (FPR, TPR) 坐标对画出ROC曲线。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>相关代码以及运用可以参考：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/Metrics">GitHub</a></p>
+<h3 id="Scikit-learn实现"><a href="#Scikit-learn实现" class="headerlink" title="Scikit-learn实现"></a>Scikit-learn实现</h3><p>Scikit-learn库提供了一个名为 <code>roc_curve</code> 函数来获取FPR以及TRP，函数原型如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sklearn.metrics.roc_curve(y_true, y_score, pos_label&#x3D;None, sample_weight&#x3D;None, drop_intermediate&#x3D;True)</span><br></pre></td></tr></table></figure>
+
+<p>要想得到上面例子的计算结果，需要把 <code>drop_intermediate</code> 设为 False。</p>
+<h3 id="个人实现"><a href="#个人实现" class="headerlink" title="个人实现"></a>个人实现</h3><p>我这里直接照搬[1]中的实现，贴出代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">def binary_clf_curve(y_true, y_score, pos_label&#x3D;None):</span><br><span class="line">    if pos_label is None:</span><br><span class="line">        pos_label &#x3D; 1.0</span><br><span class="line"></span><br><span class="line">    # make y_true a boolean vector</span><br><span class="line">    y_true &#x3D; (y_true &#x3D;&#x3D; pos_label)</span><br><span class="line"></span><br><span class="line">    # sort scores</span><br><span class="line">    desc_score_indices &#x3D; np.argsort(y_score)[::-1]</span><br><span class="line">    thresholds &#x3D; y_score[desc_score_indices]</span><br><span class="line"></span><br><span class="line">    fps &#x3D; []</span><br><span class="line">    tps &#x3D; []</span><br><span class="line">    for threshold in thresholds:</span><br><span class="line">        # 大于等于阈值判定为 1 (正类)，否则为 0 (负类)</span><br><span class="line">        y_predict &#x3D; [1 if i &gt;&#x3D; threshold else 0 for i in y_score]</span><br><span class="line">        # 预测值是否等于真实值</span><br><span class="line">        result &#x3D; [i &#x3D;&#x3D; j for i, j in zip(y_true, y_predict)]</span><br><span class="line">        # 预测值是否为 1 (正类)</span><br><span class="line">        positive &#x3D; [i &#x3D;&#x3D; 1 for i in y_predict]</span><br><span class="line"></span><br><span class="line">        # 预测为正类且预测错误</span><br><span class="line">        fp &#x3D; [(not i) and j for i, j in zip(result, positive)].count(True)</span><br><span class="line">        # 预测为正类且预测正确</span><br><span class="line">        tp &#x3D; [i and j for i, j in zip(result, positive)].count(True)</span><br><span class="line"></span><br><span class="line">        fps.append(fp)</span><br><span class="line">        tps.append(tp)</span><br><span class="line">    fps &#x3D; np.array(fps)</span><br><span class="line">    tps &#x3D; np.array(tps)</span><br><span class="line"></span><br><span class="line">    return fps, tps, thresholds</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def roc_curve(y_true, y_score, pos_label&#x3D;None):</span><br><span class="line">    fps, tps, thresholds &#x3D; binary_clf_curve(y_true, y_score, pos_label)</span><br><span class="line"></span><br><span class="line">    fpr &#x3D; fps &#x2F; fps[-1]</span><br><span class="line">    tpr &#x3D; tps &#x2F; tps[-1]</span><br><span class="line"></span><br><span class="line">    return fpr, tpr, thresholds</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/40748327">通过一个例子来绘制一条ROC曲线?</a></li>
+<li><a target="_blank" rel="noopener" href="http://nphard.me/2017/08/17/roc-auc/">roc-auc</a></li>
+<li><a target="_blank" rel="noopener" href="http://alexkong.net/2013/06/introduction-to-auc-and-roc/">ROC和AUC介绍以及如何计算AUC</a></li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/机器学习/">机器学习</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.scutmath.com/roc_curve_draw.html" data-title="ROC曲线绘制 | 清风的技术小屋" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/shell_snippets_part1.html" title="Shell Snippets Part 1">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Shell Snippets Part 1</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/cpp_snippets_part1.html"  title="C++ Snippets Part 1">
+ <strong>下一篇：</strong><br/> 
+ <span>C++ Snippets Part 1
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-number">2.</span> <span class="toc-text">例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Scikit-learn%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.1.</span> <span class="toc-text">Scikit-learn实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.2.</span> <span class="toc-text">个人实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>34</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LeetCode/" title="LeetCode">LeetCode<sup>31</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/机器学习/" title="机器学习">机器学习<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hadoop/" title="Hadoop">Hadoop<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程语言/" title="编程语言">编程语言<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HDF5/" title="HDF5">HDF5<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔试/" title="笔试">笔试<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/软件配置/" title="软件配置">软件配置<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Numpy/" title="Numpy">Numpy<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Pandas/" title="Pandas">Pandas<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Shell/" title="Shell">Shell<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数学/" title="数学">数学<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Software-Installation/" title="Software Installation">Software Installation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Caffe/" title="Caffe">Caffe<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Makefile/" title="Makefile">Makefile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/C/" title="C++">C++<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Cython/" title="Cython">Cython<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		
+		<a href="/about" target="_blank" title="罗万千">罗万千</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

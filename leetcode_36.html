@@ -1,0 +1,589 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>LeetCode 36 - Valid Sudoku | 清风的技术小屋</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="罗万千">
+    
+
+    
+    <meta name="description" content="问题描述Determine if a 9x9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:  Each row must contain the digits 1-9 without repetition. Each column must co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 36 - Valid Sudoku">
+<meta property="og:url" content="http://www.scutmath.com/leetcode_36.html">
+<meta property="og:site_name" content="清风的技术小屋">
+<meta property="og:description" content="问题描述Determine if a 9x9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:  Each row must contain the digits 1-9 without repetition. Each column must co">
+<meta property="og:locale">
+<meta property="og:image" content="http://www.scutmath.com/leetcode_36/1.png">
+<meta property="article:published_time" content="2020-04-24T12:27:55.000Z">
+<meta property="article:modified_time" content="2020-08-09T03:49:49.796Z">
+<meta property="article:author" content="罗万千">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="Algorithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.scutmath.com/leetcode_36/1.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="清风的技术小屋" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="清风的技术小屋" title="清风的技术小屋"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="清风的技术小屋">清风的技术小屋</a></h1>
+				<h2 class="blog-motto">不为所动, 做更专业的自己</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/contents">Contents</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/tags">Tags</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:www.scutmath.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/leetcode_36.html" title="LeetCode 36 - Valid Sudoku" itemprop="url">LeetCode 36 - Valid Sudoku</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2020-04-24T12:27:55.000Z" itemprop="datePublished"> Published 2020-04-24</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%881"><span class="toc-number">2.1.</span> <span class="toc-text">方案1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%882"><span class="toc-number">2.2.</span> <span class="toc-text">方案2</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Determine if a 9x9 Sudoku board is valid. Only the filled cells need to be validated <strong>according to the following rules</strong>:</p>
+<ol>
+<li>Each row must contain the digits <code>1-9</code> without repetition.</li>
+<li>Each column must contain the digits <code>1-9</code> without repetition.</li>
+<li>Each of the 9 <code>3x3</code> sub-boxes of the grid must contain the digits <code>1-9</code> without repetition.</li>
+</ol>
+<img src="/leetcode_36/1.png" class="" width="250">
+
+<p>A partially filled sudoku which is valid.</p>
+<p>The Sudoku board could be partially filled, where empty cells are filled with the character <code>&#39;.&#39;</code>.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Input:</span><br><span class="line">[</span><br><span class="line">  [&quot;5&quot;,&quot;3&quot;,&quot;.&quot;,&quot;.&quot;,&quot;7&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;],</span><br><span class="line">  [&quot;6&quot;,&quot;.&quot;,&quot;.&quot;,&quot;1&quot;,&quot;9&quot;,&quot;5&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;],</span><br><span class="line">  [&quot;.&quot;,&quot;9&quot;,&quot;8&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;6&quot;,&quot;.&quot;],</span><br><span class="line">  [&quot;8&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;6&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;3&quot;],</span><br><span class="line">  [&quot;4&quot;,&quot;.&quot;,&quot;.&quot;,&quot;8&quot;,&quot;.&quot;,&quot;3&quot;,&quot;.&quot;,&quot;.&quot;,&quot;1&quot;],</span><br><span class="line">  [&quot;7&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;2&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;6&quot;],</span><br><span class="line">  [&quot;.&quot;,&quot;6&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;2&quot;,&quot;8&quot;,&quot;.&quot;],</span><br><span class="line">  [&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;4&quot;,&quot;1&quot;,&quot;9&quot;,&quot;.&quot;,&quot;.&quot;,&quot;5&quot;],</span><br><span class="line">  [&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;8&quot;,&quot;.&quot;,&quot;.&quot;,&quot;7&quot;,&quot;9&quot;]</span><br><span class="line">]</span><br><span class="line">Output: true</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Input:</span><br><span class="line">[</span><br><span class="line">  [&quot;8&quot;,&quot;3&quot;,&quot;.&quot;,&quot;.&quot;,&quot;7&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;],</span><br><span class="line">  [&quot;6&quot;,&quot;.&quot;,&quot;.&quot;,&quot;1&quot;,&quot;9&quot;,&quot;5&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;],</span><br><span class="line">  [&quot;.&quot;,&quot;9&quot;,&quot;8&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;6&quot;,&quot;.&quot;],</span><br><span class="line">  [&quot;8&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;6&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;3&quot;],</span><br><span class="line">  [&quot;4&quot;,&quot;.&quot;,&quot;.&quot;,&quot;8&quot;,&quot;.&quot;,&quot;3&quot;,&quot;.&quot;,&quot;.&quot;,&quot;1&quot;],</span><br><span class="line">  [&quot;7&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;2&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;6&quot;],</span><br><span class="line">  [&quot;.&quot;,&quot;6&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;2&quot;,&quot;8&quot;,&quot;.&quot;],</span><br><span class="line">  [&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;4&quot;,&quot;1&quot;,&quot;9&quot;,&quot;.&quot;,&quot;.&quot;,&quot;5&quot;],</span><br><span class="line">  [&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;8&quot;,&quot;.&quot;,&quot;.&quot;,&quot;7&quot;,&quot;9&quot;]</span><br><span class="line">]</span><br><span class="line">Output: false</span><br><span class="line">Explanation: Same as Example 1, except with the 5 in the top left corner being </span><br><span class="line">    modified to 8. Since there are two 8&#39;s in the top left 3x3 sub-box, it is invalid.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ul>
+<li>A Sudoku board (partially filled) could be valid but is not necessarily solvable.</li>
+<li>Only the filled cells need to be validated according to the mentioned rules.</li>
+<li>The given board contain only digits <code>1-9</code> and the character <code>&#39;.&#39;</code>.</li>
+<li>The given board size is always <code>9x9</code>.</li>
+</ul>
+<p><strong>Related Topics:</strong> <code>Hash Table</code></p>
+<p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/valid-sudoku/">36. Valid Sudoku</a></p>
+<p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/valid-sudoku/">36. 有效的数独</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h3><p>根据题目说明，一个有效的数独，满足三个条件：</p>
+<ol>
+<li>每行数字有重复数字</li>
+<li>每列不能有重复数字</li>
+<li>每个 <code>3x3</code> 块中不能有重复数字</li>
+</ol>
+<p>怎么判断一行、一列或者一个小块中是否有重复数字，此时我们可以给用哈希表进行快速查找判断。首先我们分别给每一行、每一列以及每一小块建立一个哈希表，然后我们遍历所有数字，当遍历到某个数字时，我们根据该数字所处的行、列以及小块找到对应的哈希表，查找该数字是否在哈希表中出现，如果出现，说明该数独是无效的，否则我们将该数字存入哈希表，继续遍历。</p>
+<details>
+<summary>参考解题代码1</summary>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unordered_set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isValidSudoku</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt;&gt;&amp; board)</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">unordered_set</span>&lt;<span class="keyword">char</span>&gt;&gt; <span class="title">row_sets</span><span class="params">(<span class="number">9</span>)</span></span>;</span><br><span class="line">        <span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">unordered_set</span>&lt;<span class="keyword">char</span>&gt;&gt; <span class="title">column_sets</span><span class="params">(<span class="number">9</span>)</span></span>;</span><br><span class="line">        <span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">unordered_set</span>&lt;<span class="keyword">char</span>&gt;&gt; <span class="title">block_sets</span><span class="params">(<span class="number">9</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">char</span> ch;</span><br><span class="line">        <span class="keyword">int</span> block_id;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> i=<span class="number">0</span>; i&lt;<span class="number">9</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> j=<span class="number">0</span>; j&lt;<span class="number">9</span>; j++) &#123;</span><br><span class="line">                ch = board[i][j];</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (ch == <span class="string">&#x27;.&#x27;</span>)</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (row_sets[i].find(ch) == row_sets[i].end())</span><br><span class="line">                    row_sets[i].insert(ch);</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (column_sets[j].find(ch) == column_sets[j].end())</span><br><span class="line">                    column_sets[j].insert(ch);</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">                block_id = <span class="keyword">int</span>(i / <span class="number">3.0</span>) * <span class="number">3</span> + <span class="keyword">int</span>(j / <span class="number">3.0</span>);</span><br><span class="line">                <span class="keyword">if</span> (block_sets[block_id].find(ch) == block_sets[block_id].end())</span><br><span class="line">                    block_sets[block_id].insert(ch);</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt;&gt; board = &#123;</span><br><span class="line">            &#123;<span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>&#125;, </span><br><span class="line">            &#123;<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;.&#x27;</span>&#125;, </span><br><span class="line">            &#123;<span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;3&#x27;</span>&#125;, </span><br><span class="line">            &#123;<span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;1&#x27;</span>&#125;, </span><br><span class="line">            &#123;<span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;6&#x27;</span>&#125;, </span><br><span class="line">            &#123;<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;.&#x27;</span>&#125;, </span><br><span class="line">            &#123;<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;5&#x27;</span>&#125;, </span><br><span class="line">            &#123;<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;9&#x27;</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i=<span class="number">0</span>; i&lt;board.size(); i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> j=<span class="number">0</span>; j&lt;board[i].size(); j++) &#123;</span><br><span class="line">            <span class="built_in">cout</span> &lt;&lt; board[i][j] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Solution solu;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Is valid: &quot;</span> &lt;&lt; solu.isValidSudoku(board) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h3 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h3><p>同方案1的思想，只不过此时一行、一列以及一小块对应的哈希表分别用一个整数进行替代，通过该整数的某一位是否为1来进行重复数字判断，主要使用的是位与运算 <code>&amp;</code> 和位或运算 <code>|</code>。当遍历到某个数字 <code>x</code> 时，该数字所在行对应的整数为 <code>y</code>，此时判断该数字是否重复可以进行如下操作：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y &amp; (<span class="number">1</span> &lt;&lt; x)</span><br></pre></td></tr></table></figure>
+
+<p>如果该表达式值非0，说明 <code>y</code> 的第 <code>x</code> 位是1，这说明该数字之前出现过，否则该表达式值为0。如果该数字未重复出现，则 <code>y</code> 设为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y = y | (<span class="number">1</span> &lt;&lt; x) </span><br></pre></td></tr></table></figure>
+
+<details>
+<summary>参考解题代码2</summary>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isValidSudoku</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt;&gt;&amp; board)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> row_status[board.size()];</span><br><span class="line">        <span class="keyword">int</span> col_status[board.size()];</span><br><span class="line">        <span class="keyword">int</span> cell_status[board.size()];</span><br><span class="line">        <span class="keyword">int</span> digit, cell, block_size, num_blocks;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;board.size(); i++) &#123;</span><br><span class="line">            row_status[i] = <span class="number">0</span>;</span><br><span class="line">            col_status[i] = <span class="number">0</span>;</span><br><span class="line">            cell_status[i] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        block_size = <span class="keyword">int</span>(<span class="built_in">sqrt</span>(board.size()));</span><br><span class="line">        num_blocks = board.size() / block_size;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;board.size(); i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;board[i].size(); j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (board[i][j] == <span class="string">&#x27;.&#x27;</span>)</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">                digit = <span class="number">1</span> &lt;&lt; (board[i][j] - <span class="string">&#x27;0&#x27;</span>);</span><br><span class="line">                cell = (i / block_size) * num_blocks + (j / block_size);</span><br><span class="line">                <span class="keyword">if</span> ((row_status[i] &amp; digit) != <span class="number">0</span>)</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">if</span> ((col_status[j] &amp; digit) != <span class="number">0</span>)</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">if</span> ((cell_status[cell] &amp; digit) != <span class="number">0</span>)</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                row_status[i] |= digit;</span><br><span class="line">                col_status[j] |= digit;</span><br><span class="line">                cell_status[cell] |= digit;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt;&gt; board = &#123;</span><br><span class="line">            &#123;<span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;.&#x27;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;3&#x27;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;1&#x27;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;6&#x27;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;.&#x27;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;5&#x27;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;9&#x27;</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i=<span class="number">0</span>; i&lt;board.size(); i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> j=<span class="number">0</span>; j&lt;board[i].size(); j++) &#123;</span><br><span class="line">            <span class="built_in">cout</span> &lt;&lt; board[i][j] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Solution solu;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Is valid: &quot;</span> &lt;&lt; solu.isValidSudoku(board) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</details>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a><a href="/tags/LeetCode/">LeetCode</a><a href="/tags/Algorithm/">Algorithm</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.scutmath.com/leetcode_36.html" data-title="LeetCode 36 - Valid Sudoku | 清风的技术小屋" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/leetcode_141.html" title="LeetCode 141 - Linked List Cycle">
+  <strong>上一篇：</strong><br/>
+  <span>
+  LeetCode 141 - Linked List Cycle</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/leetcode_69.html"  title="LeetCode 69 - Sqrt(x)">
+ <strong>下一篇：</strong><br/> 
+ <span>LeetCode 69 - Sqrt(x)
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%881"><span class="toc-number">2.1.</span> <span class="toc-text">方案1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%882"><span class="toc-number">2.2.</span> <span class="toc-text">方案2</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>34</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LeetCode/" title="LeetCode">LeetCode<sup>31</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/机器学习/" title="机器学习">机器学习<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hadoop/" title="Hadoop">Hadoop<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程语言/" title="编程语言">编程语言<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HDF5/" title="HDF5">HDF5<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔试/" title="笔试">笔试<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/软件配置/" title="软件配置">软件配置<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Numpy/" title="Numpy">Numpy<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Pandas/" title="Pandas">Pandas<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Shell/" title="Shell">Shell<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数学/" title="数学">数学<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Software-Installation/" title="Software Installation">Software Installation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Caffe/" title="Caffe">Caffe<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Makefile/" title="Makefile">Makefile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/C/" title="C++">C++<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Cython/" title="Cython">Cython<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		
+		<a href="/about" target="_blank" title="罗万千">罗万千</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

@@ -1,0 +1,1444 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>清风的技术小屋</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="罗万千">
+    
+
+    
+    <meta property="og:type" content="website">
+<meta property="og:title" content="清风的技术小屋">
+<meta property="og:url" content="http://www.scutmath.com/page/3/index.html">
+<meta property="og:site_name" content="清风的技术小屋">
+<meta property="og:locale">
+<meta property="article:author" content="罗万千">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="清风的技术小屋" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="清风的技术小屋" title="清风的技术小屋"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="清风的技术小屋">清风的技术小屋</a></h1>
+				<h2 class="blog-motto">不为所动, 做更专业的自己</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/contents">Contents</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/tags">Tags</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:www.scutmath.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/pandas_memo2.html" title="Pandas备忘录2" itemprop="url">Pandas备忘录2</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-09-03T14:30:02.000Z" itemprop="datePublished"> Published 2018-09-03</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="1-Pandas备忘录系列文章"><a href="#1-Pandas备忘录系列文章" class="headerlink" title="1. Pandas备忘录系列文章"></a>1. Pandas备忘录系列文章</h2><ol>
+<li><a href="/pandas_memo.html" title="Pandas备忘录">Pandas备忘录</a>
+
+</li>
+</ol>
+<h2 id="2-介绍"><a href="#2-介绍" class="headerlink" title="2. 介绍"></a>2. 介绍</h2><p><strong>Note:</strong> 如果没有特别说明，<code>pd</code>指的是<code>pandas</code>，<code>np</code>指的是<code>numpy</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-查找"><a href="#3-查找" class="headerlink" title="3. 查找"></a>3. 查找</h2><h3 id="3-1-contains函数"><a href="#3-1-contains函数" class="headerlink" title="3.1. contains函数"></a>3.1. contains函数</h3><p>主要是用<code>Series.str.contains</code>这个函数，如果参数<code>regex</code>设为True，则查找字符串解析为正则表达式，设为False则用常规查找方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 &#x3D; pd.Series([&#39;Mouse&#39;, &#39;dog&#39;, &#39;house and parrot&#39;, &#39;23&#39;, &#39;frog&#39;])</span><br><span class="line">&gt;&gt;&gt; s1</span><br><span class="line">0               Mouse</span><br><span class="line">1                 dog</span><br><span class="line">2    house and parrot</span><br><span class="line">3                  23</span><br><span class="line">4                frog</span><br><span class="line">dtype: object</span><br><span class="line">&gt;&gt;&gt; s1.str.contains(&#39;og&#39;, regex&#x3D;False)</span><br><span class="line">0    False</span><br><span class="line">1     True</span><br><span class="line">2    False</span><br><span class="line">3    False</span><br><span class="line">4     True</span><br><span class="line">dtype: bool</span><br><span class="line">&gt;&gt;&gt; s1[s1.str.contains(&#39;og&#39;, regex&#x3D;False)]</span><br><span class="line">1     dog</span><br><span class="line">4    frog</span><br><span class="line">dtype: object</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-DataFrame增加行"><a href="#4-DataFrame增加行" class="headerlink" title="4. DataFrame增加行"></a>4. DataFrame增加行</h2><h3 id="4-1-append函数"><a href="#4-1-append函数" class="headerlink" title="4.1. append函数"></a>4.1. append函数</h3><p>可以使用<code>append</code>函数给DataFrame增加行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df &#x3D; pd.DataFrame([[1, 2], [3, 4]], columns&#x3D;list(&#39;AB&#39;))</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">   A  B</span><br><span class="line">0  1  2</span><br><span class="line">1  3  4</span><br><span class="line">&gt;&gt;&gt; df2 &#x3D; pd.DataFrame([[5, 6]], columns&#x3D;list(&#39;AB&#39;))</span><br><span class="line">&gt;&gt;&gt; df2</span><br><span class="line">   A  B</span><br><span class="line">0  5  6</span><br><span class="line">&gt;&gt;&gt; df.append(df2, ignore_index&#x3D;True)</span><br><span class="line">   A  B</span><br><span class="line">0  1  2</span><br><span class="line">1  3  4</span><br><span class="line">2  5  6</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-使用特定索引名称增加行"><a href="#4-2-使用特定索引名称增加行" class="headerlink" title="4.2. 使用特定索引名称增加行"></a>4.2. 使用特定索引名称增加行</h3><p>使用DataFrame的<code>loc</code>函数可以指定索引名称增加行，前提是得知道列的排列顺序，因此在创建DataFrame时要用<code>columns</code>参数指定列的排列顺序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; employees &#x3D; pd.DataFrame(</span><br><span class="line">...     data&#x3D;&#123;&#39;Name&#39;: [&#39;John Doe&#39;, &#39;William Spark&#39;],</span><br><span class="line">...           &#39;Age&#39;: [23, 24]&#125;,</span><br><span class="line">...     index&#x3D;[&#39;Emp001&#39;, &#39;Emp002&#39;],</span><br><span class="line">...     columns&#x3D;[&#39;Name&#39;, &#39;Age&#39;])</span><br><span class="line">&gt;&gt;&gt; employees</span><br><span class="line">                 Name  Age</span><br><span class="line">Emp001       John Doe   23</span><br><span class="line">Emp002  William Spark   24</span><br><span class="line">&gt;&gt;&gt; employees.loc[&#39;Emp003&#39;] &#x3D; [&#39;Sunny&#39;, 45]</span><br><span class="line">&gt;&gt;&gt; employees</span><br><span class="line">                 Name  Age</span><br><span class="line">Emp001       John Doe   23</span><br><span class="line">Emp002  William Spark   24</span><br><span class="line">Emp003          Sunny   45</span><br></pre></td></tr></table></figure>
+
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Python/">Python</a><a href="/tags/Pandas/">Pandas</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/weighted_random_sampling.html" title="Weighted Random Sampling With Replacement" itemprop="url">Weighted Random Sampling With Replacement</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-07-22T07:07:18.000Z" itemprop="datePublished"> Published 2018-07-22</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Weighted random sampling with replacement，中文翻译为带权重的有放回地采样，简单来说就是每一个样本都有一个权重，然后根据样本权重大小有放回地采样数据，样本的权重越大，样本被选择的概率也就越大。该问题换种方式描述就是，给定一个权重数组 $w$，大小为 $N$，然后根据权重大小，在下标数组 ${0, 1, \ldots, N-1}$ 中进行有放回地采样，下标 $i$ 被选中的概率为 $w[i]/\text{sum}(w)$。</p>
+<p>这个采样方法一个应用是在Boosting算法中，Boosting算法每次训练完模型时，根据模型分类的情况改变数据样本的权重，然后用带权重的样本训练下一个模型，如果模型的训练不支持带权重的样本，则进行带权重的样本采样。</p>
+<blockquote>
+<p>本文主要将博文 <a target="_blank" rel="noopener" href="https://www.aarondefazio.com/tangentially/?p=58">WEIGHTED RANDOM SAMPLING WITH REPLACEMENT WITH DYNAMIC WEIGHTS</a> 内容进行解析 (文章拷贝：<a href="/weighted_random_sampling/copy.pdf" title="Copy">Copy</a>)。算法实现代码在：<a target="_blank" rel="noopener" href="https://github.com/adefazio/sampler">adefazio/sampler</a></p>
+</blockquote>
+<h2 id="Rejection-Sampling"><a href="#Rejection-Sampling" class="headerlink" title="Rejection Sampling"></a>Rejection Sampling</h2><p>这个思想很简单，给定一个权重数组 $w \in R^N$，权重最大值为 $w_\max$，然后在下标数组 ${ 0, 1, \ldots, N-1 }$ 中随机采样得到下标 $i$，接下来就是判断该下标是否被accept，首先根据分布 $X \sim U(0, 1)$ 获得一个随机数 $x$，然后判断 $w_\max * x \le w[i]$，如果符合该条件，则accept该下标 $i$，否则就reject该下标。</p>
+<p>算法实现的代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">w &#x3D; [1,4,2,5] # Some data</span><br><span class="line">w_max &#x3D; max(w)</span><br><span class="line">n &#x3D; len(w)</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    idx &#x3D; random.randrange(n)</span><br><span class="line">    u &#x3D; w_max*random.random()</span><br><span class="line">    if u &lt;&#x3D; w[idx]:</span><br><span class="line">        break</span><br><span class="line">print idx</span><br></pre></td></tr></table></figure>
+
+<p>算法思想可以用下面图表示：</p>
+<img src="/weighted_random_sampling/rejection.png" class="">
+
+<p>橘色区域代表accept区域，灰色区域代表reject区域。这个算法有个缺点就是当数据不平衡时，性能会很低，因为如果小部分数据权重很大时，$w_\max$ 会变的很大，数据权重小的下标很难被accept，而且权重小的占大部分，这导致算法会经过很多次循环。</p>
+<h2 id="Level-Rejection-Sampling"><a href="#Level-Rejection-Sampling" class="headerlink" title="Level Rejection Sampling"></a>Level Rejection Sampling</h2><p>这个是在Rejection Sampling之前对下标进行分层 (level)，根据权重 $w[i]$ 的大小将下标 $i$ 分到不同层中，第 $k$ 层权重的范围为 $[2^k, 2^{k+1}]$，由于每一层内的权重的差距不会偏大，对该层进行Rejection Sampling效率会较高。</p>
+<p>该方法的思想如下图所示：</p>
+<img src="/weighted_random_sampling/sampling-visual.png" class="">
+
+<p>如图所示，总共分了5层，每一层存储的是数组下标。下标分层后，在进行采样时，首先随机选择某一层，然后进行Rejection Sampling获得最终想要的下标。</p>
+<h3 id="模拟实验"><a href="#模拟实验" class="headerlink" title="模拟实验"></a>模拟实验</h3><p>贴出一段实验代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sampler <span class="keyword">import</span> Sampler</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    weights = np.array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">2</span>], dtype=<span class="string">&#x27;d&#x27;</span>)</span><br><span class="line">    num_entries = len(weights)</span><br><span class="line">    normalized_weights = weights / np.sum(weights)</span><br><span class="line"></span><br><span class="line">    weight_sampler = Sampler(num_entries, max_value=<span class="number">100</span>, min_value=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_entries):</span><br><span class="line">        weight_sampler.add(i, weights[i])</span><br><span class="line"></span><br><span class="line">    num_samples = <span class="number">10000</span></span><br><span class="line">    distro = np.zeros(num_entries)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_samples):</span><br><span class="line">        idx = weight_sampler.sample()</span><br><span class="line">        distro[idx] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    normalized_distro = distro / np.sum(distro)</span><br><span class="line"></span><br><span class="line">    print(<span class="string">&#x27;Sample distribution: &#123;&#125;&#x27;</span>.format(distro))</span><br><span class="line">    print(<span class="string">&#x27;Weights distribution: &#123;&#125;&#x27;</span>.format(weights))</span><br><span class="line">    print(<span class="string">&#x27;Normalized sample distribution: &#123;&#125;&#x27;</span>.format(normalized_distro))</span><br><span class="line">    print(<span class="string">&#x27;Normalized weights distribution: &#123;&#125;&#x27;</span>.format(normalized_weights))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># plot frequency</span></span><br><span class="line">    plt.bar(np.arange(num_entries),</span><br><span class="line">            normalized_weights, width=<span class="number">0.35</span>,</span><br><span class="line">            label=<span class="string">&#x27;Normalized Weights Distribution&#x27;</span>)</span><br><span class="line">    plt.bar(np.arange(num_entries)+<span class="number">0.35</span>,</span><br><span class="line">            normalized_distro, width=<span class="number">0.35</span>,</span><br><span class="line">            label=<span class="string">&#x27;Normalized Sample Distribution&#x27;</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Sample distribution: [ 843.  824. 2513. 4182. 1638.]</span><br><span class="line">Weights distribution: [1. 1. 3. 5. 2.]</span><br><span class="line">Normalized sample distribution: [0.0843 0.0824 0.2513 0.4182 0.1638]</span><br><span class="line">Normalized weights distribution: [0.08333333 0.08333333 0.25 0.41666667 0.16666667]</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果如下图所示：</p>
+<img src="/weighted_random_sampling/test.png" class="">
+
+<p>图中横坐标代表数组下标，蓝色柱代表各个下标的权重大小 (归一化)，橘色柱代表经过大量采样时，各个下标被采中的比例。从图中可以看出，采样结果基本符合权重分布规律，权重越大，被采中的概率也就越大。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/hdf5_column_major.html" title="以Column-major Order读取HDF5数据" itemprop="url">以Column-major Order读取HDF5数据</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-07-18T01:39:07.000Z" itemprop="datePublished"> Published 2018-07-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在使用h5py这类库读取HDF5里面的数据时，数据的存储方式为row-major order，而一些机器学习算法的实现在使用数据时需要的存储方式为column-major order，此时需要对数据进行转换。如果数据量很小，转换是没有问题的，如果数据量巨大，进行转换时，由于需要多一倍内存来存放转换的数据，因此可能导致内存溢出。本篇博文主要是重新实现h5py库中的 <code>read_direct</code> 函数，使得该函数在读取HDF5文件时，可以使得读取到内存的数据是以column-major order方式存储。</p>
+<p>相关实现代码在: <a target="_blank" rel="noopener" href="https://gist.github.com/luowanqian/b924987be33d51f50a30e741fe249526">HDF5 gist</a></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>基本思路就是一行行地读取HDF5文件里面的数据，然后存储到内存的数组中，内存的数组是以column-major order方式存储数据。这里假设HDF5文件里面的数据存储是连续的，没有进行分块，复杂的情况等以后再实现，这里只是应对最简单的情况。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>实现主要是 Python + C 形式，Python部分主要提供一个函数接口用于调用，C部分主要是使用HDF5 C API对HDF5数据进行读取，两者之间的相互调用使用的是Cython。</p>
+<h3 id="C"><a href="#C" class="headerlink" title="C"></a>C</h3><p>这部分需要使用HDF5库提供的C API对HDF5文件数据进行读取。主要使用的API是 <code>H5Sselect_hyperslab</code>，这个函数可以设定读取存储空间的哪一部分数据或者将数据存在存储空间的哪一部分，这里的存储空间是一个抽象概念，既可以表示HDF5文件里面内容，也可以表示内存申请的存储空间，这里我们分别对HDF5文件内容和内存申请的空间分别进行设定。实现代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;*</span><br><span class="line"> * 从H5文件中读取矩阵数据，以column order存储数据</span><br><span class="line"> *</span><br><span class="line"> * filename: H5文件名</span><br><span class="line"> * dataset_name: 数据集名</span><br><span class="line"> * buffer: 数据内存存储处，大小为 num_rows * num_cols</span><br><span class="line"> * num_rows: 待读取的矩阵的行数</span><br><span class="line"> * num_cols: 待读取的矩阵的列数</span><br><span class="line"> * offset_x: 读取的数据在H5文件中的矩阵的x方向上的偏移 (第几行)</span><br><span class="line"> * offset_y: 读取的数据在H5文件中的矩阵的y方向上的偏移 (第几列)</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">int read_direct_f(char *file_name, char *dataset_name, double *buffer,</span><br><span class="line">                  int num_rows, int num_cols, int offset_x, int offset_y)</span><br><span class="line">&#123;</span><br><span class="line">    int i;</span><br><span class="line"></span><br><span class="line">    hid_t file_id, dataset_id;</span><br><span class="line">    hid_t dataspace_id, memspace_id;</span><br><span class="line">    herr_t status;</span><br><span class="line"></span><br><span class="line">    hsize_t dims_mem[1];</span><br><span class="line"></span><br><span class="line">    hsize_t offset[2];</span><br><span class="line">    hsize_t count[2];</span><br><span class="line">    hsize_t stride[2];</span><br><span class="line">    hsize_t block[2];</span><br><span class="line">    hsize_t offset_mem[1];</span><br><span class="line">    hsize_t count_mem[1];</span><br><span class="line">    hsize_t stride_mem[1];</span><br><span class="line">    hsize_t block_mem[1];</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; open the hdf5 file and the dataset</span><br><span class="line">    file_id &#x3D; H5Fopen(file_name, H5F_ACC_RDONLY, H5P_DEFAULT);</span><br><span class="line">    dataset_id &#x3D; H5Dopen2(file_id, dataset_name, H5P_DEFAULT);</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; get file dataspace</span><br><span class="line">    dataspace_id &#x3D; H5Dget_space(dataset_id);</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; create memory space</span><br><span class="line">    dims_mem[0] &#x3D; num_rows;         &#x2F;&#x2F; avoid numeric overflow</span><br><span class="line">    dims_mem[0] &#x3D; dims_mem[0] * num_cols;</span><br><span class="line">    memspace_id &#x3D; H5Screate_simple(1, dims_mem, NULL);</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; specify size and shape of subset to read</span><br><span class="line">    offset[0] &#x3D; offset_x;</span><br><span class="line">    offset[1] &#x3D; offset_y;</span><br><span class="line">    count[0] &#x3D; 1;</span><br><span class="line">    count[1] &#x3D; num_cols;</span><br><span class="line">    stride[0] &#x3D; 1;</span><br><span class="line">    stride[1] &#x3D; 1;</span><br><span class="line">    block[0] &#x3D; 1;</span><br><span class="line">    block[1] &#x3D; 1;</span><br><span class="line">    offset_mem[0] &#x3D; 0;</span><br><span class="line">    count_mem[0] &#x3D; num_cols;</span><br><span class="line">    stride_mem[0] &#x3D; num_rows;</span><br><span class="line">    block_mem[0] &#x3D; 1;</span><br><span class="line"></span><br><span class="line">    for (i&#x3D;0; i&lt;num_rows; i++) &#123;</span><br><span class="line">        offset[0] &#x3D; offset_x + i;</span><br><span class="line">        offset_mem[0] &#x3D; i;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; select subset from dataspace</span><br><span class="line">        status &#x3D; H5Sselect_hyperslab(dataspace_id, H5S_SELECT_SET,</span><br><span class="line">                                     offset, stride, count, block);</span><br><span class="line">        if (status &lt; 0) &#123;</span><br><span class="line">            H5Eprint2(H5E_DEFAULT, NULL);</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        status &#x3D; H5Sselect_hyperslab(memspace_id, H5S_SELECT_SET,</span><br><span class="line">                                     offset_mem, stride_mem,</span><br><span class="line">                                     count_mem, block_mem);</span><br><span class="line">        if (status &lt; 0) &#123;</span><br><span class="line">            H5Eprint2(H5E_DEFAULT, NULL);</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; read data</span><br><span class="line">        status &#x3D; H5Dread(dataset_id, H5T_NATIVE_DOUBLE,</span><br><span class="line">                         memspace_id, dataspace_id,</span><br><span class="line">                         H5P_DEFAULT, buffer);</span><br><span class="line">        if (status &lt; 0) &#123;</span><br><span class="line">            H5Eprint2(H5E_DEFAULT, NULL);</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; close the resources</span><br><span class="line">    H5Sclose(memspace_id);</span><br><span class="line">    H5Sclose(dataspace_id);</span><br><span class="line">    H5Dclose(dataset_id);</span><br><span class="line">    H5Fclose(file_id);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基本实现思路就是每次就只读取HDF5文件中矩阵的一行，然后写入到内存空间中，每次读取都要用函数 <code>H5Sselect_hyperslab</code> 函数设定读取区域，同样，每次写入都要使用函数 <code>H5Sselect_hyperslab</code> 设定写入区域。这个实现思想参考了HDF5官方教程 <a target="_blank" rel="noopener" href="https://portal.hdfgroup.org/display/HDF5/Reading+From+or+Writing+To+a+Subset+of+a+Dataset">Reading From or Writing To a Subset of a Dataset</a>，教程中仅仅设定了文件的读取区域，没有设定写入区域。</p>
+<h3 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h3><p>这部分使用Cython来实现Python中调用前面所写的C语言代码，这部分代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">def read_direct_fortran(str file_name, str dataset_name,</span><br><span class="line">                        double[::1, :] data, int offset_x, int offset_y):</span><br><span class="line">    cdef int num_rows</span><br><span class="line">    cdef int num_cols</span><br><span class="line">    cdef bytes file_name_bytes &#x3D; bytes(file_name, encoding&#x3D;&#39;utf-8&#39;)</span><br><span class="line">    cdef bytes dataset_name_bytes &#x3D; bytes(dataset_name, encoding&#x3D;&#39;utf-8&#39;)</span><br><span class="line">    cdef int ret;</span><br><span class="line"></span><br><span class="line">    num_rows &#x3D; data.shape[0]</span><br><span class="line">    num_cols &#x3D; data.shape[1]</span><br><span class="line"></span><br><span class="line">    ret &#x3D; read_direct_f(file_name_bytes, dataset_name_bytes, &amp;data[0, 0],</span><br><span class="line">                        num_rows, num_cols, offset_x, offset_y)</span><br></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/HDF5/">HDF5</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/leetcode_7.html" title="LeetCode 7 - Reverse Integer" itemprop="url">LeetCode 7 - Reverse Integer</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-07-15T15:07:07.000Z" itemprop="datePublished"> Published 2018-07-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given a 32-bit signed integer, reverse digits of an integer.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 123</span><br><span class="line">Output: 321</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: -123</span><br><span class="line">Output: -321</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 120</span><br><span class="line">Output: 21</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<p>Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range: $[−2^{31},  2^{31} − 1]$. For the purpose of this problem, assume that your function returns 0 when the reversed integer overflows.</p>
+<p><strong>Related Topics:</strong> Math</p>
+<p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/reverse-integer/description/">7. Reverse Integer</a></p>
+<p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/reverse-integer/description/">7. 反转整数</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>解决思路就是：利用求模得到数字的每一位，求位的顺序要从低位到高位，然后根据获得的数位构造出逆数。这里有个困难就在求解过程中会发生数字溢出，一个解决方案就是用更多字节的整数类型来表示逆数，题目中使用的整数int是四个字节，此时可以用八字节的long long代替，然后判断数是否在32位整数表示的范围即可。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    int reverse(int x) &#123;</span><br><span class="line">        int mod;</span><br><span class="line">        long long num;</span><br><span class="line">        bool postive;</span><br><span class="line"></span><br><span class="line">        num &#x3D; 0;</span><br><span class="line">        postive &#x3D; x &gt;&#x3D;0 ? true : false;</span><br><span class="line">        while (x) &#123;</span><br><span class="line">            mod &#x3D; x % 10;</span><br><span class="line">            x &#x3D; x &#x2F; 10;</span><br><span class="line">            num &#x3D; num * 10 + mod;</span><br><span class="line">            if ((postive &amp;&amp; num &gt; 0x7FFFFFFF)</span><br><span class="line">                || (!postive &amp;&amp; num &lt; (signed int)0x80000000))</span><br><span class="line">                return 0;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return num;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    int x &#x3D; 120;</span><br><span class="line"></span><br><span class="line">    Solution solu;</span><br><span class="line">    cout &lt;&lt; &quot;Revert: &quot; &lt;&lt; solu.reverse(x) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a><a href="/tags/LeetCode/">LeetCode</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/stirling_approximation.html" title="Stirling&#39;s approximation" itemprop="url">Stirling&#39;s approximation</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-07-14T13:36:10.000Z" itemprop="datePublished"> Published 2018-07-14</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>斯特林公式 (Stirling’s approximation) 是一条用来取n的阶乘的近似值的数学公式。常见的形式为</p>
+<p>$$<br>n! \approx \sqrt{2 \pi n} (\frac{n}{e})^n<br>$$</p>
+<p>对n的阶乘取自然对数，可以得到</p>
+<p>$$<br>\ln{(n!)} \approx \frac{1}{2} \ln{(2 \pi)} + (n + \frac{1}{2}) \ln{(n)} - n<br>$$</p>
+<p>一个会经常遇到的问题，那就是计算 $n! / a_n$，单独计算 $n!$ 需要很大的计算量，如果将问题转换为</p>
+<p>$$<br>\frac{n!}{a_n} = e^{\ln{(n!)} - \ln{(a_n)}}<br>$$</p>
+<p>$\ln{(n!)}$ 可以用前面介绍的近似公式进行求解，此时计算量就会小很多。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>这里举一个例子来感受下这个近似公式是如何缩减大量计算量。一个经典的概率问题－Birthday Problem</p>
+<blockquote>
+<p><strong>Birthday Prolem</strong></p>
+<p>Calculate the probability p that at least two people in a group of k people will have the same birthday, that is, will have been born on the same day of the same month but not necessarily in the same year.</p>
+</blockquote>
+<p>可以很快地想到</p>
+<blockquote>
+<p>至少两个人的生日相同的概率 = 1 - 所有人的生日不相同的概率</p>
+</blockquote>
+<p>则计算公式为</p>
+<p>$$<br>p = 1 - \frac{P_{365, k}}{365^k}<br>$$</p>
+<p>其中 $P_{365, k}$ 为排列公式，等于 $365! / (365 - k)!$，则概率 $p$ 为</p>
+<p>$$<br>p = 1 - \frac{365!}{(365 - k)!365^k}<br>$$</p>
+<p>如果按照这个式子一个个计算里面的每一项时，需要很大的计算量，尤其是 $365!$，一般计算器估计算不出来。此时，我们将式子用指数，对数进行改写，可写为</p>
+<p>$$<br>p = 1 - e^{\ln{(365)!} - \ln{(365-k)!} - k\ln{(365)}}<br>$$</p>
+<p>其中 $\ln{(365)!}$ 和 $\ln{(365-k)!}$ 可以用Stirling公式进行近似计算，可以得到</p>
+<p>$$<br>\begin{align}<br>&amp; \ln{(365)!} - \ln{(365-k)!} - k \ln{(365)}  \<br>\approx ; &amp; \left[\frac{1}{2} \ln{(2 \pi)} + (365 + \frac{1}{2}) \ln{(365)} - 365 \right] \<br>&amp; - \left[ \frac{1}{2} \ln{(2 \pi)} + (365 - k + \frac{1}{2}) \ln{(365-k)} - 365 + k \right] \<br>&amp; - k \ln{(365)} \<br>\approx ; &amp; (365 + \frac{1}{2}) \ln{(365)} - (365 - k + \frac{1}{2}) \ln{(365-k)} - k - k \ln {(365)}<br>\end{align}<br>$$</p>
+<p>可见，阶乘和指数部分变成一堆对数的乘积以及求和，这样计算量就小了很多。这里贴一下用Python实现的概率计算程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import math</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    k &#x3D; int(sys.argv[1])</span><br><span class="line">    sum &#x3D; ((365 + 0.5) * math.log(365) -</span><br><span class="line">           (365 - k + 0.5) * math.log(365 - k) -</span><br><span class="line">           k - k * math.log(365))</span><br><span class="line">    prob &#x3D; 1.0 - math.exp(sum)</span><br><span class="line">    print(&#39;Probability (k &#x3D; &#123;&#125;) is &#123;&#125;&#39;.format(k, prob))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>用程序计算了一些值，得到下面列表</p>
+<table>
+<thead>
+<tr>
+<th>k</th>
+<th>prob</th>
+<th></th>
+<th>k</th>
+<th>prob</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5</td>
+<td>0.027</td>
+<td></td>
+<td>30</td>
+<td>0.706</td>
+</tr>
+<tr>
+<td>10</td>
+<td>0.117</td>
+<td></td>
+<td>40</td>
+<td>0.891</td>
+</tr>
+<tr>
+<td>15</td>
+<td>0.253</td>
+<td></td>
+<td>50</td>
+<td>0.970</td>
+</tr>
+<tr>
+<td>20</td>
+<td>0.411</td>
+<td></td>
+<td>60</td>
+<td>0.994</td>
+</tr>
+<tr>
+<td>25</td>
+<td>0.569</td>
+<td></td>
+<td>70</td>
+<td>0.999</td>
+</tr>
+</tbody></table>
+<p>从表格中可以看到，$k = 70$ 时，概率很接近 $1$ 了，原以为至少需要100多人才可能达到0.999这个概率值，可是现在看来是不需要达到100人就可以了。这让我想起了在班里，有人的生日和我是同一天，整个班的人数大概是50人，根据表格，可以得到概率为0.970，由此可见班里同学生日和我同一天的概率还是挺高的。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/数学/">数学</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/matplotlib_memo.html" title="Matplotlib备忘录" itemprop="url">Matplotlib备忘录</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-05-09T12:00:12.000Z" itemprop="datePublished"> Published 2018-05-09</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>本文主要是记录一些 Matplotlib 的使用方法以及注意事项。</p>
+<p><strong>Note:</strong> 如果没有特别说明，<code>plt</code> 代表 <code>matplotlib.pyplot</code>，<code>np</code> 代表 <code>numpy</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+
+<p>本文代码主要在 Jupyter notebook 中执行，画图之前使用了一下 magic 方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib notebook</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建多个子图"><a href="#创建多个子图" class="headerlink" title="创建多个子图"></a>创建多个子图</h2><p>一个常用的应用就是在一个 figure 里面画多个图，此时需要 <code>add_subplot</code> 方法或者 <code>subplots</code> 方法。</p>
+<h3 id="使用-add-subplot"><a href="#使用-add-subplot" class="headerlink" title="使用 add_subplot"></a>使用 add_subplot</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fig &#x3D; plt.figure()</span><br><span class="line"></span><br><span class="line">ax1 &#x3D; fig.add_subplot(1, 2, 1)</span><br><span class="line">ax2 &#x3D; fig.add_subplot(1, 2, 2)</span><br><span class="line"></span><br><span class="line">ax1.plot(np.random.randn(50).cumsum(), &#39;k--&#39;)</span><br><span class="line">ax2.hist(np.random.randn(100), bins&#x3D;20, color&#x3D;&#39;k&#39;, alpha&#x3D;0.3)</span><br></pre></td></tr></table></figure>
+
+<img src="/matplotlib_memo/1.png" class="">
+
+<h3 id="使用-subplots"><a href="#使用-subplots" class="headerlink" title="使用 subplots"></a>使用 subplots</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fig, axes &#x3D; plt.subplots(1, 2)</span><br><span class="line"></span><br><span class="line">ax1 &#x3D; axes[0]</span><br><span class="line">ax2 &#x3D; axes[1]</span><br><span class="line"></span><br><span class="line">ax1.plot(np.random.randn(50).cumsum(), &#39;k--&#39;)</span><br><span class="line">ax2.hist(np.random.randn(100), bins&#x3D;20, color&#x3D;&#39;k&#39;, alpha&#x3D;0.3)</span><br></pre></td></tr></table></figure>
+
+<h2 id="保存图像到文件中"><a href="#保存图像到文件中" class="headerlink" title="保存图像到文件中"></a>保存图像到文件中</h2><p>可以使用 <code>plt.savefig</code> 将图像保存到文件中，也可以使用 figure 对象的属性方法 <code>savefig</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data &#x3D; np.arange(10)</span><br><span class="line">fig, ax &#x3D; plt.subplots(1, 1)</span><br><span class="line">ax.plot(data)</span><br><span class="line"></span><br><span class="line">plt.savefig(&#39;1.png&#39;)</span><br><span class="line">fig.savefig(&#39;2.png&#39;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="特定图像"><a href="#特定图像" class="headerlink" title="特定图像"></a>特定图像</h2><h3 id="Histogram"><a href="#Histogram" class="headerlink" title="Histogram"></a>Histogram</h3><p>直方图 (Histogram) 使用的是 <code>hist</code> 函数进行绘制，<code>bins</code> 选项可以设置bin的个数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mu, sigma &#x3D; 100, 15</span><br><span class="line">num_bins &#x3D; 100</span><br><span class="line">x &#x3D; mu + sigma * np.random.randn(1000000)</span><br><span class="line"></span><br><span class="line">n, bins, patches &#x3D; plt.hist(x, num_bins, density&#x3D;True)</span><br><span class="line"></span><br><span class="line">plt.title(&#39;Histogram&#39;)</span><br><span class="line">plt.grid(True)</span><br></pre></td></tr></table></figure>
+
+<img src="/matplotlib_memo/histogram.png" class="">
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Python/">Python</a><a href="/tags/Matplotlib/">Matplotlib</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/pandas_memo.html" title="Pandas备忘录" itemprop="url">Pandas备忘录</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-05-06T14:29:26.000Z" itemprop="datePublished"> Published 2018-05-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="1-Pandas备忘录系列文章"><a href="#1-Pandas备忘录系列文章" class="headerlink" title="1. Pandas备忘录系列文章"></a>1. Pandas备忘录系列文章</h2><ol>
+<li><a href="/pandas_memo2.html" title="Pandas备忘录2">Pandas备忘录2</a>
+
+</li>
+</ol>
+<h2 id="2-介绍"><a href="#2-介绍" class="headerlink" title="2. 介绍"></a>2. 介绍</h2><p>本文主要是记录一些Pandas的使用方法以及注意事项</p>
+<p><strong>Note:</strong> 如果没有特别说明，<code>pd</code> 指的是 <code>pandas</code>，<code>np</code> 指的是 <code>numpy</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-构建DataFrame"><a href="#3-构建DataFrame" class="headerlink" title="3. 构建DataFrame"></a>3. 构建DataFrame</h2><p>构建一个DataFrame方法有很多，这里介绍一部分常用的方法，即</p>
+<ul>
+<li>From dict of ndarrays / lists</li>
+<li>From a list of dicts</li>
+</ul>
+<h3 id="3-1-From-dict-of-ndarrays-lists"><a href="#3-1-From-dict-of-ndarrays-lists" class="headerlink" title="3.1. From dict of ndarrays / lists"></a>3.1. From dict of ndarrays / lists</h3><p>输入数据为一个字典，字典的key为列名，字典的value为一个Numpy的数组或者一个list，存储DataFrame一列的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data &#x3D; &#123;&#39;one&#39;: [1, 2, 3],</span><br><span class="line">...         &#39;two&#39;: [3, 2, 1]&#125;</span><br><span class="line">&gt;&gt;&gt; pd.DataFrame(data)</span><br><span class="line">   one  two</span><br><span class="line">0    1    3</span><br><span class="line">1    2    2</span><br><span class="line">2    3    1</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-From-a-list-of-dicts"><a href="#3-2-From-a-list-of-dicts" class="headerlink" title="3.2. From a list of dicts"></a>3.2. From a list of dicts</h3><p>输入数据为一个list，每个元素为一个字典，存储DataFrame一行的值，字典的key为列名，value为一个DataFrame中一个元素。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data &#x3D; [&#123;&#39;one&#39;: 1, &#39;two&#39;: 3&#125;,</span><br><span class="line">...         &#123;&#39;one&#39;: 2, &#39;two&#39;: 2&#125;,</span><br><span class="line">...         &#123;&#39;one&#39;: 3, &#39;two&#39;: 1&#125;]</span><br><span class="line">&gt;&gt;&gt; pd.DataFrame(data)</span><br><span class="line">   one  two</span><br><span class="line">0    1    3</span><br><span class="line">1    2    2</span><br><span class="line">2    3    1</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Series索引"><a href="#4-Series索引" class="headerlink" title="4. Series索引"></a>4. Series索引</h2><p>Series索引类似Numpy的数组索引，除了可以使用 integer 作为索引值，还可以使用 index 作为索引值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; obj &#x3D; pd.Series(np.arange(4.), index&#x3D;[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;])</span><br><span class="line">&gt;&gt;&gt; obj</span><br><span class="line">a    0.0</span><br><span class="line">b    1.0</span><br><span class="line">c    2.0</span><br><span class="line">d    3.0</span><br><span class="line">dtype: float64</span><br><span class="line">&gt;&gt;&gt; obj[&#39;b&#39;]</span><br><span class="line">1.0</span><br><span class="line">&gt;&gt;&gt; obj[1]</span><br><span class="line">1.0</span><br><span class="line">&gt;&gt;&gt; obj[:2]</span><br><span class="line">a    0.0</span><br><span class="line">b    1.0</span><br><span class="line">dtype: float64</span><br><span class="line">&gt;&gt;&gt; obj[obj &lt; 2]</span><br><span class="line">a    0.0</span><br><span class="line">b    1.0</span><br><span class="line">dtype: float64</span><br><span class="line"></span><br><span class="line"># 如果使用 label 索引，则索引区间为闭区间</span><br><span class="line">&gt;&gt;&gt; obj[&#39;b&#39;:&#39;c&#39;]</span><br><span class="line">b    1.0</span><br><span class="line">c    2.0</span><br><span class="line">dtype: float64</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-DataFrame索引"><a href="#5-DataFrame索引" class="headerlink" title="5. DataFrame索引"></a>5. DataFrame索引</h2><p>先贴张DataFrame索引方法的表格，摘录自《Python for Data Analysis》。</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>df[val]</td>
+<td>Select single column or sequence of  columns from the DataFrame; special case conveniences: boolean array (filter rows), slice (slice rows), or boolean DataFrame (set values bases on some criterion)</td>
+</tr>
+<tr>
+<td>df.loc[val]</td>
+<td>Selects single row or subset of rows from the DataFrame by label</td>
+</tr>
+<tr>
+<td>df.loc[:, val]</td>
+<td>Selects single column or subset of columns by label</td>
+</tr>
+<tr>
+<td>df.loc[val1, val2]</td>
+<td>Select both rows and columns by label</td>
+</tr>
+<tr>
+<td>df.iloc[where]</td>
+<td>Selects single row of subsets of rows from the DataFrame by integer position</td>
+</tr>
+<tr>
+<td>df.iloc[:, where]</td>
+<td>Selects single column or subset of columns by integer position</td>
+</tr>
+<tr>
+<td>df.iloc[where_i,  where_j]</td>
+<td>Select both rows and columns by integer position</td>
+</tr>
+<tr>
+<td>df.at[label_i, label_j]</td>
+<td>Select a single scalar value by row and column label</td>
+</tr>
+<tr>
+<td>df.iat[i, j]</td>
+<td>Select a single scalar value by row and column position (integers)</td>
+</tr>
+</tbody></table>
+<p>先创建一个数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data &#x3D; pd.DataFrame(np.arange(16).reshape((4, 4)),</span><br><span class="line">...                     index&#x3D;[&#39;Ohio&#39;, &#39;Colorado&#39;, &#39;Utah&#39;, &#39;New York&#39;],</span><br><span class="line">...                     columns&#x3D;[&#39;one&#39;, &#39;two&#39;, &#39;three&#39;, &#39;four&#39;])</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">          one  two  three  four</span><br><span class="line">Ohio        0    1      2     3</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line">Utah        8    9     10    11</span><br><span class="line">New York   12   13     14    15</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-1-df-语法"><a href="#5-1-df-语法" class="headerlink" title="5.1. df[]语法"></a>5.1. df[]语法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"># 利用单个label选择单列</span><br><span class="line">&gt;&gt;&gt; data[&#39;two&#39;]</span><br><span class="line">Ohio         1</span><br><span class="line">Colorado     5</span><br><span class="line">Utah         9</span><br><span class="line">New York    13</span><br><span class="line">Name: two, dtype: int64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 利用多个label选择多列，可以改变列顺序</span><br><span class="line">&gt;&gt;&gt; data[[&#39;three&#39;, &#39;one&#39;]]</span><br><span class="line">          three  one</span><br><span class="line">Ohio          2    0</span><br><span class="line">Colorado      6    4</span><br><span class="line">Utah         10    8</span><br><span class="line">New York     14   12</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 利用boolean数组选择多行</span><br><span class="line">&gt;&gt;&gt; bools &#x3D; np.array([False, True, False, True])</span><br><span class="line">&gt;&gt;&gt; bools</span><br><span class="line">array([False,  True, False,  True])</span><br><span class="line">&gt;&gt;&gt; data[bools]</span><br><span class="line">          one  two  three  four</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line">New York   12   13     14    15</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 利用切片(slice)选择多行，类似Numpy的语法</span><br><span class="line">&gt;&gt;&gt; data[:2]</span><br><span class="line">          one  two  three  four</span><br><span class="line">Ohio        0    1      2     3</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 利用boolean DataFrame选择数据</span><br><span class="line">&gt;&gt;&gt; data &lt; 5</span><br><span class="line">            one    two  three   four</span><br><span class="line">Ohio       True   True   True   True</span><br><span class="line">Colorado   True  False  False  False</span><br><span class="line">Utah      False  False  False  False</span><br><span class="line">New York  False  False  False  False</span><br><span class="line">&gt;&gt;&gt; data[data &lt; 5] &#x3D; 0</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">          one  two  three  four</span><br><span class="line">Ohio        0    0      0     0</span><br><span class="line">Colorado    0    5      6     7</span><br><span class="line">Utah        8    9     10    11</span><br><span class="line">New York   12   13     14    15</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-df-loc语法"><a href="#5-2-df-loc语法" class="headerlink" title="5.2. df.loc语法"></a>5.2. df.loc语法</h3><p><code>df.loc[]</code> 索引值为 axis labels</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"># 使用 df.loc[val] 选择行</span><br><span class="line">&gt;&gt;&gt; data.loc[&#39;Utah&#39;]</span><br><span class="line">one       8</span><br><span class="line">two       9</span><br><span class="line">three    10</span><br><span class="line">four     11</span><br><span class="line">Name: Utah, dtype: int64</span><br><span class="line">&gt;&gt;&gt; data.loc[[&#39;Utah&#39;, &#39;Ohio&#39;]]</span><br><span class="line">      one  two  three  four</span><br><span class="line">Utah    8    9     10    11</span><br><span class="line">Ohio    0    1      2     3</span><br><span class="line"># 如果使用 label 索引，则索引区间为闭区间</span><br><span class="line">&gt;&gt;&gt; data.loc[:&#39;Utah&#39;]</span><br><span class="line">          one  two  three  four</span><br><span class="line">Ohio        0    1      2     3</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line">Utah        8    9     10    11</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用 df.loc[:, val] 选择列</span><br><span class="line">&gt;&gt;&gt; data.loc[:, &#39;one&#39;]</span><br><span class="line">Ohio         0</span><br><span class="line">Colorado     4</span><br><span class="line">Utah         8</span><br><span class="line">New York    12</span><br><span class="line">Name: one, dtype: int64</span><br><span class="line">&gt;&gt;&gt; data.loc[:, [&#39;one&#39;, &#39;two&#39;]]</span><br><span class="line">          one  two</span><br><span class="line">Ohio        0    1</span><br><span class="line">Colorado    4    5</span><br><span class="line">Utah        8    9</span><br><span class="line">New York   12   13</span><br><span class="line"># 如果使用 label 索引，则索引区间为闭区间</span><br><span class="line">&gt;&gt;&gt; data.loc[:, :&#39;two&#39;]</span><br><span class="line">          one  two</span><br><span class="line">Ohio        0    1</span><br><span class="line">Colorado    4    5</span><br><span class="line">Utah        8    9</span><br><span class="line">New York   12   13</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用 df.loc[val1, val2] 选择多行多列</span><br><span class="line">&gt;&gt;&gt; data.loc[[&#39;Colorado&#39;, &#39;Ohio&#39;], [&#39;two&#39;, &#39;three&#39;]]</span><br><span class="line">          two  three</span><br><span class="line">Colorado    5      6</span><br><span class="line">Ohio        1      2</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-df-iloc语法"><a href="#5-3-df-iloc语法" class="headerlink" title="5.3. df.iloc语法"></a>5.3. df.iloc语法</h3><p><code>df.iloc[]</code> 索引值为 integers</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"># 使用 df.iloc[where] 选择行</span><br><span class="line">&gt;&gt;&gt; data.iloc[2]</span><br><span class="line">one       8</span><br><span class="line">two       9</span><br><span class="line">three    10</span><br><span class="line">four     11</span><br><span class="line">Name: Utah, dtype: int64</span><br><span class="line">&gt;&gt;&gt; data.iloc[[2,1]]</span><br><span class="line">          one  two  three  four</span><br><span class="line">Utah        8    9     10    11</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line">&gt;&gt;&gt; data.iloc[:2]</span><br><span class="line">          one  two  three  four</span><br><span class="line">Ohio        0    1      2     3</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用 df.iloc[:, where] 选择列</span><br><span class="line">&gt;&gt;&gt; data.iloc[:, 1]</span><br><span class="line">Ohio         1</span><br><span class="line">Colorado     5</span><br><span class="line">Utah         9</span><br><span class="line">New York    13</span><br><span class="line">Name: two, dtype: int64</span><br><span class="line">&gt;&gt;&gt; data.iloc[:, [2, 0]]</span><br><span class="line">          three  one</span><br><span class="line">Ohio          2    0</span><br><span class="line">Colorado      6    4</span><br><span class="line">Utah         10    8</span><br><span class="line">New York     14   12</span><br><span class="line">&gt;&gt;&gt; data.iloc[:, :2]</span><br><span class="line">          one  two</span><br><span class="line">Ohio        0    1</span><br><span class="line">Colorado    4    5</span><br><span class="line">Utah        8    9</span><br><span class="line">New York   12   13</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用 df.iloc[where_i, where_j] 选择多行多列</span><br><span class="line">&gt;&gt;&gt; data.iloc[2, :2]</span><br><span class="line">one    8</span><br><span class="line">two    9</span><br><span class="line">Name: Utah, dtype: int64</span><br><span class="line">&gt;&gt;&gt; data.iloc[:2, :2]</span><br><span class="line">          one  two</span><br><span class="line">Ohio        0    1</span><br><span class="line">Colorado    4    5</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-Reset-Index"><a href="#5-4-Reset-Index" class="headerlink" title="5.4. Reset Index"></a>5.4. Reset Index</h3><p>可以使用DataFrame的<code>reset_index()</code>函数将index变为DataFrame的一列，原index替换为递增的整数索引</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.reset_index()</span><br><span class="line">      index  one  two  three  four</span><br><span class="line">0      Ohio    0    1      2     3</span><br><span class="line">1  Colorado    4    5      6     7</span><br><span class="line">2      Utah    8    9     10    11</span><br><span class="line">3  New York   12   13     14    15</span><br></pre></td></tr></table></figure>
+
+<p>这个函数还有一个用处就是可以给每一行编一个号，如果index已为递增的整数索引，再调用<code>reset_index()</code>函数时，就会多出一列，内容为递增整数，相当于给每一行编个号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data2 &#x3D; data.reset_index()</span><br><span class="line">&gt;&gt;&gt; data2</span><br><span class="line">      index  one  two  three  four</span><br><span class="line">0      Ohio    0    1      2     3</span><br><span class="line">1  Colorado    4    5      6     7</span><br><span class="line">2      Utah    8    9     10    11</span><br><span class="line">3  New York   12   13     14    15</span><br><span class="line">&gt;&gt;&gt; data2.reset_index()</span><br><span class="line">   level_0     index  one  two  three  four</span><br><span class="line">0        0      Ohio    0    1      2     3</span><br><span class="line">1        1  Colorado    4    5      6     7</span><br><span class="line">2        2      Utah    8    9     10    11</span><br><span class="line">3        3  New York   12   13     14    15</span><br></pre></td></tr></table></figure>
+
+<p>列<code>level_0</code>可以用于数据编号。</p>
+<h2 id="6-Series数据映射"><a href="#6-Series数据映射" class="headerlink" title="6. Series数据映射"></a>6. Series数据映射</h2><p>已知数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data &#x3D; pd.DataFrame(&#123;&#39;Age&#39;: [22, 38, 26, 35, 35],</span><br><span class="line">...                      &#39;Sex&#39;: [&#39;male&#39;, &#39;female&#39;, &#39;female&#39;, &#39;female&#39;, &#39;male&#39;]&#125;)</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">   Age     Sex</span><br><span class="line">0   22    male</span><br><span class="line">1   38  female</span><br><span class="line">2   26  female</span><br><span class="line">3   35  female</span><br><span class="line">4   35    male</span><br></pre></td></tr></table></figure>
+
+<p><code>Sex</code> 那一列的数据取值有两种，分别为 <code>female</code> 和 <code>male</code>，此时想要作一个数据映射</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">female -&gt; 0</span><br><span class="line">male -&gt; 1</span><br></pre></td></tr></table></figure>
+
+<p>可以使用 <code>map()</code> 函数，输入映射参数 (映射用一个字典表示)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; sex_to_num &#x3D; &#123;&#39;female&#39;: 0, &#39;male&#39;: 1&#125;</span><br><span class="line">&gt;&gt;&gt; data[&#39;Sex&#39;] &#x3D; data[&#39;Sex&#39;].map(sex_to_num)</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">   Age  Sex</span><br><span class="line">0   22    1</span><br><span class="line">1   38    0</span><br><span class="line">2   26    0</span><br><span class="line">3   35    0</span><br><span class="line">4   35    1</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-缺失值"><a href="#7-缺失值" class="headerlink" title="7. 缺失值"></a>7. 缺失值</h2><p><strong>Note:</strong> 本节所述的 <code>NA</code> 代表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from numpy import nan as NA</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-1-缺失值分析"><a href="#7-1-缺失值分析" class="headerlink" title="7.1. 缺失值分析"></a>7.1. 缺失值分析</h3><p>首先分析数据缺失值情况</p>
+<ol>
+<li>Series</li>
+</ol>
+<p>对于 Series，可以使用 <code>isnull()</code> 函数判断 Series 中的数据是否为缺失值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data &#x3D; pd.Series([1, NA, 3.5, NA, 7])</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">0    1.0</span><br><span class="line">1    NaN</span><br><span class="line">2    3.5</span><br><span class="line">3    NaN</span><br><span class="line">4    7.0</span><br><span class="line">dtype: float64</span><br><span class="line">&gt;&gt;&gt; data.isnull()</span><br><span class="line">0    False</span><br><span class="line">1     True</span><br><span class="line">2    False</span><br><span class="line">3     True</span><br><span class="line">4    False</span><br><span class="line">dtype: bool</span><br></pre></td></tr></table></figure>
+
+<p>要判断有多少个缺失值，可以使用 <code>sum()</code> 判断 <code>isnull()</code> 返回的 Boolean 数组中有多少个 True。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.isnull().sum()</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>DataFrame</li>
+</ol>
+<p>对于 DataFrame，同样可以使用 <code>isnull()</code> 函数判断数据是否为缺失值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data &#x3D; pd.DataFrame([[1., 6.5, 3.], [1, NA, NA],</span><br><span class="line">...                      [NA, NA, NA], [NA, 6.5, 3.]])</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">     0    1    2</span><br><span class="line">0  1.0  6.5  3.0</span><br><span class="line">1  1.0  NaN  NaN</span><br><span class="line">2  NaN  NaN  NaN</span><br><span class="line">3  NaN  6.5  3.0</span><br><span class="line">&gt;&gt;&gt; data.isnull()</span><br><span class="line">       0      1      2</span><br><span class="line">0  False  False  False</span><br><span class="line">1  False   True   True</span><br><span class="line">2   True   True   True</span><br><span class="line">3   True  False  False</span><br></pre></td></tr></table></figure>
+
+<p>如果要知道每一列的缺失值是多少，可以使用 <code>info()</code> 函数，或者将 <code>isnull()</code> 与 <code>sum()</code> 配合起来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.info()</span><br><span class="line">&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;</span><br><span class="line">RangeIndex: 4 entries, 0 to 3</span><br><span class="line">Data columns (total 3 columns):</span><br><span class="line">0    2 non-null float64</span><br><span class="line">1    2 non-null float64</span><br><span class="line">2    2 non-null float64</span><br><span class="line">dtypes: float64(3)</span><br><span class="line">memory usage: 176.0 bytes</span><br><span class="line">&gt;&gt;&gt; data.isnull().sum()</span><br><span class="line">0    2</span><br><span class="line">1    2</span><br><span class="line">2    2</span><br><span class="line">dtype: int64</span><br></pre></td></tr></table></figure>
+
+<p>如果要知道缺失值总数，可以作两次 <code>sum()</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.isnull().sum().sum()</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-缺失值补全"><a href="#7-2-缺失值补全" class="headerlink" title="7.2. 缺失值补全"></a>7.2. 缺失值补全</h3><p>处理缺失值的一个方法就是使用插值或者自设的值补全缺失值。首先构造一个有缺失值的 DataFrame</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df &#x3D; pd.DataFrame(np.random.randn(7, 3))</span><br><span class="line">&gt;&gt;&gt; df.iloc[:4, 1] &#x3D; NA</span><br><span class="line">&gt;&gt;&gt; df.iloc[:2, 2] &#x3D; NA</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">          0         1         2</span><br><span class="line">0  1.309480       NaN       NaN</span><br><span class="line">1 -0.542253       NaN       NaN</span><br><span class="line">2 -1.129503       NaN -0.396921</span><br><span class="line">3  1.172466       NaN -1.114420</span><br><span class="line">4  0.893893  0.572520  0.648532</span><br><span class="line">5  0.293066  1.875362 -0.426759</span><br><span class="line">6 -0.389516  0.379184  0.759198</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>使用自设的值补全缺失值</li>
+</ol>
+<p>这里主要使用函数 <code>fillna()</code>，传入一个值，则缺失值就被设为该值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 缺失值使用0补全</span><br><span class="line">&gt;&gt;&gt; df.fillna(0)</span><br><span class="line">          0         1         2</span><br><span class="line">0  1.309480  0.000000  0.000000</span><br><span class="line">1 -0.542253  0.000000  0.000000</span><br><span class="line">2 -1.129503  0.000000 -0.396921</span><br><span class="line">3  1.172466  0.000000 -1.114420</span><br><span class="line">4  0.893893  0.572520  0.648532</span><br><span class="line">5  0.293066  1.875362 -0.426759</span><br><span class="line">6 -0.389516  0.379184  0.759198</span><br></pre></td></tr></table></figure>
+
+<p>如果传入的是一个字典，则可以对每一列的缺失值设定不同的补全值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 第二列缺失值用0.5补全，第三列缺失值用0补全</span><br><span class="line">&gt;&gt;&gt; df.fillna(&#123;1: 0.5, 2: 0&#125;)</span><br><span class="line">          0         1         2</span><br><span class="line">0  1.309480  0.500000  0.000000</span><br><span class="line">1 -0.542253  0.500000  0.000000</span><br><span class="line">2 -1.129503  0.500000 -0.396921</span><br><span class="line">3  1.172466  0.500000 -1.114420</span><br><span class="line">4  0.893893  0.572520  0.648532</span><br><span class="line">5  0.293066  1.875362 -0.426759</span><br><span class="line">6 -0.389516  0.379184  0.759198</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>插值补全缺失值</li>
+</ol>
+<p>这里主要使用函数 <code>fillna()</code> 的 <code>method</code> 参数，例子中数据由于某列第一个元素有缺失，所以方法选择 backfill。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df.fillna(method&#x3D;&#39;backfill&#39;)</span><br><span class="line">          0         1         2</span><br><span class="line">0  1.309480  0.572520 -0.396921</span><br><span class="line">1 -0.542253  0.572520 -0.396921</span><br><span class="line">2 -1.129503  0.572520 -0.396921</span><br><span class="line">3  1.172466  0.572520 -1.114420</span><br><span class="line">4  0.893893  0.572520  0.648532</span><br><span class="line">5  0.293066  1.875362 -0.426759</span><br><span class="line">6 -0.389516  0.379184  0.759198</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-3-缺失值删除"><a href="#7-3-缺失值删除" class="headerlink" title="7.3. 缺失值删除"></a>7.3. 缺失值删除</h3><ol>
+<li>删除有缺失值的行</li>
+</ol>
+<p>DataFrame的<code>dropna</code>函数默认是删除有缺失值的行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df &#x3D; pd.DataFrame(&#123;&quot;name&quot;: [&#39;Alfred&#39;, &#39;Batman&#39;, &#39;Catwoman&#39;],</span><br><span class="line">...                    &quot;toy&quot;: [np.nan, &#39;Batmobile&#39;, &#39;Bullwhip&#39;],</span><br><span class="line">...                    &quot;born&quot;: [pd.NaT, pd.Timestamp(&quot;1940-04-25&quot;), pd.NaT]&#125;)</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">       name        toy       born</span><br><span class="line">0    Alfred        NaN        NaT</span><br><span class="line">1    Batman  Batmobile 1940-04-25</span><br><span class="line">2  Catwoman   Bullwhip        NaT</span><br><span class="line">&gt;&gt;&gt; df.dropna()</span><br><span class="line">     name        toy       born</span><br><span class="line">1  Batman  Batmobile 1940-04-25</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>删除有缺失值的列</li>
+</ol>
+<p>设定<code>dropna</code>函数的参数axis为1可以删除有缺失值的列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df &#x3D; pd.DataFrame(&#123;&quot;name&quot;: [&#39;Alfred&#39;, &#39;Batman&#39;, &#39;Catwoman&#39;],</span><br><span class="line">...                    &quot;toy&quot;: [np.nan, &#39;Batmobile&#39;, &#39;Bullwhip&#39;],</span><br><span class="line">...                    &quot;born&quot;: [pd.NaT, pd.Timestamp(&quot;1940-04-25&quot;), pd.NaT]&#125;)</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">       name        toy       born</span><br><span class="line">0    Alfred        NaN        NaT</span><br><span class="line">1    Batman  Batmobile 1940-04-25</span><br><span class="line">2  Catwoman   Bullwhip        NaT</span><br><span class="line">&gt;&gt;&gt; df.dropna(axis&#x3D;1)</span><br><span class="line">       name</span><br><span class="line">0    Alfred</span><br><span class="line">1    Batman</span><br><span class="line">2  Catwoman</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-重复值"><a href="#8-重复值" class="headerlink" title="8. 重复值"></a>8. 重复值</h2><p>已知DataFrame</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data &#x3D; pd.DataFrame(&#123;&#39;k1&#39;: [&#39;one&#39;, &#39;two&#39;] * 3 + [&#39;two&#39;],</span><br><span class="line">...                      &#39;k2&#39;: [1, 1, 2, 3, 3, 4, 4]&#125;)</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">    k1  k2</span><br><span class="line">0  one   1</span><br><span class="line">1  two   1</span><br><span class="line">2  one   2</span><br><span class="line">3  two   3</span><br><span class="line">4  one   3</span><br><span class="line">5  two   4</span><br><span class="line">6  two   4</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-1-删除重复值"><a href="#8-1-删除重复值" class="headerlink" title="8.1. 删除重复值"></a>8.1. 删除重复值</h3><p>可以使用函数<code>drop_duplicates()</code>删除重复值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.drop_duplicates()</span><br><span class="line">    k1  k2</span><br><span class="line">0  one   1</span><br><span class="line">1  two   1</span><br><span class="line">2  one   2</span><br><span class="line">3  two   3</span><br><span class="line">4  one   3</span><br><span class="line">5  two   4</span><br></pre></td></tr></table></figure>
+
+<p>函数<code>drop_duplicates()</code>默认考虑的是全部列，也可以设定某些列来判断是否重复</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.drop_duplicates([&#39;k1&#39;])</span><br><span class="line">    k1  k2</span><br><span class="line">0  one   1</span><br><span class="line">1  two   1</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-排序"><a href="#9-排序" class="headerlink" title="9. 排序"></a>9. 排序</h2><p>已知DataFrame</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df &#x3D; pd.DataFrame(&#123;&#39;b&#39;: [4, 7, -3, 2], &#39;a&#39;: [0, 1, 0, 1]&#125;)</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">   a  b</span><br><span class="line">0  0  4</span><br><span class="line">1  1  7</span><br><span class="line">2  0 -3</span><br><span class="line">3  1  2</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-1-根据某些列进行排序"><a href="#9-1-根据某些列进行排序" class="headerlink" title="9.1. 根据某些列进行排序"></a>9.1. 根据某些列进行排序</h3><p>排序使用函数<code>sort_values()</code>，如果要根据某些列进行排序，可以设定<code>by=</code>参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df.sort_values(by&#x3D;&#39;a&#39;)</span><br><span class="line">   a  b</span><br><span class="line">0  0  4</span><br><span class="line">2  0 -3</span><br><span class="line">1  1  7</span><br><span class="line">3  1  2</span><br><span class="line">&gt;&gt;&gt; df.sort_values(by&#x3D;[&#39;a&#39;, &#39;b&#39;])</span><br><span class="line">   a  b</span><br><span class="line">2  0 -3</span><br><span class="line">0  0  4</span><br><span class="line">3  1  2</span><br><span class="line">1  1  7</span><br></pre></td></tr></table></figure>
+
+<h2 id="10-GroupBy"><a href="#10-GroupBy" class="headerlink" title="10. GroupBy"></a>10. GroupBy</h2><p>已知DataFrame</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df &#x3D; pd.DataFrame(&#123;&#39;key1&#39;:[&#39;a&#39;,&#39;a&#39;,&#39;b&#39;,&#39;b&#39;,&#39;a&#39;],</span><br><span class="line">...                    &#39;key2&#39;:[&#39;one&#39;,&#39;two&#39;,&#39;one&#39;,&#39;two&#39;,&#39;one&#39;],</span><br><span class="line">...                    &#39;data1&#39;:np.random.randn(5),</span><br><span class="line">...                    &#39;data2&#39;:np.random.randn(5)&#125;)</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">      data1     data2 key1 key2</span><br><span class="line">0  2.462027  0.054159    a  one</span><br><span class="line">1  0.283423 -0.658160    a  two</span><br><span class="line">2 -0.969307 -0.407126    b  one</span><br><span class="line">3 -0.636756  1.925338    b  two</span><br><span class="line">4 -0.408266  1.833710    a  one</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-1-查看分组名"><a href="#10-1-查看分组名" class="headerlink" title="10.1. 查看分组名"></a>10.1. 查看分组名</h3><p>DataFrame分了组后，想知道每个分组的名字，可以写为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df.groupby(&#39;key1&#39;).groups</span><br><span class="line">&#123;&#39;a&#39;: Int64Index([0, 1, 4], dtype&#x3D;&#39;int64&#39;), &#39;b&#39;: Int64Index([2, 3], dtype&#x3D;&#39;int64&#39;)&#125;</span><br><span class="line">&gt;&gt;&gt; df.groupby(&#39;key1&#39;).groups.keys()</span><br><span class="line">dict_keys([&#39;a&#39;, &#39;b&#39;])</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-2-分组计算和以及平均值"><a href="#10-2-分组计算和以及平均值" class="headerlink" title="10.2. 分组计算和以及平均值"></a>10.2. 分组计算和以及平均值</h3><p>如果想要根据列<code>key1</code>的值分组计算<code>data1</code>的和，可以写为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df[&#39;data1&#39;].groupby(df[&#39;key1&#39;]).sum().reset_index()</span><br><span class="line">  key1     data1</span><br><span class="line">0    a  2.337185</span><br><span class="line">1    b -1.606063</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df.filter([&#39;data1&#39;, &#39;key1&#39;]).groupby(&#39;key1&#39;, as_index&#x3D;False).sum()</span><br><span class="line">  key1     data1</span><br><span class="line">0    a  2.337185</span><br><span class="line">1    b -1.606063</span><br></pre></td></tr></table></figure>
+
+<p>这个<code>as_index=False</code>使得<code>key1</code>的值不作为index。计算平均值只需要将<code>sum()</code>换成<code>mean()</code>即可。</p>
+<h2 id="11-Merge"><a href="#11-Merge" class="headerlink" title="11. Merge"></a>11. Merge</h2><h3 id="11-1-笛卡尔乘积"><a href="#11-1-笛卡尔乘积" class="headerlink" title="11.1. 笛卡尔乘积"></a>11.1. 笛卡尔乘积</h3><p>两个集合$X$和$Y$的笛卡尔乘积(Cartesian product)，表示为$X \times Y$，是指第一个对象是$X$的成员而第二个对象是$Y$的所有可能有序对的其中一个成员。举个例子，假设集合$A = { a,b  }$，集合$B = { 0, 1, 2 }$，则两个集合的笛卡尔积为 ${ (a, 0), (a, 1), (a, 2), (b, 0),  (b, 1), (b, 2) }$。使用Pandas的<code>merge</code>函数可以实现两个DataFrame的笛卡尔积。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df1 &#x3D; pd.DataFrame(&#123;&#39;A&#39;: [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]&#125;)</span><br><span class="line">&gt;&gt;&gt; df1</span><br><span class="line">   A</span><br><span class="line">0  a</span><br><span class="line">1  b</span><br><span class="line">2  c</span><br><span class="line">&gt;&gt;&gt; df2 &#x3D; pd.DataFrame(&#123;&#39;B&#39;: [0, 1, 2]&#125;)</span><br><span class="line">&gt;&gt;&gt; df2</span><br><span class="line">   B</span><br><span class="line">0  0</span><br><span class="line">1  1</span><br><span class="line">2  2</span><br><span class="line">&gt;&gt;&gt; pd.merge(df1.assign(foo&#x3D;0), df2.assign(foo&#x3D;0), on&#x3D;[&#39;foo&#39;]).drop(columns&#x3D;[&#39;foo&#39;])</span><br><span class="line">   A  B</span><br><span class="line">0  a  0</span><br><span class="line">1  a  1</span><br><span class="line">2  a  2</span><br><span class="line">3  b  0</span><br><span class="line">4  b  1</span><br><span class="line">5  b  2</span><br><span class="line">6  c  0</span><br><span class="line">7  c  1</span><br><span class="line">8  c  2</span><br></pre></td></tr></table></figure>
+
+<p>主要是实现思想是增加一列<code>foo</code>，值设为0，然后使用<code>merge</code>函数进行合并。</p>
+<h2 id="12-读取数据"><a href="#12-读取数据" class="headerlink" title="12. 读取数据"></a>12. 读取数据</h2><h3 id="12-1-读取csv文件"><a href="#12-1-读取csv文件" class="headerlink" title="12.1. 读取csv文件"></a>12.1. 读取csv文件</h3><p>读取csv数据文件需要用到 <code>read_csv()</code> 函数</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Python/">Python</a><a href="/tags/Pandas/">Pandas</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/numpy_memo.html" title="Numpy备忘录" itemprop="url">Numpy备忘录</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-05-03T15:10:53.000Z" itemprop="datePublished"> Published 2018-05-03</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>本文主要是记录一些Numpy的使用方法以及注意事项。</p>
+<p><strong>Note:</strong> 如果没有特别说明，<code>np</code> 指的是 <code>numpy</code>，代表导入的 numpy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br></pre></td></tr></table></figure>
+
+<p>PS: 网上找到一份Numpy的CheatSheet，内容不错，感兴趣的可以去下载：<a target="_blank" rel="noopener" href="https://www.dataquest.io/blog/numpy-cheat-sheet/">Numpy CheatSheet</a></p>
+<h2 id="转换ndarray数据类型"><a href="#转换ndarray数据类型" class="headerlink" title="转换ndarray数据类型"></a>转换ndarray数据类型</h2><p>如果想转换ndarray的数据类型，可以使用ndarray的 <code>astype</code> 方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>arr = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>arr.dtype</span><br><span class="line">dtype(<span class="string">&#x27;int64&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>float_arr = arr.astype(np.float64)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>float_arr.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong> 调用 <code>astype</code> 方法会生成新的数组，因此需要赋值到一个变量上。</p>
+<h2 id="切片不会生成新的数组"><a href="#切片不会生成新的数组" class="headerlink" title="切片不会生成新的数组"></a>切片不会生成新的数组</h2><p>对数组进行切片后，返回的数组并不是原始数组的拷贝，只是一个对原始数组的引用，如果对切片后的数组进行数据修改，原始数组相应的位置数据会被修改。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; arr &#x3D; np.arange(10)</span><br><span class="line">&gt;&gt;&gt; arr</span><br><span class="line">array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])</span><br><span class="line">&gt;&gt;&gt; new_arr &#x3D; arr[5:8]</span><br><span class="line">&gt;&gt;&gt; new_arr</span><br><span class="line">array([5, 6, 7])</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; new_arr[:] &#x3D; 12</span><br><span class="line">&gt;&gt;&gt; new_arr</span><br><span class="line">array([12, 12, 12])</span><br><span class="line">&gt;&gt;&gt; arr</span><br><span class="line">array([ 0,  1,  2,  3,  4, 12, 12, 12,  8,  9])</span><br></pre></td></tr></table></figure>
+
+<p>如果想要切片后的数组是原始数组的拷贝，需要调用 <code>copy()</code> 方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; new_arr &#x3D; arr[5:8].copy()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Axis编号"><a href="#Axis编号" class="headerlink" title="Axis编号"></a>Axis编号</h2><p>调用一些Numpy函数时会遇到设置 <code>axis</code> 参数，该参数可以设为 <code>0</code> 或 <code>1</code> ，对于这两个值表示的意义，可以参考下图</p>
+<img src="/numpy_memo/1.png" class="">
+
+<p>也就是说<code>axis 0</code> 代表行方向，<code>axis 1</code> 代表列方向。例如，我们使用 <code>mean()</code> 计算矩阵的平均值时，<code>A.mean(axis=0)</code> 代表每个平均值是沿着行方向计算可得，<code>A.mean(axis=1)</code> 代表每个平均值是沿着列方向计算可得。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; A &#x3D; np.random.randn(2, 3)</span><br><span class="line">&gt;&gt;&gt; A</span><br><span class="line">array([[-0.40797393,  0.24059956, -1.57582642],</span><br><span class="line">       [ 0.31626161, -0.07033558,  0.58346107]])</span><br><span class="line">&gt;&gt;&gt; A.mean(axis&#x3D;0)</span><br><span class="line">array([-0.04585616,  0.08513199, -0.49618267])</span><br><span class="line">&gt;&gt;&gt; A.mean(axis&#x3D;1)</span><br><span class="line">array([-0.58106693,  0.27646237])</span><br></pre></td></tr></table></figure>
+
+<p><code>A.mean(axis=0)</code> 大小为矩阵A列的个数，<code>A.mean(axis=1)</code>大小为矩阵A行的个数。</p>
+<h2 id="统计Boolean数组中True的个数"><a href="#统计Boolean数组中True的个数" class="headerlink" title="统计Boolean数组中True的个数"></a>统计Boolean数组中True的个数</h2><p>Boolean值通常可以转换成 0 (False) 或 1 (True)，因此可以使用 <code>sum()</code> 函数统计Boolean数组中 True 的个数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; bools &#x3D; np.array([False, True, True, False, False])</span><br><span class="line">&gt;&gt;&gt; bools.sum()</span><br><span class="line">2</span><br><span class="line">&gt;&gt;&gt; np.sum(bools)</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<p>既然可以知道数组中 True 的个数，自然也可以知道 True 所占的比例，此时可以用 <code>mean()</code> 函数进行计算</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; bools.mean()</span><br><span class="line">0.4</span><br><span class="line">&gt;&gt;&gt; np.mean(bools)</span><br><span class="line">0.4</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Python/">Python</a><a href="/tags/Numpy/">Numpy</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/terminal_shortcuts.html" title="终端快捷键" itemprop="url">终端快捷键</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-05-03T12:34:20.000Z" itemprop="datePublished"> Published 2018-05-03</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>OS: OS X 10.11.6</p>
+<p>Shell: bash and zsh</p>
+<p>Other: iTerm2</p>
+<h2 id="快捷键列表"><a href="#快捷键列表" class="headerlink" title="快捷键列表"></a>快捷键列表</h2><table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Option + Left or Right</td>
+<td>光标按单词前移或后移</td>
+</tr>
+<tr>
+<td>Control + F or B</td>
+<td>光标向前或向后移动一个字符</td>
+</tr>
+<tr>
+<td>Control + D</td>
+<td>删除当前光标的字符</td>
+</tr>
+<tr>
+<td>Control + H</td>
+<td>删除光标之前的字符</td>
+</tr>
+<tr>
+<td>Control + W</td>
+<td>删除光标之前的单词</td>
+</tr>
+<tr>
+<td>Command + A</td>
+<td>移动光标到行首</td>
+</tr>
+<tr>
+<td>Command + E</td>
+<td>移动光标到行尾巴</td>
+</tr>
+<tr>
+<td>Control + U</td>
+<td>清除整行内容</td>
+</tr>
+<tr>
+<td>Control + K</td>
+<td>删除光标之后的内容</td>
+</tr>
+<tr>
+<td>Control + C</td>
+<td>Kill掉当前运行的程序</td>
+</tr>
+<tr>
+<td>Control + Z</td>
+<td>暂停当前运行程序，要恢复运行使用 <code>fg process_name</code></td>
+</tr>
+</tbody></table>
+<h2 id="快捷键详细信息"><a href="#快捷键详细信息" class="headerlink" title="快捷键详细信息"></a>快捷键详细信息</h2><h3 id="Option-Left-or-Right"><a href="#Option-Left-or-Right" class="headerlink" title="Option + Left or Right"></a>Option + Left or Right</h3><p>如果使用iTerm2作为终端模拟器时，该快捷键不是所预想的功能，此时需要进行设置，这里贴出[4]提供的教程</p>
+<p>Step 1: 在 Profiles-Keys 下设置 <code> Left ⌥ key to act as Esc+</code></p>
+<img src="/terminal_shortcuts/1.png" class="" width="800">
+
+<p>Step 2: 添加一个快捷键 <code>⌥ ←</code>，快捷键设置内容为</p>
+<ul>
+<li>Keyboard Shortcut: <code>⌥ ←</code></li>
+<li>Action: Send Escape Sequence</li>
+<li>Esc+: b</li>
+</ul>
+<img src="/terminal_shortcuts/2.png" class="" width="800">
+
+<p>Step 3: 添加一个快捷键 <code>⌥ →</code>，快捷键设置内容为</p>
+<ul>
+<li>Keyboard Shortcut: <code>⌥ →</code></li>
+<li>Action: Send Escape Sequence</li>
+<li>Esc+: f</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://cnbin.github.io/blog/2015/06/20/iterm2-kuai-jie-jian-da-quan/">iTerm2 快捷键大全</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.howtogeek.com/howto/ubuntu/keyboard-shortcuts-for-bash-command-shell-for-ubuntu-debian-suse-redhat-linux-etc/">The Best Keyboard Shortcuts for Bash (aka the Linux and macOS Terminal)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.techrepublic.com/article/20-terminal-shortcuts-developers-need-to-know/">20 Terminal shortcuts developers need to know</a></li>
+<li><a target="_blank" rel="noopener" href="https://coderwall.com/p/h6yfda/use-and-to-jump-forwards-backwards-words-in-iterm-2-on-os-x">Use ⌥ ← and ⌥→ to jump forwards / backwards words in iTerm 2, on OS X</a></li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Shell/">Shell</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/python_snippets_part1.html" title="Python Snippets Part 1" itemprop="url">Python Snippets Part 1</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-05-02T14:57:40.000Z" itemprop="datePublished"> Published 2018-05-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <ul>
+<li><a href="#1-%E5%88%A4%E6%96%AD%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8">1. 判断文件或目录是否存在</a></li>
+<li><a href="#2-parametergrid">2. ParameterGrid</a></li>
+<li><a href="#3-%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87">3. 批量下载图片</a></li>
+<li><a href="#4-%E9%81%8D%E5%8E%86%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%AD%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6">4. 遍历文件夹中所有文件</a></li>
+<li><a href="#5-%E8%AE%A1%E7%AE%97%E5%87%BD%E6%95%B0%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4">5. 计算函数运行时间</a></li>
+<li><a href="#6-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%8F%AF%E8%BF%AD%E4%BB%A3">6. 判断对象是否可迭代</a></li>
+<li><a href="#7-%E5%88%A4%E6%96%AD%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%B1%BB%E5%9E%8B">7. 判断操作系统类型</a></li>
+</ul>
+<h2 id="1-判断文件或目录是否存在"><a href="#1-判断文件或目录是否存在" class="headerlink" title="1. 判断文件或目录是否存在"></a>1. 判断文件或目录是否存在</h2><p>创建一个目录和一个文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir dir1 &amp;&amp; touch file1.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ls -l</span></span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x  2 luowanqian  wheel  68  5  2 23:21 dir1</span><br><span class="line">-rw-r--r--  1 luowanqian  wheel   0  5  2 23:21 file1.txt</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>os.path.exists()</code> 可以判断文件或目录是否存在，但是不能判断是该路径是一个文件还是目录，要进一步判断，需要使用 <code>os.path.isfile()</code>，如果该路径是一个文件，则返回 True，否则返回 False，当然，也可以直接使用 <code>os.path.isfile()</code> 判断文件是否存在。测试代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> os</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.exists(<span class="string">&#x27;dir1&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.exists(<span class="string">&#x27;file1.txt&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(<span class="string">&#x27;dir1&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(<span class="string">&#x27;file1.txt&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.exists(<span class="string">&#x27;dir2&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.exists(<span class="string">&#x27;file2.txt&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(<span class="string">&#x27;dir2&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(<span class="string">&#x27;file2.txt&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>目录 <code>dir2</code> 和文件 <code>file2.txt</code> 均不存在，所以函数 <code>os.path.exists()</code> 和 <code>os.path.isfile()</code> 均返回 False。</p>
+<h2 id="2-ParameterGrid"><a href="#2-ParameterGrid" class="headerlink" title="2. ParameterGrid"></a>2. ParameterGrid</h2><p>机器学习算法最常见的调参方法是网格搜索，需要将多组参数进行组合，Scikit-learn提供了一个类 <code>ParametGrid</code> 可以生成所有的参数组合，这里提取其关键代码单独写成一个生成器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> product</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parameters_grid</span>(<span class="params">parameter_map</span>):</span></span><br><span class="line">    items = sorted(parameter_map.items())</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> items:</span><br><span class="line">        <span class="keyword">yield</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        keys, values = zip(*items)</span><br><span class="line">        <span class="keyword">for</span> v <span class="keyword">in</span> product(*values):</span><br><span class="line">            params = dict(zip(keys, v))</span><br><span class="line">            <span class="keyword">yield</span> params</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    parameter_map = &#123;<span class="string">&#x27;a&#x27;</span>: [<span class="number">1</span>, <span class="number">2</span>], <span class="string">&#x27;b&#x27;</span>: [<span class="literal">True</span>, <span class="literal">False</span>]&#125;</span><br><span class="line">    <span class="keyword">for</span> params <span class="keyword">in</span> parameters_grid(parameter_map):</span><br><span class="line">        print(params)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>代码运行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;a&#39;: 1, &#39;b&#39;: True&#125;</span><br><span class="line">&#123;&#39;a&#39;: 1, &#39;b&#39;: False&#125;</span><br><span class="line">&#123;&#39;a&#39;: 2, &#39;b&#39;: True&#125;</span><br><span class="line">&#123;&#39;a&#39;: 2, &#39;b&#39;: False&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-批量下载图片"><a href="#3-批量下载图片" class="headerlink" title="3. 批量下载图片"></a>3. 批量下载图片</h2><p>这里使用<code>requests</code>库批量下载图片，为了加快下载速度，还实现了多线程下载，同时为了避免一次下载失败，脚本支持自动重试下载。没有处理具体的异常，只是捕获异常后输出异常信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> retrying <span class="keyword">import</span> retry</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> progressbar</span><br><span class="line"><span class="keyword">import</span> concurrent.futures <span class="keyword">as</span> concurrent</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@retry(stop_max_attempt_number=10)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">download</span>(<span class="params">image_url, image_path</span>):</span></span><br><span class="line">    response = requests.get(image_url)</span><br><span class="line">    img = Image.open(BytesIO(response.content))</span><br><span class="line">    img.save(image_path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    base_url = <span class="string">&#x27;http://www.baidu.com&#x27;</span></span><br><span class="line">    num_images = <span class="number">3</span></span><br><span class="line">    suffix = <span class="string">&#x27;.jpg&#x27;</span></span><br><span class="line">    image_dir = <span class="string">&#x27;images&#x27;</span></span><br><span class="line"></span><br><span class="line">    num_workers = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.isdir(image_dir):</span><br><span class="line">        os.mkdir(image_dir)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> concurrent.ThreadPoolExecutor(max_workers=num_workers) <span class="keyword">as</span> executor:</span><br><span class="line">        image_urls = []</span><br><span class="line">        image_paths = []</span><br><span class="line">        <span class="keyword">for</span> image_id <span class="keyword">in</span> range(num_images):</span><br><span class="line">            url = base_url + <span class="string">&#x27;/&#x27;</span> + str(image_id + <span class="number">1</span>) + suffix</span><br><span class="line">            file_path = os.path.join(image_dir, str(image_id + <span class="number">1</span>) + suffix)</span><br><span class="line">            image_urls.append(url)</span><br><span class="line">            image_paths.append(file_path)</span><br><span class="line"></span><br><span class="line">        tasks = &#123;</span><br><span class="line">            executor.submit(download, url, file_path):</span><br><span class="line">                           (url, file_path) <span class="keyword">for</span> url, file_path <span class="keyword">in</span> zip(image_urls, image_paths)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        total = len(image_urls)</span><br><span class="line">        pbar = progressbar.ProgressBar(max_value=total).start()</span><br><span class="line">        <span class="keyword">for</span> task <span class="keyword">in</span> concurrent.as_completed(tasks):</span><br><span class="line">            url, file_path = tasks[task]</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                task.result()</span><br><span class="line">                i = i + <span class="number">1</span></span><br><span class="line">                pbar.update(i)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> exc:</span><br><span class="line">                print(<span class="string">&#x27;&#123;&#125; generated an exception: &#123;&#125;&#x27;</span>.format(url, exc))</span><br><span class="line">        pbar.finish()</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-遍历文件夹中所有文件"><a href="#4-遍历文件夹中所有文件" class="headerlink" title="4. 遍历文件夹中所有文件"></a>4. 遍历文件夹中所有文件</h2><p>首先目录结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ tree test</span><br><span class="line">test</span><br><span class="line">├── 1.txt</span><br><span class="line">├── 2.txt</span><br><span class="line">└── test2</span><br><span class="line">    ├── 3.txt</span><br><span class="line">    └── 4.txt</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>os.walk()</code>遍历<code>test</code>目录，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root_dir = <span class="string">&#x27;/tmp/test&#x27;</span></span><br><span class="line"><span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(root_dir, topdown=<span class="literal">True</span>):</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> files:</span><br><span class="line">        print(os.path.join(root, name))</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> dirs:</span><br><span class="line">        print(os.path.join(root, name))</span><br></pre></td></tr></table></figure>
+
+<p>得到结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;tmp&#x2F;test&#x2F;1.txt</span><br><span class="line">&#x2F;tmp&#x2F;test&#x2F;2.txt</span><br><span class="line">&#x2F;tmp&#x2F;test&#x2F;test2</span><br><span class="line">&#x2F;tmp&#x2F;test&#x2F;test2&#x2F;3.txt</span><br><span class="line">&#x2F;tmp&#x2F;test&#x2F;test2&#x2F;4.txt</span><br></pre></td></tr></table></figure>
+
+<p>如果设置<code>topdown=False</code>，得到结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;tmp&#x2F;test&#x2F;test2&#x2F;3.txt</span><br><span class="line">&#x2F;tmp&#x2F;test&#x2F;test2&#x2F;4.txt</span><br><span class="line">&#x2F;tmp&#x2F;test&#x2F;1.txt</span><br><span class="line">&#x2F;tmp&#x2F;test&#x2F;2.txt</span><br><span class="line">&#x2F;tmp&#x2F;test&#x2F;test2</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-计算函数运行时间"><a href="#5-计算函数运行时间" class="headerlink" title="5. 计算函数运行时间"></a>5. 计算函数运行时间</h2><p>这里使用装饰器来计算函数运行时间</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">timethis</span>(<span class="params">func</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Decorator that reports the execution time</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"><span class="meta">    @wraps(func)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span>(<span class="params">*args, **kwargs</span>):</span></span><br><span class="line">        start = time.time()</span><br><span class="line">        result = func(*args, **kwargs)</span><br><span class="line">        end = time.time()</span><br><span class="line">        print(func.__name__, end-start)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timethis</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countdown</span>(<span class="params">n</span>):</span></span><br><span class="line">    <span class="keyword">while</span> n &gt; <span class="number">0</span>:</span><br><span class="line">        n -= <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-判断对象是否可迭代"><a href="#6-判断对象是否可迭代" class="headerlink" title="6. 判断对象是否可迭代"></a>6. 判断对象是否可迭代</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isiterable</span>(<span class="params">obj</span>):</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        obj = iter(obj)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    a = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">    b = <span class="number">3</span></span><br><span class="line">    print(<span class="string">f&quot;&#x27;a&#x27; is <span class="subst">&#123;<span class="string">&#x27;iterable&#x27;</span> <span class="keyword">if</span> isiterable(a) <span class="keyword">else</span> <span class="string">&#x27;not iterable&#x27;</span>&#125;</span>&quot;</span>)</span><br><span class="line">    print(<span class="string">f&quot;&#x27;b&#x27; is <span class="subst">&#123;<span class="string">&#x27;iterable&#x27;</span> <span class="keyword">if</span> isiterable(b) <span class="keyword">else</span> <span class="string">&#x27;not iterable&#x27;</span>&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>执行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#39;a&#39; is iterable</span><br><span class="line">&#39;b&#39; is not iterable</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-判断操作系统类型"><a href="#7-判断操作系统类型" class="headerlink" title="7. 判断操作系统类型"></a>7. 判断操作系统类型</h2><p>可以使用 <code>sys.platform</code> 判断当前是什么操作系统。常见的操作系统，其返回值如下</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>platform value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AIX</td>
+<td><code>&#39;aix&#39;</code></td>
+</tr>
+<tr>
+<td>Linux</td>
+<td><code>&#39;linux&#39;</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>&#39;win32&#39;</code></td>
+</tr>
+<tr>
+<td>Windows/Cygwin</td>
+<td><code>&#39;cygwin&#39;</code></td>
+</tr>
+<tr>
+<td>macOS</td>
+<td><code>&#39;darwin&#39;</code></td>
+</tr>
+</tbody></table>
+<p>官方推荐使用 <code>startswith()</code> 判断系统类型 (见 <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/sys.html#sys.platform">sys.platform</a>)，这里贴一段测试代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">identify_platform</span>():</span></span><br><span class="line">    platform = sys.platform</span><br><span class="line">    <span class="keyword">if</span> platform.startswith(<span class="string">&quot;freebsd&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;freebsd&quot;</span></span><br><span class="line">    <span class="keyword">elif</span> platform.startswith(<span class="string">&quot;linux&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;linux&quot;</span></span><br><span class="line">    <span class="keyword">elif</span> platform.startswith(<span class="string">&quot;aix&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;aix&quot;</span></span><br><span class="line">    <span class="keyword">elif</span> platform.startswith(<span class="string">&quot;win&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;windows&quot;</span></span><br><span class="line">    <span class="keyword">elif</span> platform.startswith(<span class="string">&quot;darwin&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;macos&quot;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;unknown&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    print(<span class="string">f&quot;Platform: <span class="subst">&#123;identify_platform()&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/编程语言/">编程语言</a><a href="/tags/Python/">Python</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix">
+    <a class="extend prev" rel="prev" href="/page/2/">&lt;span&gt;&lt;&#x2F;span&gt;Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/">Next&lt;span&gt;&lt;&#x2F;span&gt;</a>
+  </nav>
+
+</div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>34</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LeetCode/" title="LeetCode">LeetCode<sup>31</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/机器学习/" title="机器学习">机器学习<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hadoop/" title="Hadoop">Hadoop<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程语言/" title="编程语言">编程语言<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HDF5/" title="HDF5">HDF5<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔试/" title="笔试">笔试<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/软件配置/" title="软件配置">软件配置<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Numpy/" title="Numpy">Numpy<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Pandas/" title="Pandas">Pandas<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Shell/" title="Shell">Shell<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数学/" title="数学">数学<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Software-Installation/" title="Software Installation">Software Installation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Caffe/" title="Caffe">Caffe<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Makefile/" title="Makefile">Makefile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/C/" title="C++">C++<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Cython/" title="Cython">Cython<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		
+		<a href="/about" target="_blank" title="罗万千">罗万千</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+ </html>

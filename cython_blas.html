@@ -1,0 +1,566 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Cython调用BLAS | 清风的技术小屋</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="罗万千">
+    
+
+    
+    <meta name="description" content="介绍看本文之前建议看文章”Typed Memoryviews“，该文章主要介绍的是Memoryviews，使用Memoryviews可以直接访问Numpy数组的memory buffer，直接操作Numpy数组的数据，同时是连接C数组与Numpy数组之间的桥梁。相关代码在：CythonDemos&#x2F;Demo1 BLASBLAS，全称Basic Linear Algebra Subprograms，即">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cython调用BLAS">
+<meta property="og:url" content="http://www.scutmath.com/cython_blas.html">
+<meta property="og:site_name" content="清风的技术小屋">
+<meta property="og:description" content="介绍看本文之前建议看文章”Typed Memoryviews“，该文章主要介绍的是Memoryviews，使用Memoryviews可以直接访问Numpy数组的memory buffer，直接操作Numpy数组的数据，同时是连接C数组与Numpy数组之间的桥梁。相关代码在：CythonDemos&#x2F;Demo1 BLASBLAS，全称Basic Linear Algebra Subprograms，即">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-09-03T15:21:59.000Z">
+<meta property="article:modified_time" content="2020-08-09T03:49:49.780Z">
+<meta property="article:author" content="罗万千">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Cython">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="清风的技术小屋" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="清风的技术小屋" title="清风的技术小屋"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="清风的技术小屋">清风的技术小屋</a></h1>
+				<h2 class="blog-motto">不为所动, 做更专业的自己</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/contents">Contents</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/tags">Tags</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:www.scutmath.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/cython_blas.html" title="Cython调用BLAS" itemprop="url">Cython调用BLAS</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-09-03T15:21:59.000Z" itemprop="datePublished"> Published 2018-09-03</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BLAS"><span class="toc-number">2.</span> <span class="toc-text">BLAS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cython%E8%B0%83%E7%94%A8BLAS%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">Cython调用BLAS函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>看本文之前建议看文章”<a target="_blank" rel="noopener" href="http://docs.cython.org/en/latest/src/userguide/memoryviews.html">Typed Memoryviews</a>“，该文章主要介绍的是<code>Memoryviews</code>，使用<code>Memoryviews</code>可以直接访问Numpy数组的memory buffer，直接操作Numpy数组的数据，同时是连接C数组与Numpy数组之间的桥梁。相关代码在：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/CythonDemos/tree/master/Demo1">CythonDemos/Demo1</a></p>
+<h2 id="BLAS"><a href="#BLAS" class="headerlink" title="BLAS"></a>BLAS</h2><p><a target="_blank" rel="noopener" href="http://www.netlib.org/blas/">BLAS</a>，全称Basic Linear Algebra Subprograms，即基础线性代数子程序库，里面有大量已经编写好的关于线性代数运算的程序。BLAS库的API分三大类，分别为<code>Level 1</code>、<code>Level 2</code>以及<code>Level 3</code>。</p>
+<ul>
+<li>Level 1: 函数处理单一向量的线性运算以及两个向量的二元运算</li>
+<li>Level 2: 函数处理矩阵与向量的运算，同时也包含线性方程组求解</li>
+<li>Level 3: 函数处理矩阵与矩阵之间的运算</li>
+</ul>
+<p>API的全部介绍可以参考官方文档：<a target="_blank" rel="noopener" href="http://www.netlib.org/blas/blasqr.pdf">blasqr.pdf</a></p>
+<h2 id="Cython调用BLAS函数"><a href="#Cython调用BLAS函数" class="headerlink" title="Cython调用BLAS函数"></a>Cython调用BLAS函数</h2><p>Cython要调用BLAS函数，主要是通过BLAS库的C接口，接口的具体定义可以参考现有BLAS库的 <a target="_blank" rel="noopener" href="https://github.com/xianyi/OpenBLAS/blob/develop/cblas.h">cblas.h</a>，里面函数的命名和 <a target="_blank" rel="noopener" href="http://www.netlib.org/blas/blasqr.pdf">blasqr.pdf</a> 中函数命名是一一对应的，只不过函数前多了<code>cblas_</code>前缀。这里演示如何调用函数<code>cblas_dgemv</code>，在头文件  <a target="_blank" rel="noopener" href="https://github.com/xianyi/OpenBLAS/blob/develop/cblas.h">cblas.h</a> 中函数声明为</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cblas_dgemv</span><span class="params">(OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_ORDER order, OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE trans, OPENBLAS_CONST blasint m, OPENBLAS_CONST blasint n, OPENBLAS_CONST <span class="keyword">double</span> alpha, OPENBLAS_CONST <span class="keyword">double</span> *a, OPENBLAS_CONST blasint lda, OPENBLAS_CONST <span class="keyword">double</span> *x, OPENBLAS_CONST blasint incx, OPENBLAS_CONST <span class="keyword">double</span> beta, <span class="keyword">double</span> *y, OPENBLAS_CONST blasint incy)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>去除一些宏以及替换定义的数据类型，简单表示就是</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cblas_dgemv</span><span class="params">(<span class="keyword">enum</span> CBLAS_ORDER order, <span class="keyword">enum</span> CBLAS_TRANSPOSE trans, <span class="keyword">int</span> m, <span class="keyword">int</span> n, <span class="keyword">double</span> alpha, <span class="keyword">double</span> *a, <span class="keyword">int</span> lda, <span class="keyword">double</span> *x, <span class="keyword">int</span> incx, <span class="keyword">double</span> beta, <span class="keyword">double</span> *y, <span class="keyword">int</span> incy)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这个函数主要是实现的功能计算矩阵与向量相乘，在 <a target="_blank" rel="noopener" href="http://www.netlib.org/blas/blasqr.pdf">blasqr.pdf</a> 中对应的是<code>Level2</code>中<code>xGEMV</code>函数</p>
+<p>$$<br>y = \alpha Ax + \beta y<br>$$</p>
+<p>在Cython调用BLAS函数首先要使用<code>cdef extern</code>引入头文件，然后声明函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cdef extern from &#x27;cblas.h&#x27;:</span><br><span class="line">    <span class="keyword">enum</span> CBLAS_ORDER:</span><br><span class="line">        CblasRowMajor=<span class="number">101</span></span><br><span class="line">        CblasColMajor=<span class="number">102</span></span><br><span class="line">    <span class="keyword">enum</span> CBLAS_TRANSPOSE:</span><br><span class="line">        CblasNoTrans=<span class="number">111</span></span><br><span class="line">        CblasTrans=<span class="number">112</span></span><br><span class="line">        CblasConjTrans=<span class="number">113</span></span><br><span class="line">        CblasConjNoTrans=<span class="number">114</span></span><br><span class="line">    <span class="keyword">void</span> dgemv <span class="string">&quot;cblas_dgemv&quot;</span>(CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA,</span><br><span class="line">                             <span class="keyword">int</span> M, <span class="keyword">int</span> N, <span class="keyword">double</span> alpha, <span class="keyword">double</span> *A, <span class="keyword">int</span> lda,</span><br><span class="line">                             <span class="keyword">double</span> *X, <span class="keyword">int</span> incX, <span class="keyword">double</span> beta,</span><br><span class="line">                             <span class="keyword">double</span> *Y, <span class="keyword">int</span> incY) nogil</span><br></pre></td></tr></table></figure>
+
+<p>关于<code>enum</code>中<code>CblasRowMajor</code>这些标识符的取值，是按照 <a target="_blank" rel="noopener" href="https://github.com/xianyi/OpenBLAS/blob/develop/cblas.h">cblas.h</a> 中定义来取值。函数声明后就可以编写一个wrapper函数来调用BLAS函数，之所以要写一个wrapper函数，是因为声明的BLAS函数只能在C中进行调用，我们还要使得其能够在Python中进行调用，wrapper函数定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">cpdef <span class="title">blas_dgemv</span><span class="params">(<span class="keyword">double</span>[:, ::<span class="number">1</span>] A, <span class="keyword">double</span>[::<span class="number">1</span>] x, <span class="keyword">double</span>[::<span class="number">1</span>] y,</span></span></span><br><span class="line"><span class="function"><span class="params">                 <span class="keyword">int</span> M, <span class="keyword">int</span> N, <span class="keyword">double</span> alpha, <span class="keyword">double</span> beta)</span>:</span></span><br><span class="line"><span class="function">    cdef <span class="keyword">double</span> *A_ptr </span>= &amp;A[<span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">    cdef <span class="keyword">double</span> *x_ptr = &amp;x[<span class="number">0</span>]</span><br><span class="line">    cdef <span class="keyword">double</span> *y_ptr = &amp;y[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    dgemv(CblasRowMajor, CblasNoTrans, M, N,</span><br><span class="line">          alpha, A_ptr, N, x_ptr, <span class="number">1</span>, beta, y_ptr, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>cpdef</code>可以使得定义的函数可以被Python调用。这里说一下如何将<code>MemoryViews</code>转化成C的指针，对于向量<code>x</code>可以通过对第一个元素进行取址来进行转换<code>&amp;x[0]</code>，对于矩阵<code>A</code>则是对其第一行第一列的元素进行取址操作<code>&amp;A[0, 0]</code>。</p>
+<p>由于BLAS库中将矩阵数据看成是一个一维数组，所以在调用BLAS函数时需要指定矩阵是Row Major还是Column Major，即参数<code>CBLAS_ORDER Order</code>，这里设定是Row Major，因此函数<code>blas_dgemv</code>中参数<code>A</code>限定是Row Major，即声明为<code>double[:, ::1]</code>。</p>
+<p>整个pyx文件的内容为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">cdef extern from &#39;cblas.h&#39;:</span><br><span class="line">    enum CBLAS_ORDER:</span><br><span class="line">        CblasRowMajor&#x3D;101</span><br><span class="line">        CblasColMajor&#x3D;102</span><br><span class="line">    enum CBLAS_TRANSPOSE:</span><br><span class="line">        CblasNoTrans&#x3D;111</span><br><span class="line">        CblasTrans&#x3D;112</span><br><span class="line">        CblasConjTrans&#x3D;113</span><br><span class="line">        CblasConjNoTrans&#x3D;114</span><br><span class="line">    void dgemv &quot;cblas_dgemv&quot;(CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA,</span><br><span class="line">                             int M, int N, double alpha, double *A, int lda,</span><br><span class="line">                             double *X, int incX, double beta,</span><br><span class="line">                             double *Y, int incY) nogil</span><br><span class="line"></span><br><span class="line">cpdef blas_dgemv(double[:, ::1] A, double[::1] x, double[::1] y,</span><br><span class="line">                 int M, int N, double alpha, double beta):</span><br><span class="line">    cdef double *A_ptr &#x3D; &amp;A[0, 0]</span><br><span class="line">    cdef double *x_ptr &#x3D; &amp;x[0]</span><br><span class="line">    cdef double *y_ptr &#x3D; &amp;y[0]</span><br><span class="line"></span><br><span class="line">    dgemv(CblasRowMajor, CblasNoTrans, M, N,</span><br><span class="line">          alpha, A_ptr, N, x_ptr, 1, beta, y_ptr, 1)</span><br></pre></td></tr></table></figure>
+
+<p>剩下就是将pyx进行编译，然后就可以在Python中调用<code>blas_dgemv</code>函数了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://maciejkula.github.io/2015/01/01/calling-blas-from-cython/">Calling BLAS from Cython</a></li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Python/">Python</a><a href="/tags/Cython/">Cython</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.scutmath.com/cython_blas.html" data-title="Cython调用BLAS | 清风的技术小屋" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/tmux_session_save_restore.html" title="保存和恢复Tmux会话">
+  <strong>上一篇：</strong><br/>
+  <span>
+  保存和恢复Tmux会话</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/pandas_memo2.html"  title="Pandas备忘录2">
+ <strong>下一篇：</strong><br/> 
+ <span>Pandas备忘录2
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BLAS"><span class="toc-number">2.</span> <span class="toc-text">BLAS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cython%E8%B0%83%E7%94%A8BLAS%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">Cython调用BLAS函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>34</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LeetCode/" title="LeetCode">LeetCode<sup>31</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/机器学习/" title="机器学习">机器学习<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hadoop/" title="Hadoop">Hadoop<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程语言/" title="编程语言">编程语言<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HDF5/" title="HDF5">HDF5<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔试/" title="笔试">笔试<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/软件配置/" title="软件配置">软件配置<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Numpy/" title="Numpy">Numpy<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Pandas/" title="Pandas">Pandas<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Shell/" title="Shell">Shell<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数学/" title="数学">数学<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Software-Installation/" title="Software Installation">Software Installation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Caffe/" title="Caffe">Caffe<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Makefile/" title="Makefile">Makefile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/C/" title="C++">C++<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Cython/" title="Cython">Cython<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		
+		<a href="/about" target="_blank" title="罗万千">罗万千</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

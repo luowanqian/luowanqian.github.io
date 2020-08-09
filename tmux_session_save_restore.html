@@ -1,0 +1,567 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>保存和恢复Tmux会话 | 清风的技术小屋</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="罗万千">
+    
+
+    
+    <meta name="description" content="问题使用Tmux时经常会遇到的一个问题，那就是系统重启时，Session会被清除，每次打开电脑都要重启建一个Session，然后创建一堆Window以及Pane，这极大地降低了Tmux使用效率，因此需要想一个办法能够保存Tmux的Session。 解决方案该问题的解决方案是安装一个叫Tmux Resurrect的插件。Tmux要安装插件，可以通过Tmux Plugin Manager这个插件进行安">
+<meta property="og:type" content="article">
+<meta property="og:title" content="保存和恢复Tmux会话">
+<meta property="og:url" content="http://www.scutmath.com/tmux_session_save_restore.html">
+<meta property="og:site_name" content="清风的技术小屋">
+<meta property="og:description" content="问题使用Tmux时经常会遇到的一个问题，那就是系统重启时，Session会被清除，每次打开电脑都要重启建一个Session，然后创建一堆Window以及Pane，这极大地降低了Tmux使用效率，因此需要想一个办法能够保存Tmux的Session。 解决方案该问题的解决方案是安装一个叫Tmux Resurrect的插件。Tmux要安装插件，可以通过Tmux Plugin Manager这个插件进行安">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-09-09T14:14:38.000Z">
+<meta property="article:modified_time" content="2020-08-09T03:49:49.822Z">
+<meta property="article:author" content="罗万千">
+<meta property="article:tag" content="Tmux">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="清风的技术小屋" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="清风的技术小屋" title="清风的技术小屋"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="清风的技术小屋">清风的技术小屋</a></h1>
+				<h2 class="blog-motto">不为所动, 做更专业的自己</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/contents">Contents</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/tags">Tags</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:www.scutmath.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/tmux_session_save_restore.html" title="保存和恢复Tmux会话" itemprop="url">保存和恢复Tmux会话</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-09-09T14:14:38.000Z" itemprop="datePublished"> Published 2018-09-09</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tmux-Plugin-Manager"><span class="toc-number">2.1.</span> <span class="toc-text">Tmux Plugin Manager</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tmux-Resurrect"><span class="toc-number">3.</span> <span class="toc-text">Tmux Resurrect</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D"><span class="toc-number">4.</span> <span class="toc-text">保存和恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>使用Tmux时经常会遇到的一个问题，那就是系统重启时，Session会被清除，每次打开电脑都要重启建一个Session，然后创建一堆Window以及Pane，这极大地降低了Tmux使用效率，因此需要想一个办法能够保存Tmux的Session。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>该问题的解决方案是安装一个叫<code>Tmux Resurrect</code>的插件。Tmux要安装插件，可以通过<code>Tmux Plugin Manager</code>这个插件进行安装，该插件相当于一个插件管理系统，可以快速地安装、更新以及删除插件。</p>
+<h3 id="Tmux-Plugin-Manager"><a href="#Tmux-Plugin-Manager" class="headerlink" title="Tmux Plugin Manager"></a>Tmux Plugin Manager</h3><p>安装<code>Tmux Plugin Manager</code>插件可以参考该插件的GitHub：<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tpm">tmux-plugins/tpm</a>。安装很简单，首先clone插件到本地</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm</span></span><br></pre></td></tr></table></figure>
+
+<p>然后修改<code>.tmux.conf</code>，在文件最底部添加以下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># List of plugins</span><br><span class="line">set -g @plugin &#39;tmux-plugins&#x2F;tpm&#39;</span><br><span class="line">set -g @plugin &#39;tmux-plugins&#x2F;tmux-sensible&#39;</span><br><span class="line"></span><br><span class="line"># Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)</span><br><span class="line">run &#39;~&#x2F;.tmux&#x2F;plugins&#x2F;tpm&#x2F;tpm&#39;</span><br></pre></td></tr></table></figure>
+
+<p>重新加载配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">type</span> this <span class="keyword">in</span> terminal <span class="keyword">if</span> tmux is already running</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> tmux <span class="built_in">source</span> ~/.tmux.conf</span></span><br></pre></td></tr></table></figure>
+
+<p>然后就可以在Tmux中使用快捷<code>prefix + I</code>(注意这里的<code>I</code>是大写)安装配置文件<code>.tmux.conf</code>中定义的插件了。</p>
+<p><strong>补充：</strong></p>
+<p>如果Tmux安装了<a target="_blank" rel="noopener" href="https://github.com/gpakosz/.tmux">gpakosz/.tmux</a>，在文件<code>.tmux.conf.local</code>中配置好<code>Tmux Plugin Manager</code>后，在Tmux中使用<code>prefix + I</code>安装插件会没有效果，相关的讨论见<a target="_blank" rel="noopener" href="https://github.com/gpakosz/.tmux/issues/61">“run ‘~/.tmux/plugins/tpm/tpm’” has no effect in .tmux.conf.local #61</a>，具体的解决方案是用另一种写法写<code>set -g @plugin</code>，即将</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set -g @plugin &#39;tmux-plugins&#x2F;tpm&#39;</span><br><span class="line">set -g @plugin &#39;tmux-plugins&#x2F;tmux-sensible&#39;</span><br></pre></td></tr></table></figure>
+
+<p>改写为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set -g @tpm_plugins &#39;          \</span><br><span class="line">  tmux-plugins&#x2F;tpm             \</span><br><span class="line">  tmux-plugins&#x2F;tmux-sensible</span><br><span class="line">&#39;</span><br></pre></td></tr></table></figure>
+
+<p>解决方案来源于：<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tpm/blob/master/docs/tpm_not_working.md">Help, tpm not working!</a></p>
+<h2 id="Tmux-Resurrect"><a href="#Tmux-Resurrect" class="headerlink" title="Tmux Resurrect"></a>Tmux Resurrect</h2><p>安装好<code>Tmux Plugin Manager</code>后，就可以安装<code>Tmux Resurrect</code>插件(<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tmux-resurrect">tmux-plugins/tmux-resurrect</a>)了。在Tmux配置文件<code>.tmux.conf</code>中添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set -g @plugin &#39;tmux-plugins&#x2F;tmux-resurrect&#39;</span><br></pre></td></tr></table></figure>
+
+<p>然后使用快捷键<code>prefix + I</code>就可以安装插件了。</p>
+<h2 id="保存和恢复"><a href="#保存和恢复" class="headerlink" title="保存和恢复"></a>保存和恢复</h2><p>安装完<code>Tmux Plugin Manager</code>，就可以使用下面快捷键保存和恢复Session了。</p>
+<ul>
+<li><code>prefix + Ctrl-s</code> - save</li>
+<li><code>prefix + Ctrl-r</code> - restore</li>
+</ul>
+<p>平常重启电脑后，首先在终端打开Tmux，然后使用<code>prefix + Ctrl-r</code>就可以恢复保存的Session了，如果有多个Session可以使用<code>prefix + s</code>来选择Session。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://liam0205.me/2016/09/10/tmux-plugin-resurrect/">保存和恢复 Tmux 会话</a></li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Tmux/">Tmux</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.scutmath.com/tmux_session_save_restore.html" data-title="保存和恢复Tmux会话 | 清风的技术小屋" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/fast_kernel_matrix_generation.html" title="快速生成Kernel Matrix">
+  <strong>上一篇：</strong><br/>
+  <span>
+  快速生成Kernel Matrix</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/cython_blas.html"  title="Cython调用BLAS">
+ <strong>下一篇：</strong><br/> 
+ <span>Cython调用BLAS
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tmux-Plugin-Manager"><span class="toc-number">2.1.</span> <span class="toc-text">Tmux Plugin Manager</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tmux-Resurrect"><span class="toc-number">3.</span> <span class="toc-text">Tmux Resurrect</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D"><span class="toc-number">4.</span> <span class="toc-text">保存和恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>34</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LeetCode/" title="LeetCode">LeetCode<sup>31</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/机器学习/" title="机器学习">机器学习<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hadoop/" title="Hadoop">Hadoop<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程语言/" title="编程语言">编程语言<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HDF5/" title="HDF5">HDF5<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔试/" title="笔试">笔试<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/软件配置/" title="软件配置">软件配置<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Numpy/" title="Numpy">Numpy<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Pandas/" title="Pandas">Pandas<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Shell/" title="Shell">Shell<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数学/" title="数学">数学<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Software-Installation/" title="Software Installation">Software Installation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Caffe/" title="Caffe">Caffe<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Makefile/" title="Makefile">Makefile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/C/" title="C++">C++<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Cython/" title="Cython">Cython<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		
+		<a href="/about" target="_blank" title="罗万千">罗万千</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

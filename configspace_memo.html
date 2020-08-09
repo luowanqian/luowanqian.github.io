@@ -1,0 +1,610 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ConfigSpace备忘录 | 清风的技术小屋</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="罗万千">
+    
+
+    
+    <meta name="description" content="介绍ConfigSpace是一个用于管理算法参数空间的Python包，主要用于算法参数选择任务。一些AutoML库，例如SMAC3、BOHB以及auto-sklearn，会用到该包。项目主页为：https:&#x2F;&#x2F;github.com&#x2F;automl&#x2F;ConfigSpace。 注明：本文章相关代码在Gist 初始化使用ConfigSpace包时通常要创建一个参数空间实例 1234import Confi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ConfigSpace备忘录">
+<meta property="og:url" content="http://www.scutmath.com/configspace_memo.html">
+<meta property="og:site_name" content="清风的技术小屋">
+<meta property="og:description" content="介绍ConfigSpace是一个用于管理算法参数空间的Python包，主要用于算法参数选择任务。一些AutoML库，例如SMAC3、BOHB以及auto-sklearn，会用到该包。项目主页为：https:&#x2F;&#x2F;github.com&#x2F;automl&#x2F;ConfigSpace。 注明：本文章相关代码在Gist 初始化使用ConfigSpace包时通常要创建一个参数空间实例 1234import Confi">
+<meta property="og:locale">
+<meta property="article:published_time" content="2019-05-03T02:10:09.000Z">
+<meta property="article:modified_time" content="2020-08-09T03:49:49.779Z">
+<meta property="article:author" content="罗万千">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="清风的技术小屋" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="清风的技术小屋" title="清风的技术小屋"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="清风的技术小屋">清风的技术小屋</a></h1>
+				<h2 class="blog-motto">不为所动, 做更专业的自己</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/contents">Contents</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/tags">Tags</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:www.scutmath.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/configspace_memo.html" title="ConfigSpace备忘录" itemprop="url">ConfigSpace备忘录</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2019-05-03T02:10:09.000Z" itemprop="datePublished"> Published 2019-05-03</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E6%95%B0%E5%8F%82%E6%95%B0%E5%92%8C%E6%B5%AE%E7%82%B9%E5%8F%82%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">整数参数和浮点参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Categorical%E5%8F%82%E6%95%B0%E5%92%8C%E5%8F%82%E6%95%B0%E4%B9%8B%E9%97%B4%E7%9A%84%E8%81%94%E7%B3%BB"><span class="toc-number">4.</span> <span class="toc-text">Categorical参数和参数之间的联系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%81%E6%AD%A2%E5%8F%82%E6%95%B0%E5%8F%96%E5%80%BC%E7%BB%84%E5%90%88%E5%87%BA%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">禁止参数取值组合出现</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>ConfigSpace是一个用于管理算法参数空间的Python包，主要用于算法参数选择任务。一些AutoML库，例如<a target="_blank" rel="noopener" href="https://github.com/automl/SMAC3">SMAC3</a>、<a target="_blank" rel="noopener" href="https://github.com/automl/HpBandSter">BOHB</a>以及<a target="_blank" rel="noopener" href="https://github.com/automl/auto-sklearn">auto-sklearn</a>，会用到该包。项目主页为：<a target="_blank" rel="noopener" href="https://github.com/automl/ConfigSpace">https://github.com/automl/ConfigSpace</a>。</p>
+<p>注明：本文章相关代码在<a target="_blank" rel="noopener" href="https://gist.github.com/luowanqian/5fd452f204b60a56e5297c96489ed6dc">Gist</a></p>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>使用ConfigSpace包时通常要创建一个参数空间实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import ConfigSpace as CS</span><br><span class="line">import ConfigSpace.hyperparameters as CSH</span><br><span class="line"></span><br><span class="line">cs &#x3D; CS.ConfigurationSpace()</span><br></pre></td></tr></table></figure>
+
+<p>这个参数空间集合实例<code>cs</code>包含所有参数的设置</p>
+<h2 id="整数参数和浮点参数"><a href="#整数参数和浮点参数" class="headerlink" title="整数参数和浮点参数"></a>整数参数和浮点参数</h2><p>本节开始将介绍如何配置算法的参数空间，这里举例的算法为SVM分类算法，算法具体实现为<a target="_blank" rel="noopener" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">sklearn.svm.SVC</a>。由SVC类介绍可以知道两个参数：</p>
+<ol>
+<li><code>C</code>为惩罚参数，数据类型为浮点数，且$C \ge 0$</li>
+<li><code>max_iter</code>为最大迭代次数，数据类型为整数</li>
+</ol>
+<p>假设要限定<code>C</code>的取值范围为$[0, 1]$以及<code>max_iter</code>的取值范围为$[10, 100]$，可以用<code>UniformFloatHyperparameter</code>和<code>UniformIntegerHyperparameter</code>设定参数范围</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">param_c &#x3D; CSH.UniformFloatHyperparameter(name&#x3D;&#39;C&#39;, lower&#x3D;0, upper&#x3D;1)</span><br><span class="line">param_max_iter &#x3D; CSH.UniformIntegerHyperparameter(name&#x3D;&#39;max_iter&#39;, lower&#x3D;10, upper&#x3D;100)</span><br></pre></td></tr></table></figure>
+
+<p>设定完参数空间后，需要添加到参数空间集合实例<code>cs</code>中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cs.add_hyperparameter(param_c)</span><br><span class="line">cs.add_hyperparameter(param_max_iter)</span><br></pre></td></tr></table></figure>
+
+<p>此时可以使用<code>cs</code>的<code>sample_configuration</code>方法进行采样获得一组随机的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cs.sample_configuration()</span><br></pre></td></tr></table></figure>
+
+<p>此时输出类似下面这种情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Configuration:</span><br><span class="line">  C, Value: 0.7114185317566737</span><br><span class="line">  max_iter, Value: 84</span><br></pre></td></tr></table></figure>
+
+<h2 id="Categorical参数和参数之间的联系"><a href="#Categorical参数和参数之间的联系" class="headerlink" title="Categorical参数和参数之间的联系"></a>Categorical参数和参数之间的联系</h2><p>由<code>sklearn.svm.SVC</code>类介绍可知，算法核类型由参数<code>kernel</code>控制 </p>
+<ul>
+<li><code>kernel</code>限定算法的核类型，取值主要有<code>&#39;linear&#39;</code>，<code>&#39;poly&#39;</code>，<code>&#39;rbf&#39;</code>，<code>&#39;sigmoid&#39;</code></li>
+</ul>
+<p>此时可以用<code>CategoricalHyperparameter</code>来代表参数<code>kernel</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">param_kernel &#x3D; CSH.CategoricalHyperparameter(name&#x3D;&#39;kernel&#39;, choices&#x3D;[&#39;linear&#39;, &#39;poly&#39;, &#39;rbf&#39;, &#39;sigmoid&#39;])</span><br><span class="line"></span><br><span class="line">cs.add_hyperparameter(param_kernel)</span><br></pre></td></tr></table></figure>
+
+<p>每一种核还有相应的参数设置（设定SVC类对应的参数），即</p>
+<ul>
+<li>Linear核$K(x, y)=x^Ty$，无参数</li>
+<li>Poly核$K(x, y)=(\gamma x^Ty + r)^d$，其中参数$\gamma$对应<code>gamma</code>，参数$r$对应<code>coef0</code>，参数$d$对应<code>degree</code></li>
+<li>RBF核$K(x, y)=\exp(-\gamma \Vert x - y\Vert^2)$，其中参数$\gamma$对应<code>gamma</code></li>
+<li>Sigmoid核$K(x, y)=\tanh(\gamma x^T y + r)$，其中参数$\gamma$对应<code>gamma</code>，参数$r$对应<code>coef0</code></li>
+</ul>
+<p>首先创建参数<code>degree</code>、<code>coef0</code>以及<code>gamma</code>的参数空间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">param_degree &#x3D; CSH.UniformIntegerHyperparameter(name&#x3D;&#39;degree&#39;, lower&#x3D;2, upper&#x3D;4)</span><br><span class="line">param_coef0 &#x3D; CSH.UniformFloatHyperparameter(name&#x3D;&#39;coef0&#39;, lower&#x3D;0, upper&#x3D;1)</span><br><span class="line">param_gamma &#x3D; CSH.UniformFloatHyperparameter(name&#x3D;&#39;gamma&#39;, lower&#x3D;1e-5, upper&#x3D;1e2)</span><br><span class="line"></span><br><span class="line">cs.add_hyperparameters([param_degree, param_coef0, param_gamma])</span><br></pre></td></tr></table></figure>
+
+<p>有前面的描述可以知道不同的核对应不同的参数，也就是说核参数和核类型参数之间是由关联的</p>
+<ul>
+<li>参数<code>degree</code>关联Poly核</li>
+<li>参数<code>coef0</code>关联Poly核和Sigmoid核</li>
+<li>参数<code>gamma</code>关联Poly核、RBF核和Sigmoid核</li>
+</ul>
+<p>要想表示这种参数之间的关系，可以使用<code>EqualsCondition</code>以及<code>OrConjunction</code>，即</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cond1 &#x3D; CS.EqualsCondition(param_degree, param_kernel, &#39;poly&#39;)</span><br><span class="line">cond2 &#x3D; CS.OrConjunction(CS.EqualsCondition(param_coef0, param_kernel, &#39;poly&#39;),</span><br><span class="line">                         CS.EqualsCondition(param_coef0, param_kernel, &#39;sigmoid&#39;))</span><br><span class="line">cond3 &#x3D; CS.OrConjunction(CS.EqualsCondition(param_gamma, param_kernel, &#39;rbf&#39;),</span><br><span class="line">                         CS.EqualsCondition(param_gamma, param_kernel, &#39;poly&#39;),</span><br><span class="line">                         CS.EqualsCondition(param_gamma, param_kernel, &#39;sigmoid&#39;))</span><br><span class="line"></span><br><span class="line">cs.add_conditions([cond1, cond2, cond3])</span><br></pre></td></tr></table></figure>
+
+<p>其中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CS.EqualsCondition(param_degree, param_kernel, &#39;poly&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>意思为参数<code>kernel</code>值为<code>&#39;poly&#39;</code>时，设定参数<code>degree</code>的值。如果有多个条件，需要用<code>OrConjunction</code>来OR这些条件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cond2 &#x3D; CS.OrConjunction(CS.EqualsCondition(param_coef0, param_kernel, &#39;poly&#39;),</span><br><span class="line">                         CS.EqualsCondition(param_coef0, param_kernel, &#39;sigmoid&#39;))</span><br></pre></td></tr></table></figure>
+
+<p>意思为当参数<code>kernel</code>值为<code>&#39;poly&#39;</code>时，设定参数<code>coef0</code>值，或者当参数<code>kernel</code>值为<code>&#39;sigmoid&#39;</code>时，设定参数<code>coef0</code>值。</p>
+<h2 id="禁止参数取值组合出现"><a href="#禁止参数取值组合出现" class="headerlink" title="禁止参数取值组合出现"></a>禁止参数取值组合出现</h2><p>前面我们设定了<code>sklearn.svm.SVC</code>类某些参数的参数空间，假如SVC的核选择的是Linear核，即参数<code>kernel</code>取值为<code>&#39;Linear&#39;</code>，此时SVM变成了LinearSVM。如果SVC类的LinearSVM实现为<a target="_blank" rel="noopener" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html">sklearn.svm.LinearSVC</a>，这时可以用LinearSVC类参数进一步控制算法的运行过程。<br><code>注：这里只是假设一种情况，即SVC类有LinearSVC类的全部参数，真实情况是SVC类并没有LinearSVC类的全部参数。</code></p>
+<p>LinearSVC类部分参数如下</p>
+<ul>
+<li><code>penalty</code>设置正则项类型，数据类型为字符串，取值为<code>&#39;l1&#39;</code>或者<code>&#39;l2&#39;</code></li>
+<li><code>loss</code>设置损失函数类型，数据类型为字符串，取值为<code>&#39;hinge&#39;</code>或者<code>&#39;squared_hinge&#39;</code></li>
+<li><code>dual</code>设置算法是否求解对偶问题，数据类型为布尔值，实际可以替换成字符串类型</li>
+</ul>
+<p>首先根据这三个参数设置参数空间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">param_penalty &#x3D; CSH.CategoricalHyperparameter(name&#x3D;&#39;penalty&#39;, choices&#x3D;[&#39;l1&#39;, &#39;l2&#39;], default_value&#x3D;&#39;l2&#39;)</span><br><span class="line">param_loss &#x3D; CSH.CategoricalHyperparameter(name&#x3D;&#39;loss&#39;, choices&#x3D;[&#39;hinge&#39;, &#39;squared_hinge&#39;], default_value&#x3D;&#39;squared_hinge&#39;)</span><br><span class="line">param_dual &#x3D; CSH.CategoricalHyperparameter(name&#x3D;&#39;dual&#39;, choices&#x3D;[&#39;True&#39;,&#39;False&#39;], default_value&#x3D;&#39;False&#39;)</span><br><span class="line"></span><br><span class="line">cs.add_hyperparameters([param_penalty, param_loss, param_dual])</span><br></pre></td></tr></table></figure>
+
+<p>当核类型为Linear核时，这三个参数才会被设置，因此要进行参数关联</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cond1 &#x3D; CS.EqualsCondition(param_penalty, param_kernel, &#39;linear&#39;)</span><br><span class="line">cond2 &#x3D; CS.EqualsCondition(param_loss, param_kernel, &#39;linear&#39;)</span><br><span class="line">cond3 &#x3D; CS.EqualsCondition(param_dual, param_kernel, &#39;linear&#39;)</span><br><span class="line"></span><br><span class="line">cs.add_conditions([cond1, cond2, cond3])</span><br></pre></td></tr></table></figure>
+
+<p>这里限定一些参数组合不能出现</p>
+<ul>
+<li>参数<code>penalty</code>取值<code>&#39;l1&#39;</code>，参数<code>loss</code>取值<code>&#39;hinge&#39;</code></li>
+<li>参数<code>dual</code>取值<code>&#39;False&#39;</code>，参数<code>penalty</code>取值<code>&#39;l2&#39;</code>，参数<code>loss</code>取值<code>&#39;hinge&#39;</code></li>
+<li>参数<code>dual</code>取值<code>&#39;False&#39;</code>，参数<code>&#39;penalty&#39;</code>取值<code>&#39;l1&#39;</code></li>
+</ul>
+<p>要禁止出现某些参数组合，可以使用<code>ForbiddenEqualsClause</code>，如果有多个组合，需要使用<code>ForbiddenAndConjunction</code>进行OR</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">penalty_loss &#x3D; CS.ForbiddenAndConjunction(</span><br><span class="line">        CS.ForbiddenEqualsClause(param_penalty, &#39;l2&#39;),</span><br><span class="line">        CS.ForbiddenEqualsClause(param_loss, &#39;hinge&#39;)</span><br><span class="line">)</span><br><span class="line">dual_penalty_loss &#x3D; CS.ForbiddenAndConjunction(</span><br><span class="line">        CS.ForbiddenEqualsClause(param_dual, &#39;False&#39;),</span><br><span class="line">        CS.ForbiddenEqualsClause(param_penalty, &#39;l2&#39;),</span><br><span class="line">        CS.ForbiddenEqualsClause(param_loss, &#39;hinge&#39;)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">penalty_dual &#x3D; CS.ForbiddenAndConjunction(</span><br><span class="line">        CS.ForbiddenEqualsClause(param_dual, &#39;False&#39;),</span><br><span class="line">        CS.ForbiddenEqualsClause(param_penalty, &#39;l1&#39;)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">cs.add_forbidden_clause(penalty_loss)</span><br><span class="line">cs.add_forbidden_clause(dual_penalty_loss)</span><br><span class="line">cs.add_forbidden_clause(penalty_dual)</span><br></pre></td></tr></table></figure>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Python/">Python</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.scutmath.com/configspace_memo.html" data-title="ConfigSpace备忘录 | 清风的技术小屋" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/python_iterable_container.html" title="Python Iterable Container Implementation">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Python Iterable Container Implementation</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/ubuntu_vnc.html"  title="Ubuntu18.04安装VNC">
+ <strong>下一篇：</strong><br/> 
+ <span>Ubuntu18.04安装VNC
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E6%95%B0%E5%8F%82%E6%95%B0%E5%92%8C%E6%B5%AE%E7%82%B9%E5%8F%82%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">整数参数和浮点参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Categorical%E5%8F%82%E6%95%B0%E5%92%8C%E5%8F%82%E6%95%B0%E4%B9%8B%E9%97%B4%E7%9A%84%E8%81%94%E7%B3%BB"><span class="toc-number">4.</span> <span class="toc-text">Categorical参数和参数之间的联系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%81%E6%AD%A2%E5%8F%82%E6%95%B0%E5%8F%96%E5%80%BC%E7%BB%84%E5%90%88%E5%87%BA%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">禁止参数取值组合出现</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>34</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LeetCode/" title="LeetCode">LeetCode<sup>31</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/机器学习/" title="机器学习">机器学习<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hadoop/" title="Hadoop">Hadoop<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程语言/" title="编程语言">编程语言<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HDF5/" title="HDF5">HDF5<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔试/" title="笔试">笔试<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/软件配置/" title="软件配置">软件配置<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Numpy/" title="Numpy">Numpy<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Pandas/" title="Pandas">Pandas<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Shell/" title="Shell">Shell<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数学/" title="数学">数学<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Software-Installation/" title="Software Installation">Software Installation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Caffe/" title="Caffe">Caffe<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Makefile/" title="Makefile">Makefile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/C/" title="C++">C++<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Cython/" title="Cython">Cython<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		
+		<a href="/about" target="_blank" title="罗万千">罗万千</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

@@ -1,0 +1,552 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Pandas备忘录2 | 清风的技术小屋</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="罗万千">
+    
+
+    
+    <meta name="description" content="1. Pandas备忘录系列文章 Pandas备忘录    2. 介绍Note: 如果没有特别说明，pd指的是pandas，np指的是numpy。 12import pandas as pdimport numpy as np  3. 查找3.1. contains函数主要是用Series.str.contains这个函数，如果参数regex设为True，则查找字符串解析为正则表达式，设为Fals">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pandas备忘录2">
+<meta property="og:url" content="http://www.scutmath.com/pandas_memo2.html">
+<meta property="og:site_name" content="清风的技术小屋">
+<meta property="og:description" content="1. Pandas备忘录系列文章 Pandas备忘录    2. 介绍Note: 如果没有特别说明，pd指的是pandas，np指的是numpy。 12import pandas as pdimport numpy as np  3. 查找3.1. contains函数主要是用Series.str.contains这个函数，如果参数regex设为True，则查找字符串解析为正则表达式，设为Fals">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-09-03T14:30:02.000Z">
+<meta property="article:modified_time" content="2020-08-09T03:49:49.803Z">
+<meta property="article:author" content="罗万千">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Pandas">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="清风的技术小屋" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="清风的技术小屋" title="清风的技术小屋"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="清风的技术小屋">清风的技术小屋</a></h1>
+				<h2 class="blog-motto">不为所动, 做更专业的自己</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/contents">Contents</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/tags">Tags</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:www.scutmath.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/pandas_memo2.html" title="Pandas备忘录2" itemprop="url">Pandas备忘录2</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="罗万千" target="_blank" itemprop="author">罗万千</a>
+		
+  <p class="article-time">
+    <time datetime="2018-09-03T14:30:02.000Z" itemprop="datePublished"> Published 2018-09-03</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Pandas%E5%A4%87%E5%BF%98%E5%BD%95%E7%B3%BB%E5%88%97%E6%96%87%E7%AB%A0"><span class="toc-text">1. Pandas备忘录系列文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BB%8B%E7%BB%8D"><span class="toc-text">2. 介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%9F%A5%E6%89%BE"><span class="toc-text">3. 查找</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-contains%E5%87%BD%E6%95%B0"><span class="toc-text">3.1. contains函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-DataFrame%E5%A2%9E%E5%8A%A0%E8%A1%8C"><span class="toc-text">4. DataFrame增加行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-append%E5%87%BD%E6%95%B0"><span class="toc-text">4.1. append函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E4%BD%BF%E7%94%A8%E7%89%B9%E5%AE%9A%E7%B4%A2%E5%BC%95%E5%90%8D%E7%A7%B0%E5%A2%9E%E5%8A%A0%E8%A1%8C"><span class="toc-text">4.2. 使用特定索引名称增加行</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="1-Pandas备忘录系列文章"><a href="#1-Pandas备忘录系列文章" class="headerlink" title="1. Pandas备忘录系列文章"></a>1. Pandas备忘录系列文章</h2><ol>
+<li><a href="/pandas_memo.html" title="Pandas备忘录">Pandas备忘录</a>
+
+</li>
+</ol>
+<h2 id="2-介绍"><a href="#2-介绍" class="headerlink" title="2. 介绍"></a>2. 介绍</h2><p><strong>Note:</strong> 如果没有特别说明，<code>pd</code>指的是<code>pandas</code>，<code>np</code>指的是<code>numpy</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-查找"><a href="#3-查找" class="headerlink" title="3. 查找"></a>3. 查找</h2><h3 id="3-1-contains函数"><a href="#3-1-contains函数" class="headerlink" title="3.1. contains函数"></a>3.1. contains函数</h3><p>主要是用<code>Series.str.contains</code>这个函数，如果参数<code>regex</code>设为True，则查找字符串解析为正则表达式，设为False则用常规查找方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 &#x3D; pd.Series([&#39;Mouse&#39;, &#39;dog&#39;, &#39;house and parrot&#39;, &#39;23&#39;, &#39;frog&#39;])</span><br><span class="line">&gt;&gt;&gt; s1</span><br><span class="line">0               Mouse</span><br><span class="line">1                 dog</span><br><span class="line">2    house and parrot</span><br><span class="line">3                  23</span><br><span class="line">4                frog</span><br><span class="line">dtype: object</span><br><span class="line">&gt;&gt;&gt; s1.str.contains(&#39;og&#39;, regex&#x3D;False)</span><br><span class="line">0    False</span><br><span class="line">1     True</span><br><span class="line">2    False</span><br><span class="line">3    False</span><br><span class="line">4     True</span><br><span class="line">dtype: bool</span><br><span class="line">&gt;&gt;&gt; s1[s1.str.contains(&#39;og&#39;, regex&#x3D;False)]</span><br><span class="line">1     dog</span><br><span class="line">4    frog</span><br><span class="line">dtype: object</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-DataFrame增加行"><a href="#4-DataFrame增加行" class="headerlink" title="4. DataFrame增加行"></a>4. DataFrame增加行</h2><h3 id="4-1-append函数"><a href="#4-1-append函数" class="headerlink" title="4.1. append函数"></a>4.1. append函数</h3><p>可以使用<code>append</code>函数给DataFrame增加行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df &#x3D; pd.DataFrame([[1, 2], [3, 4]], columns&#x3D;list(&#39;AB&#39;))</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">   A  B</span><br><span class="line">0  1  2</span><br><span class="line">1  3  4</span><br><span class="line">&gt;&gt;&gt; df2 &#x3D; pd.DataFrame([[5, 6]], columns&#x3D;list(&#39;AB&#39;))</span><br><span class="line">&gt;&gt;&gt; df2</span><br><span class="line">   A  B</span><br><span class="line">0  5  6</span><br><span class="line">&gt;&gt;&gt; df.append(df2, ignore_index&#x3D;True)</span><br><span class="line">   A  B</span><br><span class="line">0  1  2</span><br><span class="line">1  3  4</span><br><span class="line">2  5  6</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-使用特定索引名称增加行"><a href="#4-2-使用特定索引名称增加行" class="headerlink" title="4.2. 使用特定索引名称增加行"></a>4.2. 使用特定索引名称增加行</h3><p>使用DataFrame的<code>loc</code>函数可以指定索引名称增加行，前提是得知道列的排列顺序，因此在创建DataFrame时要用<code>columns</code>参数指定列的排列顺序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; employees &#x3D; pd.DataFrame(</span><br><span class="line">...     data&#x3D;&#123;&#39;Name&#39;: [&#39;John Doe&#39;, &#39;William Spark&#39;],</span><br><span class="line">...           &#39;Age&#39;: [23, 24]&#125;,</span><br><span class="line">...     index&#x3D;[&#39;Emp001&#39;, &#39;Emp002&#39;],</span><br><span class="line">...     columns&#x3D;[&#39;Name&#39;, &#39;Age&#39;])</span><br><span class="line">&gt;&gt;&gt; employees</span><br><span class="line">                 Name  Age</span><br><span class="line">Emp001       John Doe   23</span><br><span class="line">Emp002  William Spark   24</span><br><span class="line">&gt;&gt;&gt; employees.loc[&#39;Emp003&#39;] &#x3D; [&#39;Sunny&#39;, 45]</span><br><span class="line">&gt;&gt;&gt; employees</span><br><span class="line">                 Name  Age</span><br><span class="line">Emp001       John Doe   23</span><br><span class="line">Emp002  William Spark   24</span><br><span class="line">Emp003          Sunny   45</span><br></pre></td></tr></table></figure>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Python/">Python</a><a href="/tags/Pandas/">Pandas</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.scutmath.com/pandas_memo2.html" data-title="Pandas备忘录2 | 清风的技术小屋" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/cython_blas.html" title="Cython调用BLAS">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Cython调用BLAS</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/weighted_random_sampling.html"  title="Weighted Random Sampling With Replacement">
+ <strong>下一篇：</strong><br/> 
+ <span>Weighted Random Sampling With Replacement
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Pandas%E5%A4%87%E5%BF%98%E5%BD%95%E7%B3%BB%E5%88%97%E6%96%87%E7%AB%A0"><span class="toc-text">1. Pandas备忘录系列文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BB%8B%E7%BB%8D"><span class="toc-text">2. 介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%9F%A5%E6%89%BE"><span class="toc-text">3. 查找</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-contains%E5%87%BD%E6%95%B0"><span class="toc-text">3.1. contains函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-DataFrame%E5%A2%9E%E5%8A%A0%E8%A1%8C"><span class="toc-text">4. DataFrame增加行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-append%E5%87%BD%E6%95%B0"><span class="toc-text">4.1. append函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E4%BD%BF%E7%94%A8%E7%89%B9%E5%AE%9A%E7%B4%A2%E5%BC%95%E5%90%8D%E7%A7%B0%E5%A2%9E%E5%8A%A0%E8%A1%8C"><span class="toc-text">4.2. 使用特定索引名称增加行</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>34</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/LeetCode/" title="LeetCode">LeetCode<sup>31</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Algorithm/" title="Algorithm">Algorithm<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/机器学习/" title="机器学习">机器学习<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hadoop/" title="Hadoop">Hadoop<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程语言/" title="编程语言">编程语言<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HDF5/" title="HDF5">HDF5<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔试/" title="笔试">笔试<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/软件配置/" title="软件配置">软件配置<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Numpy/" title="Numpy">Numpy<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Pandas/" title="Pandas">Pandas<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Shell/" title="Shell">Shell<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数学/" title="数学">数学<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Software-Installation/" title="Software Installation">Software Installation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Caffe/" title="Caffe">Caffe<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Makefile/" title="Makefile">Makefile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/C/" title="C++">C++<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Cython/" title="Cython">Cython<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		
+		<a href="/about" target="_blank" title="罗万千">罗万千</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
