@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Pandas备忘录2 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1. Pandas备忘录系列文章 Pandas备忘录  2. 介绍Note: 如果没有特别说明，pd指的是pandas，np指的是numpy。 12import pandas as pdimport numpy as np  3. 查找3.1. contains函数主要是用Series.str.contains这个函数，如果参数regex设为True，则查找字符串解析为正则表达式，设为False则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pandas备忘录2">
+<meta property="og:url" content="http://example.com/2018/09/03/Pandas%E5%A4%87%E5%BF%98%E5%BD%952/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. Pandas备忘录系列文章 Pandas备忘录  2. 介绍Note: 如果没有特别说明，pd指的是pandas，np指的是numpy。 12import pandas as pdimport numpy as np  3. 查找3.1. contains函数主要是用Series.str.contains这个函数，如果参数regex设为True，则查找字符串解析为正则表达式，设为False则">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-09-03T14:30:02.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.161Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Pandas">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Pandas备忘录2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/09/03/Pandas%E5%A4%87%E5%BF%98%E5%BD%952/" class="article-date">
+  <time class="dt-published" datetime="2018-09-03T14:30:02.000Z" itemprop="datePublished">2018-09-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Pandas备忘录2
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="1-Pandas备忘录系列文章"><a href="#1-Pandas备忘录系列文章" class="headerlink" title="1. Pandas备忘录系列文章"></a>1. Pandas备忘录系列文章</h2><ol>
+<li><a href="/2018/05/06/Pandas%E5%A4%87%E5%BF%98%E5%BD%95/" title="Pandas备忘录">Pandas备忘录</a></li>
+</ol>
+<h2 id="2-介绍"><a href="#2-介绍" class="headerlink" title="2. 介绍"></a>2. 介绍</h2><p><strong>Note:</strong> 如果没有特别说明，<code>pd</code>指的是<code>pandas</code>，<code>np</code>指的是<code>numpy</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-查找"><a href="#3-查找" class="headerlink" title="3. 查找"></a>3. 查找</h2><h3 id="3-1-contains函数"><a href="#3-1-contains函数" class="headerlink" title="3.1. contains函数"></a>3.1. contains函数</h3><p>主要是用<code>Series.str.contains</code>这个函数，如果参数<code>regex</code>设为True，则查找字符串解析为正则表达式，设为False则用常规查找方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 = pd.Series([&#x27;Mouse&#x27;, &#x27;dog&#x27;, &#x27;house and parrot&#x27;, &#x27;23&#x27;, &#x27;frog&#x27;])</span><br><span class="line">&gt;&gt;&gt; s1</span><br><span class="line">0               Mouse</span><br><span class="line">1                 dog</span><br><span class="line">2    house and parrot</span><br><span class="line">3                  23</span><br><span class="line">4                frog</span><br><span class="line">dtype: object</span><br><span class="line">&gt;&gt;&gt; s1.str.contains(&#x27;og&#x27;, regex=False)</span><br><span class="line">0    False</span><br><span class="line">1     True</span><br><span class="line">2    False</span><br><span class="line">3    False</span><br><span class="line">4     True</span><br><span class="line">dtype: bool</span><br><span class="line">&gt;&gt;&gt; s1[s1.str.contains(&#x27;og&#x27;, regex=False)]</span><br><span class="line">1     dog</span><br><span class="line">4    frog</span><br><span class="line">dtype: object</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-DataFrame增加行"><a href="#4-DataFrame增加行" class="headerlink" title="4. DataFrame增加行"></a>4. DataFrame增加行</h2><h3 id="4-1-append函数"><a href="#4-1-append函数" class="headerlink" title="4.1. append函数"></a>4.1. append函数</h3><p>可以使用<code>append</code>函数给DataFrame增加行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df = pd.DataFrame([[1, 2], [3, 4]], columns=list(&#x27;AB&#x27;))</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">   A  B</span><br><span class="line">0  1  2</span><br><span class="line">1  3  4</span><br><span class="line">&gt;&gt;&gt; df2 = pd.DataFrame([[5, 6]], columns=list(&#x27;AB&#x27;))</span><br><span class="line">&gt;&gt;&gt; df2</span><br><span class="line">   A  B</span><br><span class="line">0  5  6</span><br><span class="line">&gt;&gt;&gt; df.append(df2, ignore_index=True)</span><br><span class="line">   A  B</span><br><span class="line">0  1  2</span><br><span class="line">1  3  4</span><br><span class="line">2  5  6</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-使用特定索引名称增加行"><a href="#4-2-使用特定索引名称增加行" class="headerlink" title="4.2. 使用特定索引名称增加行"></a>4.2. 使用特定索引名称增加行</h3><p>使用DataFrame的<code>loc</code>函数可以指定索引名称增加行，前提是得知道列的排列顺序，因此在创建DataFrame时要用<code>columns</code>参数指定列的排列顺序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; employees = pd.DataFrame(</span><br><span class="line">...     data=&#123;&#x27;Name&#x27;: [&#x27;John Doe&#x27;, &#x27;William Spark&#x27;],</span><br><span class="line">...           &#x27;Age&#x27;: [23, 24]&#125;,</span><br><span class="line">...     index=[&#x27;Emp001&#x27;, &#x27;Emp002&#x27;],</span><br><span class="line">...     columns=[&#x27;Name&#x27;, &#x27;Age&#x27;])</span><br><span class="line">&gt;&gt;&gt; employees</span><br><span class="line">                 Name  Age</span><br><span class="line">Emp001       John Doe   23</span><br><span class="line">Emp002  William Spark   24</span><br><span class="line">&gt;&gt;&gt; employees.loc[&#x27;Emp003&#x27;] = [&#x27;Sunny&#x27;, 45]</span><br><span class="line">&gt;&gt;&gt; employees</span><br><span class="line">                 Name  Age</span><br><span class="line">Emp001       John Doe   23</span><br><span class="line">Emp002  William Spark   24</span><br><span class="line">Emp003          Sunny   45</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/09/03/Pandas%E5%A4%87%E5%BF%98%E5%BD%952/" data-id="clz2w7lbu002ryivh5wb36dmn" data-title="Pandas备忘录2" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Cython调用BLAS
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/22/Weighted-Random-Sampling-With-Replacement/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Weighted Random Sampling With Replacement</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

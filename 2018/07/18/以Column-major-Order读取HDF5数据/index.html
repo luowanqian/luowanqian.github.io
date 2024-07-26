@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>以Column-major Order读取HDF5数据 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="在使用h5py这类库读取HDF5里面的数据时，数据的存储方式为row-major order，而一些机器学习算法的实现在使用数据时需要的存储方式为column-major order，此时需要对数据进行转换。如果数据量很小，转换是没有问题的，如果数据量巨大，进行转换时，由于需要多一倍内存来存放转换的数据，因此可能导致内存溢出。本篇博文主要是重新实现h5py库中的 read_direct 函数，使得">
+<meta property="og:type" content="article">
+<meta property="og:title" content="以Column-major Order读取HDF5数据">
+<meta property="og:url" content="http://example.com/2018/07/18/%E4%BB%A5Column-major-Order%E8%AF%BB%E5%8F%96HDF5%E6%95%B0%E6%8D%AE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在使用h5py这类库读取HDF5里面的数据时，数据的存储方式为row-major order，而一些机器学习算法的实现在使用数据时需要的存储方式为column-major order，此时需要对数据进行转换。如果数据量很小，转换是没有问题的，如果数据量巨大，进行转换时，由于需要多一倍内存来存放转换的数据，因此可能导致内存溢出。本篇博文主要是重新实现h5py库中的 read_direct 函数，使得">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-07-18T01:39:07.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.171Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="HDF5">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-以Column-major-Order读取HDF5数据" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/18/%E4%BB%A5Column-major-Order%E8%AF%BB%E5%8F%96HDF5%E6%95%B0%E6%8D%AE/" class="article-date">
+  <time class="dt-published" datetime="2018-07-18T01:39:07.000Z" itemprop="datePublished">2018-07-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      以Column-major Order读取HDF5数据
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>在使用h5py这类库读取HDF5里面的数据时，数据的存储方式为row-major order，而一些机器学习算法的实现在使用数据时需要的存储方式为column-major order，此时需要对数据进行转换。如果数据量很小，转换是没有问题的，如果数据量巨大，进行转换时，由于需要多一倍内存来存放转换的数据，因此可能导致内存溢出。本篇博文主要是重新实现h5py库中的 <code>read_direct</code> 函数，使得该函数在读取HDF5文件时，可以使得读取到内存的数据是以column-major order方式存储。</p>
+<p>相关实现代码在: <a target="_blank" rel="noopener" href="https://gist.github.com/luowanqian/b924987be33d51f50a30e741fe249526">HDF5 gist</a></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>基本思路就是一行行地读取HDF5文件里面的数据，然后存储到内存的数组中，内存的数组是以column-major order方式存储数据。这里假设HDF5文件里面的数据存储是连续的，没有进行分块，复杂的情况等以后再实现，这里只是应对最简单的情况。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>实现主要是 Python + C 形式，Python部分主要提供一个函数接口用于调用，C部分主要是使用HDF5 C API对HDF5数据进行读取，两者之间的相互调用使用的是Cython。</p>
+<h3 id="C"><a href="#C" class="headerlink" title="C"></a>C</h3><p>这部分需要使用HDF5库提供的C API对HDF5文件数据进行读取。主要使用的API是 <code>H5Sselect_hyperslab</code>，这个函数可以设定读取存储空间的哪一部分数据或者将数据存在存储空间的哪一部分，这里的存储空间是一个抽象概念，既可以表示HDF5文件里面内容，也可以表示内存申请的存储空间，这里我们分别对HDF5文件内容和内存申请的空间分别进行设定。实现代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * 从H5文件中读取矩阵数据，以column order存储数据</span><br><span class="line"> *</span><br><span class="line"> * filename: H5文件名</span><br><span class="line"> * dataset_name: 数据集名</span><br><span class="line"> * buffer: 数据内存存储处，大小为 num_rows * num_cols</span><br><span class="line"> * num_rows: 待读取的矩阵的行数</span><br><span class="line"> * num_cols: 待读取的矩阵的列数</span><br><span class="line"> * offset_x: 读取的数据在H5文件中的矩阵的x方向上的偏移 (第几行)</span><br><span class="line"> * offset_y: 读取的数据在H5文件中的矩阵的y方向上的偏移 (第几列)</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">int read_direct_f(char *file_name, char *dataset_name, double *buffer,</span><br><span class="line">                  int num_rows, int num_cols, int offset_x, int offset_y)</span><br><span class="line">&#123;</span><br><span class="line">    int i;</span><br><span class="line"></span><br><span class="line">    hid_t file_id, dataset_id;</span><br><span class="line">    hid_t dataspace_id, memspace_id;</span><br><span class="line">    herr_t status;</span><br><span class="line"></span><br><span class="line">    hsize_t dims_mem[1];</span><br><span class="line"></span><br><span class="line">    hsize_t offset[2];</span><br><span class="line">    hsize_t count[2];</span><br><span class="line">    hsize_t stride[2];</span><br><span class="line">    hsize_t block[2];</span><br><span class="line">    hsize_t offset_mem[1];</span><br><span class="line">    hsize_t count_mem[1];</span><br><span class="line">    hsize_t stride_mem[1];</span><br><span class="line">    hsize_t block_mem[1];</span><br><span class="line"></span><br><span class="line">    // open the hdf5 file and the dataset</span><br><span class="line">    file_id = H5Fopen(file_name, H5F_ACC_RDONLY, H5P_DEFAULT);</span><br><span class="line">    dataset_id = H5Dopen2(file_id, dataset_name, H5P_DEFAULT);</span><br><span class="line"></span><br><span class="line">    // get file dataspace</span><br><span class="line">    dataspace_id = H5Dget_space(dataset_id);</span><br><span class="line"></span><br><span class="line">    // create memory space</span><br><span class="line">    dims_mem[0] = num_rows;         // avoid numeric overflow</span><br><span class="line">    dims_mem[0] = dims_mem[0] * num_cols;</span><br><span class="line">    memspace_id = H5Screate_simple(1, dims_mem, NULL);</span><br><span class="line"></span><br><span class="line">    // specify size and shape of subset to read</span><br><span class="line">    offset[0] = offset_x;</span><br><span class="line">    offset[1] = offset_y;</span><br><span class="line">    count[0] = 1;</span><br><span class="line">    count[1] = num_cols;</span><br><span class="line">    stride[0] = 1;</span><br><span class="line">    stride[1] = 1;</span><br><span class="line">    block[0] = 1;</span><br><span class="line">    block[1] = 1;</span><br><span class="line">    offset_mem[0] = 0;</span><br><span class="line">    count_mem[0] = num_cols;</span><br><span class="line">    stride_mem[0] = num_rows;</span><br><span class="line">    block_mem[0] = 1;</span><br><span class="line"></span><br><span class="line">    for (i=0; i&lt;num_rows; i++) &#123;</span><br><span class="line">        offset[0] = offset_x + i;</span><br><span class="line">        offset_mem[0] = i;</span><br><span class="line"></span><br><span class="line">        // select subset from dataspace</span><br><span class="line">        status = H5Sselect_hyperslab(dataspace_id, H5S_SELECT_SET,</span><br><span class="line">                                     offset, stride, count, block);</span><br><span class="line">        if (status &lt; 0) &#123;</span><br><span class="line">            H5Eprint2(H5E_DEFAULT, NULL);</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        status = H5Sselect_hyperslab(memspace_id, H5S_SELECT_SET,</span><br><span class="line">                                     offset_mem, stride_mem,</span><br><span class="line">                                     count_mem, block_mem);</span><br><span class="line">        if (status &lt; 0) &#123;</span><br><span class="line">            H5Eprint2(H5E_DEFAULT, NULL);</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // read data</span><br><span class="line">        status = H5Dread(dataset_id, H5T_NATIVE_DOUBLE,</span><br><span class="line">                         memspace_id, dataspace_id,</span><br><span class="line">                         H5P_DEFAULT, buffer);</span><br><span class="line">        if (status &lt; 0) &#123;</span><br><span class="line">            H5Eprint2(H5E_DEFAULT, NULL);</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // close the resources</span><br><span class="line">    H5Sclose(memspace_id);</span><br><span class="line">    H5Sclose(dataspace_id);</span><br><span class="line">    H5Dclose(dataset_id);</span><br><span class="line">    H5Fclose(file_id);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基本实现思路就是每次就只读取HDF5文件中矩阵的一行，然后写入到内存空间中，每次读取都要用函数 <code>H5Sselect_hyperslab</code> 函数设定读取区域，同样，每次写入都要使用函数 <code>H5Sselect_hyperslab</code> 设定写入区域。这个实现思想参考了HDF5官方教程 <a target="_blank" rel="noopener" href="https://portal.hdfgroup.org/display/HDF5/Reading+From+or+Writing+To+a+Subset+of+a+Dataset">Reading From or Writing To a Subset of a Dataset</a>，教程中仅仅设定了文件的读取区域，没有设定写入区域。</p>
+<h3 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h3><p>这部分使用Cython来实现Python中调用前面所写的C语言代码，这部分代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">def read_direct_fortran(str file_name, str dataset_name,</span><br><span class="line">                        double[::1, :] data, int offset_x, int offset_y):</span><br><span class="line">    cdef int num_rows</span><br><span class="line">    cdef int num_cols</span><br><span class="line">    cdef bytes file_name_bytes = bytes(file_name, encoding=&#x27;utf-8&#x27;)</span><br><span class="line">    cdef bytes dataset_name_bytes = bytes(dataset_name, encoding=&#x27;utf-8&#x27;)</span><br><span class="line">    cdef int ret;</span><br><span class="line"></span><br><span class="line">    num_rows = data.shape[0]</span><br><span class="line">    num_cols = data.shape[1]</span><br><span class="line"></span><br><span class="line">    ret = read_direct_f(file_name_bytes, dataset_name_bytes, &amp;data[0, 0],</span><br><span class="line">                        num_rows, num_cols, offset_x, offset_y)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/18/%E4%BB%A5Column-major-Order%E8%AF%BB%E5%8F%96HDF5%E6%95%B0%E6%8D%AE/" data-id="clz2w7lc1003qyivh26yp5e73" data-title="以Column-major Order读取HDF5数据" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/07/22/Weighted-Random-Sampling-With-Replacement/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Weighted Random Sampling With Replacement
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/15/LeetCode-7-Reverse-Integer/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">LeetCode 7 - Reverse Integer</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

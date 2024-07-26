@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Logistic Regression | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="二项Logistic回归模型二项Logistic回归模型是一种分类模型，由条件概率分布 $P(Y|X)$ 表示，这里的随机变量取值为实数，随机变量 $Y$ 取值为 0 或 1，这个条件概率分布是未知的，需要通过监督学习方法来进行估计。条件概率分布如下表示：$$\begin{align}P(Y&#x3D;1 | x) &amp; &#x3D; \frac{e^{x^T \beta + b}}{1 +">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Logistic Regression">
+<meta property="og:url" content="http://example.com/2018/03/29/Logistic-Regression/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="二项Logistic回归模型二项Logistic回归模型是一种分类模型，由条件概率分布 $P(Y|X)$ 表示，这里的随机变量取值为实数，随机变量 $Y$ 取值为 0 或 1，这个条件概率分布是未知的，需要通过监督学习方法来进行估计。条件概率分布如下表示：$$\begin{align}P(Y&#x3D;1 | x) &amp; &#x3D; \frac{e^{x^T \beta + b}}{1 +">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-03-29T11:06:40.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.151Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Logistic-Regression" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/03/29/Logistic-Regression/" class="article-date">
+  <time class="dt-published" datetime="2018-03-29T11:06:40.000Z" itemprop="datePublished">2018-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Logistic Regression
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="二项Logistic回归模型"><a href="#二项Logistic回归模型" class="headerlink" title="二项Logistic回归模型"></a>二项Logistic回归模型</h2><p>二项Logistic回归模型是一种分类模型，由条件概率分布 $P(Y|X)$ 表示，这里的随机变量取值为实数，随机变量 $Y$ 取值为 0 或 1，这个条件概率分布是未知的，需要通过监督学习方法来进行估计。条件概率分布如下表示：<br>$$<br>\begin{align}<br>P(Y&#x3D;1 | x) &amp; &#x3D; \frac{e^{x^T \beta + b}}{1 + e^{x^T\beta + b}} &#x3D; \frac{1}{1 + e^{-x^T \beta + b}} \<br>P(Y &#x3D; 0 | x) &amp; &#x3D; \frac{1}{1 + e^{x^T \beta + b}}<br>\end{align}<br>$$<br>这里，$x\in R^d$ 是输入，$Y \in {0, 1}$ 是输出，$\beta \in R^d$ 和 $b$ 是参数。模型参数是未知的，需要进行模型训练获得，当获得模型参数时，对于一个新的输入实例 $x$，根据上面式子分别求出条件概率 $P(Y&#x3D;1 | x)$ 和 $P(Y&#x3D;0|x)$，比较两个条件概率值的大小，将实例 $x$ 分到较大的那一类。</p>
+<h2 id="模型参数估计"><a href="#模型参数估计" class="headerlink" title="模型参数估计"></a>模型参数估计</h2><p>模型参数估计通常使用极大似然估计法 (MLE) 进行估计。已知输入的训练数据集 $T &#x3D; {(x_1, y_1), \ldots, (x_N, y_N)}$，其中 $x_i &#x3D; [x_{i1}, x_{i2}, \ldots, x_{id}]^T \in R^d$，$y_i \in {0, 1}$，待求的参数为 $\beta &#x3D; [\beta_1, \beta_2, \ldots, \beta_d]^T \in R^d$ 和 $b \in R$。设：<br>$$<br>\begin{align}<br>P(Y&#x3D;1|x) &amp; &#x3D; \phi(x) \<br>P(Y &#x3D;0 | x) &amp; &#x3D; 1 - \phi(x)<br>\end{align}<br>$$<br>两个结合成一个式子可以写成如下表示：<br>$$<br>P(Y &#x3D; y | x) &#x3D; \phi(x)^{y} (1 - \phi(x))^{1- y}<br>$$<br>定义似然函数为：<br>$$<br>L(\beta, b) &#x3D; \prod_{i&#x3D;1}^N \phi(x_i)^{y_i} (1 - \phi(x_i))^{1-y_i}<br>$$</p>
+<p>则对数似然函数为：<br>$$<br>\begin{align}<br>\ln (L(\beta, b)) &amp; &#x3D; \ln \left( \prod_{i&#x3D;1}^N \phi(x_i)^{y_i} (1 - \phi(x_i))^{1-y_i} \right) \<br>&amp; &#x3D; \sum_{i&#x3D;1}^N \left[  y_i \ln(\phi(x_i)) + (1- y_i) \ln(1-\phi(x_i))\right] \<br>&amp; &#x3D; \sum_{i&#x3D;1}^N \left[  y_i \ln\left(\frac{\phi(x_i)}{1 - \phi(x_i)} \right)  + \ln(1- \phi(x_i)) \right]<br>\end{align}<br>$$<br>根据前面模型描述，可以知道<br>$$<br>\phi(x) &#x3D; \frac{e^{x^T \beta + b}}{1 + e^{x^T\beta + b}}<br>$$<br>则 $\frac{\phi(x)}{1-\phi(x)}$ 为<br>$$<br>\frac{\phi(x)}{1 - \phi(x)} &#x3D; e^{x^T \beta + b}<br>$$<br>因此对数似然函数为：<br>$$<br>\begin{align}<br>\ln(L(\beta, b)) &amp; &#x3D; \sum_{i&#x3D;1}^N \left[  y_i \ln(e^{x_i^T \beta}) + \ln\left( \frac{1}{1 + e^{x_i^T\beta + b}} \right) \right] \<br>&amp; &#x3D; \sum_{i&#x3D;1}^N \left[ y_i (x_i^T \beta) - \ln(1 + e^{x_i^T\beta + b}) \right]<br>\end{align}<br>$$<br>对 $\ln(L(\beta, b))$ 求最大值，得到 $\beta$ 和 $b$ 的估计值，不过在实现时，通常转化为求解最小值，即对 $\ln(L(\beta, b))$ 求最大值转换成对 $-\ln(L(\beta, b))$ 求最小值：<br>$$<br>\min_{\beta, b} \sum_{i&#x3D;1}^N \left[ \ln(1 + e^{x_i^T\beta + b}) - y_i (x_i^T \beta) \right]<br>$$</p>
+<h2 id="模型实现"><a href="#模型实现" class="headerlink" title="模型实现"></a>模型实现</h2><p>根据前面描述，模型参数估计主要是要求解</p>
+<p>$$<br>\min_{\beta, b} \frac{1}{N} \sum_{i&#x3D;1}^N \left[ \ln(1 + e^{x_i^T\beta + b}) - y_i (x_i^T \beta) \right]<br>$$</p>
+<p>这里多乘一个系数 $\frac{1}{N}$ 并不会改变最优解的大小。上述问题可以采用梯度下降法或者拟牛顿法进行求解，在求解过程中，需要计算目标函数的梯度。令函数 $f(\beta, b)$ 为：<br>$$<br>f(\beta, b) &#x3D; \sum_{i&#x3D;1}^N \left[ \ln(1 + e^{x_i^T\beta + b}) - y_i (x_i^T \beta) \right]<br>$$<br>则函数 $f(\beta, b)$ 对 $\beta_k ; (k&#x3D;1, \ldots, d)$ 的偏导为<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta, b)}}{\partial \beta_k} &amp; &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^N \left( \frac{x_{ik}e^{\beta^T x_i + b}}{1 + e^{\beta^T x_i + b}} -x_{ik} y_i \right) \<br>&amp; &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^N \left( \frac{x_{ik}}{1 + e^{-(\beta^T x_i + b)}} - x_{ik}y_i \right)<br>\end{align}<br>$$<br>令矩阵 $X \in R^{N \times d}$ 为<br>$$<br>X &#x3D; \begin{bmatrix}<br>x_{11} &amp; \ldots &amp; x_{1d} \<br>x_{21} &amp; \ldots  &amp; x_{2d} \<br>\vdots &amp;  &amp; \vdots \<br>x_{N1} &amp; \ldots &amp; x_Nd<br>\end{bmatrix} &#x3D; \begin{bmatrix}<br>x_1^T \<br>x_2^T \<br>\vdots \<br>x_N^T<br>\end{bmatrix}<br>$$<br>则 $X\beta + b$ 为<br>$$<br>X \beta + b &#x3D; [\beta^T x_1 + b , \ldots, \beta^T x_N + b]^T<br>$$<br>令函数 $g(x)$ 为 Sigmoid 函数，也就是<br>$$<br>g(x) &#x3D; \frac{1}{1 + e^{-x}}<br>$$<br>则 $g(X \beta + b)$ 为<br>$$<br>g(X \beta + b) &#x3D; \begin{bmatrix}<br>\frac{1}{1 + e^{-(\beta^T x_1 +b)}} \<br>\frac{1}{1 + e^{-(\beta^T x_2 +b)}}  \<br>\vdots \<br>\frac{1}{1 + e^{-(\beta^T x_N +b)}}<br>\end{bmatrix}<br>$$<br>令 $Xt &#x3D;X^T$，矩阵 $Xt$ 第 $k$ 行为 $Xt[k, :]$，则可以得到<br>$$<br>\sum_{i&#x3D;1}^N \frac{x_{ik}}{1 + e^{-(\beta^T x_i + b)}} &#x3D; Xt[k, :]  g(X\beta + b)<br>$$<br>以及<br>$$<br>\sum_{i&#x3D;1}^N x_{ik} y_i &#x3D; Xt[k, :] y<br>$$<br>因此<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta, b)}}{\partial \beta_k} &amp; &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^N \left( \frac{x_{ik}e^{\beta^T x_i + b}}{1 + e^{\beta^T x_i + b}} -x_{ik} y_i \right) \<br>&amp; &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^N \left( \frac{x_{ik}}{1 + e^{-(\beta^T x_i + b)}} - x_{ik}y_i \right) \<br>&amp; &#x3D; \frac{1}{N} Xt[k, :]  \left(g(X\beta + b) - y \right)<br>\end{align}<br>$$<br>则可得<br>$$<br>\begin{bmatrix}<br>\frac{\partial f(\beta, b)}{\partial \beta_1} \<br>\frac{\partial f(\beta, b)}{\partial \beta_2} \<br>\vdots \<br>\frac{\partial f(\beta, b)}{\partial \beta_d}<br>\end{bmatrix} &#x3D; \frac{1}{N} \begin{bmatrix}<br>Xt[1, :]  \left(g(X\beta + b) - y\right) \<br>Xt[2, :]  \left(g(X\beta + b) - y\right) \<br>\vdots \<br>Xt[N, :]  \left(g(X\beta + b) - y\right)<br>\end{bmatrix} &#x3D; \frac{1}{N} X^T (g(X\beta+b)- y)<br>$$<br>前面是求函数 $f(\beta, b)$ 对 $\beta_k$ 的偏导，对于偏置项 $b$，函数 $f(\beta, b)$ 对 $b$ 的偏导为<br>$$<br>\begin{align}<br>\frac{\partial f(\beta, b)}{\partial b} &amp;  &#x3D;  \frac{1}{N} \sum_{i&#x3D;1}^N \left( \frac{e^{\beta^T x_i + b}}{1 + e^{\beta^T x_i + b}} - y_i \right)  \<br>&amp; &#x3D;  \frac{1}{N} \sum_{i&#x3D;1}^N \left( \frac{1}{1 + e^{-(\beta^T x_i + b)}} - y_i \right) \<br>&amp; &#x3D; \frac{1}{N} 1^T (g(X\beta + b) - y)<br>\end{align}<br>$$</p>
+<p>这里的 $1$ 代表元素全是1的列向量。综上可以得到，函数 $f(\beta, b)$ 的梯度为：<br>$$<br>\nabla f(\beta, b) &#x3D; \begin{bmatrix}<br>\frac{1}{N} 1^T (g(X\beta + b) - y) \<br>\frac{1}{N} X^T (g(X\beta+b)- y)<br>\end{bmatrix}<br>$$<br>这个梯度向量第一个元素代表 $\frac{\partial f(\beta, b)}{\partial b}$。知道梯度向量的表示，我们可以用梯度下降法或拟牛顿法 (例如BFGS等) 来求解优化问题，我这里采用BFGS算法来进行求解，核心代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">from scipy.optimize import minimize</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class LogisticRegression:</span><br><span class="line">    def __init__(self, alpha=1.0, max_iter=1000, tol=1e-4):</span><br><span class="line">        self.alpha = alpha</span><br><span class="line">        self.max_iter = max_iter</span><br><span class="line">        self.tol = tol</span><br><span class="line"></span><br><span class="line">    def sigmoid(self, x):</span><br><span class="line">        return 1 / (1.0 + np.exp(-x))</span><br><span class="line"></span><br><span class="line">    def objective(self, beta, X, y):</span><br><span class="line">        n, _ = X.shape</span><br><span class="line">        tmp = np.dot(X, beta[1:]) + beta[0]</span><br><span class="line">        object = np.sum(np.log(1+np.exp(tmp))) - np.dot(y, tmp)</span><br><span class="line"></span><br><span class="line">        return object / (1.0 * n)</span><br><span class="line"></span><br><span class="line">    def gradient(self, beta, X, y):</span><br><span class="line">        n, _ = X.shape</span><br><span class="line">        tmp = self.sigmoid(np.dot(X, beta[1:]) + beta[0]) - y</span><br><span class="line">        grads = []</span><br><span class="line">        grads.append(np.sum(tmp)/(1.0*n))</span><br><span class="line">        grads.extend(np.dot(X.T, tmp)/(1.0*n))</span><br><span class="line"></span><br><span class="line">        return np.array(grads)</span><br><span class="line"></span><br><span class="line">    def callback(self, beta):</span><br><span class="line">        self.history.append(self.objective(beta, self.X, self.y))</span><br><span class="line"></span><br><span class="line">    def fit(self, X, y):</span><br><span class="line">        n, p = X.shape</span><br><span class="line">        self.X = X</span><br><span class="line">        self.y = y</span><br><span class="line">        self.history = []</span><br><span class="line"></span><br><span class="line">        # initialize</span><br><span class="line">        beta0 = np.random.randn(p+1)</span><br><span class="line"></span><br><span class="line">        res = minimize(self.objective, beta0, args=(X, y), method=&#x27;BFGS&#x27;,</span><br><span class="line">                       jac=self.gradient, callback=self.callback)</span><br><span class="line"></span><br><span class="line">        self.coef = res.x[1:]</span><br><span class="line">        self.intercept = res.x[0]</span><br><span class="line"></span><br><span class="line">        return self</span><br><span class="line"></span><br><span class="line">    def predict(self, X):</span><br><span class="line">        activation = self.sigmoid(np.dot(X, self.coef) + self.intercept)</span><br><span class="line">        y = np.zeros(X.shape[0], dtype=np.int)</span><br><span class="line">        y[activation &gt;= 0.5] = 1</span><br><span class="line"></span><br><span class="line">        return y</span><br><span class="line"></span><br><span class="line">    def score(self, X, y):</span><br><span class="line">        y_predict = self.predict(X)</span><br><span class="line"></span><br><span class="line">        return np.mean(y == y_predict) * 100</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def coef_(self):</span><br><span class="line">        return self.coef</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def intercept_(self):</span><br><span class="line">        return self.intercept</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def history_(self):</span><br><span class="line">        return self.history</span><br></pre></td></tr></table></figure>
+
+<p>全部相关的代码在：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/LogisticRegression">GitHub</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/03/29/Logistic-Regression/" data-id="clz2w7lbr002eyivh5uuwd68m" data-title="Logistic Regression" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/30/Softmax-Regression/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Softmax Regression
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Coordinate Descent Algorithm for Lasso Problem</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

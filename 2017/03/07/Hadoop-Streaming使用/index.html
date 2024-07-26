@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hadoop Streaming使用 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="关于 Hadoop Streaming 的使用，可以参考官方网站 Hadoop Streaming。个人觉得使用Steaming这个功能，可以使用其他语言来编写MapReduce程序，相比使用Java来编写程序，工作量小了很多。 根据《Hadoop权威指南》中例子使用python来实现 Max Temperature 这个程序，要分别实现Map函数以及Reduce函数。 Map函数12345678">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop Streaming使用">
+<meta property="og:url" content="http://example.com/2017/03/07/Hadoop-Streaming%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="关于 Hadoop Streaming 的使用，可以参考官方网站 Hadoop Streaming。个人觉得使用Steaming这个功能，可以使用其他语言来编写MapReduce程序，相比使用Java来编写程序，工作量小了很多。 根据《Hadoop权威指南》中例子使用python来实现 Max Temperature 这个程序，要分别实现Map函数以及Reduce函数。 Map函数12345678">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2017/03/07/Hadoop-Streaming%E4%BD%BF%E7%94%A8/1.png">
+<meta property="og:image" content="http://example.com/2017/03/07/Hadoop-Streaming%E4%BD%BF%E7%94%A8/2.png">
+<meta property="og:image" content="http://example.com/2017/03/07/Hadoop-Streaming%E4%BD%BF%E7%94%A8/3.png">
+<meta property="article:published_time" content="2017-03-07T08:44:28.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.151Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2017/03/07/Hadoop-Streaming%E4%BD%BF%E7%94%A8/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Hadoop-Streaming使用" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2017/03/07/Hadoop-Streaming%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time class="dt-published" datetime="2017-03-07T08:44:28.000Z" itemprop="datePublished">2017-03-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Hadoop Streaming使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>关于 <strong>Hadoop Streaming</strong> 的使用，可以参考官方网站 <a target="_blank" rel="noopener" href="http://hadoop.apache.org/docs/r2.7.3/hadoop-streaming/HadoopStreaming.html">Hadoop Streaming</a>。个人觉得使用Steaming这个功能，可以使用其他语言来编写MapReduce程序，相比使用Java来编写程序，工作量小了很多。</p>
+<p>根据《Hadoop权威指南》中例子使用python来实现 <strong>Max Temperature</strong> 这个程序，要分别实现Map函数以及Reduce函数。</p>
+<h3 id="Map函数"><a href="#Map函数" class="headerlink" title="Map函数"></a>Map函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">    val = line.strip()</span><br><span class="line">    (year, temp, q) = (val[<span class="number">15</span>:<span class="number">19</span>], val[<span class="number">87</span>:<span class="number">92</span>], val[<span class="number">92</span>:<span class="number">93</span>])</span><br><span class="line">    <span class="keyword">if</span> (temp != <span class="string">&quot;+9999&quot;</span> <span class="keyword">and</span> re.<span class="keyword">match</span>(<span class="string">&quot;[01459]&quot;</span>, q)):</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;%s\t%s&quot;</span> % (year, temp)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Reduce函数"><a href="#Reduce函数" class="headerlink" title="Reduce函数"></a>Reduce函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">(last_key, max_val) = (<span class="literal">None</span>, -sys.maxint)</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">    (key, val) = line.strip().split(<span class="string">&quot;\t&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> last_key <span class="keyword">and</span> last_key != key:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;%s\t%s&quot;</span> % (last_key, max_val)</span><br><span class="line">        (last_key, max_val) = (key, <span class="built_in">int</span>(val))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        (last_key, max_val) = (key, <span class="built_in">max</span>(max_val, <span class="built_in">int</span>(val)))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> last_key:</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;%s\t%s&quot;</span> % (last_key, max_val)</span><br></pre></td></tr></table></figure>
+
+<p>本文用到的文件如下：</p>
+<img src="/2017/03/07/Hadoop-Streaming%E4%BD%BF%E7%94%A8/1.png" class="">
+
+<p>其中 <code>1901.txt</code>为数据文件，<code>max_temperature_map.py</code>定义了Map函数，<code>max_temperature_reduce.py</code>定义了Reduce函数</p>
+<p>定义好Map函数以及Reduce函数后，利用unix的管道将Map过程以及Reduce过程连接起来，使用下面命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat 1901.txt | ./max_temperature_map.py | sort | ./max_temperature_reduce.py</span><br></pre></td></tr></table></figure>
+
+<p>运行结果如下：</p>
+<img src="/2017/03/07/Hadoop-Streaming%E4%BD%BF%E7%94%A8/2.png" class="">
+
+<p>运行结果正确，此时就可以使用Hadoop的Streaming了，使用下面命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \</span><br><span class="line">    -fs file:///  \</span><br><span class="line">    -input 1901.txt \</span><br><span class="line">    -output output \</span><br><span class="line">    -mapper max_temperature_map.py \</span><br><span class="line">    -reducer max_temperature_reduce.py</span><br></pre></td></tr></table></figure>
+
+<p>注意：如果文件是在本地文件系统中而不是HDFS中时，要使用 <code>-fs file:///</code> 这个命令选项</p>
+<p>运行结果保存到 <code>output</code> 文件夹中</p>
+<img src="/2017/03/07/Hadoop-Streaming%E4%BD%BF%E7%94%A8/3.png" class="">
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2017/03/07/Hadoop-Streaming%E4%BD%BF%E7%94%A8/" data-id="clz2w7lb8000cyivhhkfw91kb" data-title="Hadoop Streaming使用" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/03/09/%E4%BA%BA%E8%84%B8%E6%95%B0%E6%8D%AE%E5%BA%93Yale/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          人脸数据库Yale
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/02/28/Hadoop%E7%9A%84FileNotFound%E9%97%AE%E9%A2%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hadoop的FileNotFound问题</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

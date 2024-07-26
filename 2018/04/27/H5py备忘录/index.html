@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>H5py备忘录 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文主要是记录一些h5py的使用方法。 Note: 如果没有特别说明，np 指的是 numpy，代表导入的 numpy 1import numpy as np  存储浮点数采用单精度浮点数在HDF5文件中存储浮点数时，可以选择单精度浮点数和双精度浮点数，常见是用单精度浮点数来存储浮点数，相比于双精度浮点数，单精度浮点数存储空间为双精度浮点数的一半，这样可以缩小一半的存储空间。不同于文件存储，在内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="H5py备忘录">
+<meta property="og:url" content="http://example.com/2018/04/27/H5py%E5%A4%87%E5%BF%98%E5%BD%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本文主要是记录一些h5py的使用方法。 Note: 如果没有特别说明，np 指的是 numpy，代表导入的 numpy 1import numpy as np  存储浮点数采用单精度浮点数在HDF5文件中存储浮点数时，可以选择单精度浮点数和双精度浮点数，常见是用单精度浮点数来存储浮点数，相比于双精度浮点数，单精度浮点数存储空间为双精度浮点数的一半，这样可以缩小一半的存储空间。不同于文件存储，在内存">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-04-27T09:32:59.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.151Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="HDF5">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-H5py备忘录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/27/H5py%E5%A4%87%E5%BF%98%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2018-04-27T09:32:59.000Z" itemprop="datePublished">2018-04-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      H5py备忘录
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本文主要是记录一些h5py的使用方法。</p>
+<p><strong>Note:</strong> 如果没有特别说明，<code>np</code> 指的是 <code>numpy</code>，代表导入的 numpy</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+
+<h2 id="存储浮点数采用单精度浮点数"><a href="#存储浮点数采用单精度浮点数" class="headerlink" title="存储浮点数采用单精度浮点数"></a>存储浮点数采用单精度浮点数</h2><p>在HDF5文件中存储浮点数时，可以选择单精度浮点数和双精度浮点数，常见是用单精度浮点数来存储浮点数，相比于双精度浮点数，单精度浮点数存储空间为双精度浮点数的一半，这样可以缩小一半的存储空间。不同于文件存储，在内存中需要使用双精度浮点数来保证计算的准确性，因此一个通常的操作是，在内存中使用双精度浮点数，然后存储到HDF5文件时，使用单精度浮点数，两者的使用只需要进行数据类型转换。</p>
+<p>在内存中，我们使用Numpy创建一个数组，数据类型为双精度浮点数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata = np.ones((<span class="number">100</span>, <span class="number">1000</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata.shape</span><br><span class="line">(<span class="number">100</span>, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>直接使用赋值方式将数组存储到HDF5文件中，存储的浮点数为双精度浮点数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> h5py.File(<span class="string">&#x27;big1.hdf5&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f1:</span><br><span class="line"><span class="meta">... </span>    f1[<span class="string">&#x27;big&#x27;</span>] = bigdata</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1 = h5py.File(<span class="string">&#x27;big1.hdf5&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1[<span class="string">&#x27;big&#x27;</span>].dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>文件大小为 783K</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span> -lh big1.hdf5</span></span><br><span class="line">-rw-r--r--  1 luowanqian  staff   783K  4 29 10:44 big1.hdf5</span><br></pre></td></tr></table></figure>
+
+<p>我们可以使用 <code>create_dataset</code> 函数来指定存储单精度浮点数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> h5py.File(<span class="string">&#x27;big2.hdf5&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f2:</span><br><span class="line"><span class="meta">... </span>    f2.create_dataset(<span class="string">&#x27;big&#x27;</span>, data=bigdata, dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f2 = h5py.File(<span class="string">&#x27;big2.hdf5&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f2[<span class="string">&#x27;big&#x27;</span>].dtype</span><br><span class="line">dtype(<span class="string">&#x27;float32&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>文件大小为 393K</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span> -lh big2.hdf5</span></span><br><span class="line">-rw-r--r--  1 luowanqian  staff   393K  4 29 11:02 big2.hdf5</span><br></pre></td></tr></table></figure>
+
+<h2 id="读取数据时进行数据转换"><a href="#读取数据时进行数据转换" class="headerlink" title="读取数据时进行数据转换"></a>读取数据时进行数据转换</h2><p>假设有个存储单精度浮点数的HDF5文件，我们想将数据读入到内存时是双精度浮点数。HDF5文件的数据如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> h5py</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata = np.ones((<span class="number">100</span>, <span class="number">1000</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> h5py.File(<span class="string">&#x27;big.hdf5&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line"><span class="meta">... </span>    f.create_dataset(<span class="string">&#x27;big&#x27;</span>, data=bigdata, dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f = h5py.File(<span class="string">&#x27;big.hdf5&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset = f[<span class="string">&#x27;big&#x27;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float32&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.shape</span><br><span class="line">(<span class="number">100</span>, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h3><p>使用 <code>np.empty</code> 创建一个空数组，然后使用 <code>read_direct</code> 函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = np.empty((<span class="number">100</span>, <span class="number">1000</span>), dtype=np.float64)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.read_direct(out)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如果不想读取全部数据，可以设置函数 <code>read_direct</code> 的 <code>source_sel</code> 和 <code>dest_sel</code> 参数。假设要将 <code>dset[0, :]</code> 的数据读入到 <code>out[50, :]</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = np.empty((<span class="number">100</span>, <span class="number">1000</span>), dtype=np.float64)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.read_direct(out, source_sel=np.s_[<span class="number">0</span>, :], dest_sel=np.s_[<span class="number">50</span>, :])</span><br></pre></td></tr></table></figure>
+
+<p>其中使用 <code>np.s_</code> 返回是 Numpy 的 <code>slice</code> 对象，该对象包含索引信息。如果省略 <code>dset_sel</code> 参数，则采用类似 Numpy 的广播规则进行赋值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = np.empty((<span class="number">100</span>, <span class="number">50</span>), dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.read_direct(out, source_sel=np.s_[:, <span class="number">0</span>:<span class="number">50</span>])</span><br></pre></td></tr></table></figure>
+
+<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><p>如果要读取多次同样大小的数据时，使用 <code>read_direct</code> 可以节省很多时间，因为只需要申请一次空间，后面数据读入直接覆盖到这个空间。做一个Benchmark：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> h5py</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> timeit <span class="keyword">import</span> timeit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">filename = <span class="string">&#x27;test.hdf5&#x27;</span></span><br><span class="line">n = <span class="number">10000</span></span><br><span class="line"></span><br><span class="line">f = h5py.File(filename, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">dset = f.create_dataset(<span class="string">&#x27;perftest&#x27;</span>, (n, n), dtype=np.float32)</span><br><span class="line">dset[:] = np.random.random(n)</span><br><span class="line">out = np.empty((n, <span class="number">500</span>), dtype=np.float32)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">time_simple</span>():</span><br><span class="line">    dset[:, <span class="number">0</span>:<span class="number">500</span>].mean(axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">time_direct</span>():</span><br><span class="line">    dset.read_direct(out, np.s_[:, <span class="number">0</span>:<span class="number">500</span>])</span><br><span class="line">    out.mean(axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Time simple: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(timeit(time_simple, number=<span class="number">500</span>)))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Time direct: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(timeit(time_direct, number=<span class="number">500</span>)))</span><br><span class="line"></span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+
+<p>运行结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Time simple: 41.33699381200131</span><br><span class="line">Time direct: 39.005692337988876</span><br></pre></td></tr></table></figure>
+
+<h3 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h3><p>使用 <code>Dataset.astype</code> 这个上下文管理器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> dset.astype(<span class="string">&#x27;float64&#x27;</span>):</span><br><span class="line"><span class="meta">... </span>    out = dset[...]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.shape</span><br><span class="line">(<span class="number">100</span>, <span class="number">1000</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>当然，也适合读取部分数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> dset.astype(<span class="string">&#x27;float64&#x27;</span>):</span><br><span class="line"><span class="meta">... </span>    out = dset[<span class="number">0</span>, :]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/27/H5py%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz2w7lb60008yivh3zakcel0" data-title="H5py备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/28/%E5%9B%BE%E5%83%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E6%88%90LMDB%E6%96%87%E4%BB%B6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          图像数据转换成LMDB文件
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/25/Non-Maximum-Suppression/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Non-Maximum Suppression</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

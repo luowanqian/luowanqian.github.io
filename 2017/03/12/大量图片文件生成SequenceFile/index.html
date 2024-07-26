@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>大量图片文件生成SequenceFile | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文主要介绍如何将大量图片数据集合起来，然后生成一个SequenceFile，这么做的原因是避免Hadoop处理大量小文件导致性能下降。SequenceFile的key-value内容以及数据类型为： 12key : 储存图片文件名，数据类型为Textvalue : 储存图片数据，数据类型为ArrayPrimitiveWritable  为什么要用ArrayPrimitiveWritable来存储">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大量图片文件生成SequenceFile">
+<meta property="og:url" content="http://example.com/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本文主要介绍如何将大量图片数据集合起来，然后生成一个SequenceFile，这么做的原因是避免Hadoop处理大量小文件导致性能下降。SequenceFile的key-value内容以及数据类型为： 12key : 储存图片文件名，数据类型为Textvalue : 储存图片数据，数据类型为ArrayPrimitiveWritable  为什么要用ArrayPrimitiveWritable来存储">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/1.png">
+<meta property="og:image" content="http://example.com/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/2.png">
+<meta property="og:image" content="http://example.com/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/3.png">
+<meta property="article:published_time" content="2017-03-12T01:38:34.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.171Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-大量图片文件生成SequenceFile" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/" class="article-date">
+  <time class="dt-published" datetime="2017-03-12T01:38:34.000Z" itemprop="datePublished">2017-03-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      大量图片文件生成SequenceFile
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本文主要介绍如何将大量图片数据集合起来，然后生成一个SequenceFile，这么做的原因是避免Hadoop处理大量小文件导致性能下降。SequenceFile的key-value内容以及数据类型为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">key : 储存图片文件名，数据类型为Text</span><br><span class="line">value : 储存图片数据，数据类型为ArrayPrimitiveWritable</span><br></pre></td></tr></table></figure>
+
+<p>为什么要用<code>ArrayPrimitiveWritable</code>来存储图片数据，主要是我想将图片数据用一个<code>int</code>数组来存储，数组元素就是图像的像素，数据范围在<code>[0, 255]</code>，当然，你可以使用<code>byte</code>数组来存储图片数据。</p>
+<span id="more"></span>
+
+<h2 id="生成SequenceFile"><a href="#生成SequenceFile" class="headerlink" title="生成SequenceFile"></a>生成SequenceFile</h2><p>实验用的图片文件为：</p>
+<img src="/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/1.png" class="">
+
+<h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><p>第一种方法就是直接使用ImageIO读取图片的所有像素，然后存储像素值到一个<code>int</code>数组中，最后使用<code>ArrayPrimitiveWritable</code>的<code>set()</code>函数存储图像数据。生成操作涉及遍历目录 (参考:<a href="/2017/03/11/Java%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6/" title="Java获取指定目录下的所有文件">Java获取指定目录下的所有文件</a>) 以及读取图片像素 (参考:<a href="/2017/03/11/Java%E8%AF%BB%E5%8F%96PGM%E5%9B%BE%E7%89%87/" title="Java读取PGM图片">Java读取PGM图片</a>)。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.FileSystem;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.ArrayPrimitiveWritable;</span><br><span class="line">import org.apache.hadoop.io.IOUtils;</span><br><span class="line">import org.apache.hadoop.io.SequenceFile;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line"></span><br><span class="line">import javax.imageio.ImageIO;</span><br><span class="line">import java.awt.image.BufferedImage;</span><br><span class="line">import java.awt.image.Raster;</span><br><span class="line">import java.io.File;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line"></span><br><span class="line">public class WriteImagesToSequenceFile &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line">        String imagesPath = &quot;/tmp/images&quot;;</span><br><span class="line">        String seqPath = &quot;/tmp/images.seq&quot;;</span><br><span class="line"></span><br><span class="line">        Configuration conf = new Configuration();</span><br><span class="line">        FileSystem fs = FileSystem.get(conf);</span><br><span class="line">        Path path = new Path(seqPath);</span><br><span class="line"></span><br><span class="line">        Text key = new Text();</span><br><span class="line">        ArrayPrimitiveWritable value = new ArrayPrimitiveWritable();</span><br><span class="line">        SequenceFile.Writer writer = null;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            BufferedImage image = null;</span><br><span class="line">            int[] pixels = null;</span><br><span class="line">            Raster source = null;</span><br><span class="line">            int width = 0;</span><br><span class="line">            int height = 0;</span><br><span class="line"></span><br><span class="line">            writer = SequenceFile.createWriter(fs, conf, path,</span><br><span class="line">                    key.getClass(), value.getClass());</span><br><span class="line"></span><br><span class="line">            ArrayList&lt;File&gt; files = ListFiles.getAllFiles(imagesPath, 1);</span><br><span class="line">            for (File file : files) &#123;</span><br><span class="line">                System.out.println(&quot;Processing &quot; + file.getName());</span><br><span class="line"></span><br><span class="line">                image = ImageIO.read(file);</span><br><span class="line">                source = image.getRaster();</span><br><span class="line">                width = image.getWidth();</span><br><span class="line">                height = image.getHeight();</span><br><span class="line">                pixels = new int[width*height];</span><br><span class="line">                source.getPixels(0, 0, width, height, pixels);</span><br><span class="line"></span><br><span class="line">                key.set(file.getName());</span><br><span class="line">                value.set(pixels);</span><br><span class="line"></span><br><span class="line">                writer.append(key, value);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            IOUtils.closeStream(writer);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><p>第二种方法是编写一个MapReduce程序来生成SequenceFile，这个主要参考了<code>&lt;&lt;Hadoop权威指南&gt;&gt; 第四版</code>中第八章的程序<code>SmallFilesToSequenceFileConverter</code>，原始程序中<code>key-value</code>的<code>value</code>的数据类型为<code>BytesWritable</code>，这里为<code>ArrayPrimitiveWritable</code>。</p>
+<ol>
+<li><code>WholeFileInputFormat</code>类代码如下：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.ArrayPrimitiveWritable;</span><br><span class="line">import org.apache.hadoop.io.NullWritable;</span><br><span class="line">import org.apache.hadoop.mapreduce.InputSplit;</span><br><span class="line">import org.apache.hadoop.mapreduce.JobContext;</span><br><span class="line">import org.apache.hadoop.mapreduce.RecordReader;</span><br><span class="line">import org.apache.hadoop.mapreduce.TaskAttemptContext;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class WholeFileInputFormat extends FileInputFormat&lt;NullWritable, ArrayPrimitiveWritable&gt; &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected boolean isSplitable(JobContext context, Path filename) &#123;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public RecordReader&lt;NullWritable, ArrayPrimitiveWritable&gt; createRecordReader(InputSplit inputSplit, TaskAttemptContext taskAttemptContext) throws IOException, InterruptedException &#123;</span><br><span class="line">        WholeFileRecordReader reader = new WholeFileRecordReader();</span><br><span class="line">        reader.initialize(inputSplit, taskAttemptContext);</span><br><span class="line">        return reader;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><code>WholeFileRecordReader</code>类代码如下：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.FSDataInputStream;</span><br><span class="line">import org.apache.hadoop.fs.FileSystem;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.ArrayPrimitiveWritable;</span><br><span class="line">import org.apache.hadoop.io.IOUtils;</span><br><span class="line">import org.apache.hadoop.io.NullWritable;</span><br><span class="line">import org.apache.hadoop.mapreduce.InputSplit;</span><br><span class="line">import org.apache.hadoop.mapreduce.RecordReader;</span><br><span class="line">import org.apache.hadoop.mapreduce.TaskAttemptContext;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileSplit;</span><br><span class="line"></span><br><span class="line">import javax.imageio.ImageIO;</span><br><span class="line">import java.awt.image.BufferedImage;</span><br><span class="line">import java.awt.image.Raster;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class WholeFileRecordReader extends RecordReader&lt;NullWritable, ArrayPrimitiveWritable&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private FileSplit fileSplit;</span><br><span class="line">    private Configuration conf;</span><br><span class="line">    private ArrayPrimitiveWritable value = new ArrayPrimitiveWritable();</span><br><span class="line">    private boolean processed = false;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void initialize(InputSplit inputSplit, TaskAttemptContext taskAttemptContext) throws IOException, InterruptedException &#123;</span><br><span class="line">        this.fileSplit = (FileSplit)inputSplit;</span><br><span class="line">        this.conf = taskAttemptContext.getConfiguration();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean nextKeyValue() throws IOException, InterruptedException &#123;</span><br><span class="line">        if (!processed) &#123;</span><br><span class="line">            Path file = fileSplit.getPath();</span><br><span class="line">            FileSystem fs = file.getFileSystem(conf);</span><br><span class="line">            FSDataInputStream in = null;</span><br><span class="line">            BufferedImage image = null;</span><br><span class="line">            Raster source = null;</span><br><span class="line">            int[] pixels = null;</span><br><span class="line">            int width, height;</span><br><span class="line">            try &#123;</span><br><span class="line">                in = fs.open(file);</span><br><span class="line">                image = ImageIO.read(in);</span><br><span class="line">                source = image.getRaster();</span><br><span class="line">                width = image.getWidth();</span><br><span class="line">                height = image.getHeight();</span><br><span class="line">                pixels = new int[width*height];</span><br><span class="line">                source.getPixels(0, 0, width, height, pixels);</span><br><span class="line">                value.set(pixels);</span><br><span class="line">            &#125; finally &#123;</span><br><span class="line">                IOUtils.closeStream(in);</span><br><span class="line">            &#125;</span><br><span class="line">            processed = true;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public NullWritable getCurrentKey() throws IOException, InterruptedException &#123;</span><br><span class="line">        return NullWritable.get();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public ArrayPrimitiveWritable getCurrentValue() throws IOException, InterruptedException &#123;</span><br><span class="line">        return value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public float getProgress() throws IOException, InterruptedException &#123;</span><br><span class="line">        return processed ? 1.0f : 0.0f;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void close() throws IOException &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>SmallFilesToSequenceFileConverter</code>类代码如下：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">import org.apache.hadoop.conf.Configured;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.ArrayPrimitiveWritable;</span><br><span class="line">import org.apache.hadoop.io.NullWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.InputSplit;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileSplit;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;</span><br><span class="line">import org.apache.hadoop.util.Tool;</span><br><span class="line">import org.apache.hadoop.util.ToolRunner;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class SmallFilesToSequenceFileConverter extends Configured implements Tool &#123;</span><br><span class="line"></span><br><span class="line">    static class SequenceFileMapper</span><br><span class="line">            extends Mapper&lt;NullWritable, ArrayPrimitiveWritable, Text, ArrayPrimitiveWritable&gt; &#123;</span><br><span class="line"></span><br><span class="line">        private Text filenameKey;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        protected void setup(Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">            InputSplit split = context.getInputSplit();</span><br><span class="line">            Path path = ((FileSplit)split).getPath();</span><br><span class="line">            filenameKey = new Text(path.toString());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        protected void map(NullWritable key, ArrayPrimitiveWritable value, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">            context.write(filenameKey, value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int run(String[] args) throws Exception &#123;</span><br><span class="line">        Job job = JobBuilder.parseInputAndOutput(this, getConf(), args);</span><br><span class="line">        if (job == null)</span><br><span class="line">            return -1;</span><br><span class="line"></span><br><span class="line">        job.setInputFormatClass(WholeFileInputFormat.class);</span><br><span class="line">        job.setOutputFormatClass(SequenceFileOutputFormat.class);</span><br><span class="line"></span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(ArrayPrimitiveWritable.class);</span><br><span class="line"></span><br><span class="line">        job.setMapperClass(SequenceFileMapper.class);</span><br><span class="line"></span><br><span class="line">        return job.waitForCompletion(true) ? 0 : 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        int exitCode = ToolRunner.run(new SmallFilesToSequenceFileConverter(), args);</span><br><span class="line">        System.exit(exitCode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>补充：代码使用的<code>JobBuilder</code>类的代码在：<a target="_blank" rel="noopener" href="https://github.com/tomwhite/hadoop-book/blob/master/common/src/main/java/JobBuilder.java">https://github.com/tomwhite/hadoop-book/blob/master/common/src/main/java/JobBuilder.java</a></p>
+</blockquote>
+<h2 id="读取SequenceFile"><a href="#读取SequenceFile" class="headerlink" title="读取SequenceFile"></a>读取SequenceFile</h2><p>使用Hadoop命令来读取第一个方法生成的SequenceFile内容，显示如下：</p>
+<img src="/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/2.png" class="">
+
+<p>图片内容没有显示出来，只是显示了<code>org.apache.hadoop.io.ArrayPrimitiveWritable@17497425</code>，要显示具体内容使用下面代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.FileSystem;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.ArrayPrimitiveWritable;</span><br><span class="line">import org.apache.hadoop.io.IOUtils;</span><br><span class="line">import org.apache.hadoop.io.SequenceFile;</span><br><span class="line">import org.apache.hadoop.io.Writable;</span><br><span class="line">import org.apache.hadoop.util.ReflectionUtils;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.net.URI;</span><br><span class="line"></span><br><span class="line">public class SequenceFileReadDemo &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line">        String uri = args[0]</span><br><span class="line">        Configuration conf = new Configuration();</span><br><span class="line">        FileSystem fs = FileSystem.get(URI.create(uri), conf);</span><br><span class="line">        Path path = new Path(uri);</span><br><span class="line"></span><br><span class="line">        SequenceFile.Reader reader = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            reader = new SequenceFile.Reader(fs, path, conf);</span><br><span class="line">            Writable key = (Writable)</span><br><span class="line">                    ReflectionUtils.newInstance(reader.getKeyClass(), conf);</span><br><span class="line">            Writable value = (Writable)</span><br><span class="line">                    ReflectionUtils.newInstance(reader.getValueClass(), conf);</span><br><span class="line">            while (reader.next(key, value)) &#123;</span><br><span class="line">                int[] pixels = (int[])((ArrayPrimitiveWritable)value).get();</span><br><span class="line">                System.out.printf(&quot;%s\t:\t&quot;, key);</span><br><span class="line">                for (int i=0; i&lt;10; i++)</span><br><span class="line">                    System.out.printf(&quot;%d &quot;, pixels[i]);</span><br><span class="line">                System.out.println();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            IOUtils.closeStream(reader);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>读取图片的第一行的前十个像素，显示如下：</p>
+<img src="/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/3.png" class="">
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/kmicinski/hadoop-class-project/blob/master/src/main/phase2/WriteImagesToSequenceFile.java">https://github.com/kmicinski/hadoop-class-project/blob/master/src/main/phase2/WriteImagesToSequenceFile.java</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/" data-id="clz2w7lc40047yivhc8pagrgr" data-title="大量图片文件生成SequenceFile" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/08/%E5%89%91%E6%8C%87offer-%E5%8F%98%E6%80%81%E8%B7%B3%E5%8F%B0%E9%98%B6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          剑指offer - 变态跳台阶
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/03/11/Java%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Java获取指定目录下的所有文件</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Softmax Regression | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="模型介绍Softmax回归 (或者称多项Logistic回归) 是Logistic回归的一般化形式，这是多分类模型，二项Logistic回归是其特殊情况，因为类别只有两类。类似二项Logistic回归模型 (关于二项Logistic回归模型，可以参考我的文章) ，Softmax回归模型也是由条件概率 $P(Y | X)$ 表示，$Y$ 的取值不再是 ${0, 1}$ 两类，而是 ${1, 2, \">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Softmax Regression">
+<meta property="og:url" content="http://example.com/2018/03/30/Softmax-Regression/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="模型介绍Softmax回归 (或者称多项Logistic回归) 是Logistic回归的一般化形式，这是多分类模型，二项Logistic回归是其特殊情况，因为类别只有两类。类似二项Logistic回归模型 (关于二项Logistic回归模型，可以参考我的文章) ，Softmax回归模型也是由条件概率 $P(Y | X)$ 表示，$Y$ 的取值不再是 ${0, 1}$ 两类，而是 ${1, 2, \">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-03-30T11:18:32.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.161Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Softmax-Regression" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/03/30/Softmax-Regression/" class="article-date">
+  <time class="dt-published" datetime="2018-03-30T11:18:32.000Z" itemprop="datePublished">2018-03-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Softmax Regression
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="模型介绍"><a href="#模型介绍" class="headerlink" title="模型介绍"></a>模型介绍</h2><p>Softmax回归 (或者称多项Logistic回归) 是Logistic回归的一般化形式，这是多分类模型，二项Logistic回归是其特殊情况，因为类别只有两类。类似二项Logistic回归模型 (关于二项Logistic回归模型，可以参考<a href="/2018/03/29/Logistic-Regression/" title="Logistic Regression">我的文章</a>) ，Softmax回归模型也是由条件概率 $P(Y | X)$ 表示，$Y$ 的取值不再是 ${0, 1}$ 两类，而是 ${1, 2, \ldots, K}$，其中 $K$ 是类别数，这里类别不从 $0$ 开始是为了后面公式推导方便，实际编码中，类别映射通常都从 $0$ 开始。我们定义不同类别对应的条件概率为：<br>$$<br>\begin{align}<br>P(Y &#x3D; 1 | x) &amp;  &#x3D; \frac{e^{\theta^T_1 x + b}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x + b}} \<br>P(Y &#x3D; 2 | x) &amp; &#x3D; \frac{e^{\theta^T_2 x + b}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x + b}} \<br>\vdots \<br>P(Y &#x3D; K | x) &amp; &#x3D; \frac{e^{\theta^T_K x + b}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x + b}}<br>\end{align}<br>$$<br>这里 $x \in R^{d}$ 是输入，$Y \in {1, 2, \ldots, K}$ 输出，$\theta_k\in R^{d} ; (k&#x3D;1,\ldots, K)$ 和 $b \in R$ 是未知参数。 同二项Logistic模型那样，对于给定的输入 $x$，分别计算 $x$ 属于不同类别的概率，然后 $x$ 的类别分到概率值最大的那一类。有时为了方便，将权值向量 $\theta_k$ 和输入向量 $x$ 加以扩充，仍记作 $\theta_k$ 和 $x$，即 $\theta_k &#x3D; [\theta_{k1}, \ldots, \theta_{kd}, b]^T \in R^{d+1}$，$x &#x3D; [x_1, x_2, \ldots, x_d, 1] \in R^{d+1}$，此时条件概率为：<br>$$<br>P(Y &#x3D; k | x)  &#x3D; \frac{e^{\theta^T_k x}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x}}  \quad (k&#x3D;1, 2, \ldots, K)<br>$$</p>
+<h2 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h2><p>模型参数估计方法同二项Logistic回归模型那样，使用极大似然估计法 (MLE) 进行估计。已知输入的训练数据集 $T &#x3D; { (x_1, y_1), (x_2, y_2), \ldots, (x_N, y_N) }$，其中 $x_i &#x3D; [x_{i1}, \ldots, x_{id}, 1]^T \in R^{d+1}$，$y_i \in {1, 2, \ldots, K}$，待求的参数为 $\theta_k &#x3D; [\theta_{k1}, \ldots, \theta_{kd}, b] \in R^{d+1} ; (k&#x3D;1, 2, \ldots, K)$。前面不同类别的条件概率写成一条式子如下：<br>$$<br>P( Y &#x3D; y | x) &#x3D; \prod_{k&#x3D;1}^K  \left(\frac{e^{\theta^T_k x}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x}}\right)^{1{ y &#x3D; k}}<br>$$<br>这里 $1{ \cdot }$ 为指indicator函数，定义为<br>$$<br>1{x } &#x3D; \begin{cases}<br>1 &amp; \text{x is a true statement} \<br>0 &amp; \text{x is a false statement}<br>\end{cases}<br>$$<br>定义似然函数为：<br>$$<br>L(\theta_1, \ldots, \theta_K) &#x3D; \prod_{i&#x3D;1}^N \prod_{k&#x3D;1}^K  \left(\frac{e^{\theta^T_k x_i}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x_i}}\right)^{1{ y_i &#x3D; k}}<br>$$<br>对数似然函数为：<br>$$<br>\ln(L(\theta_1, \ldots, \theta_K)) &#x3D; \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1{ y_i &#x3D; k } \ln\left( \frac{e^{\theta^T_k x_i}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x_i}} \right)<br>$$<br>对 $\ln(L(\theta_1, \ldots, \theta_K))$ 求最大值，得到 $\theta_k$ 的估计值，在实现时，通常转换为求最小值，即对 $\ln(L(\theta_1, \ldots, \theta_K))$ 求最大值转换成对 $-\ln(L(\theta_1, \ldots, \theta_K))$ 求最小值：<br>$$<br>\min_{\theta_1, \ldots, \theta_K}  -\sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1{ y_i &#x3D; k } \ln \left( \frac{e^{\theta^T_k x_i}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x_i}} \right)<br>$$</p>
+<h2 id="模型实现"><a href="#模型实现" class="headerlink" title="模型实现"></a>模型实现</h2><p>根据前面描述，模型参数估计主要是要求解下面这个优化问题：<br>$$<br>\min_{\theta_1, \ldots, \theta_K}  -\frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1{ y_i &#x3D; k } \ln \left( \frac{e^{\theta^T_k x_i}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x_i}} \right)<br>$$<br>这里多乘一个系数 $\frac{1}{N}$ 并不会改变最优解的大小。上述问题可以用梯度下降法或者拟牛顿法进行求解，在求解过程中，需要计算目标函数的梯度，接下来推导梯度矩阵的表达式，这里首先令函数 $J(\theta_1, \ldots, \theta_K)$ 为损失函数 (目标函数)：<br>$$<br>J(\theta_1, \ldots, \theta_K) &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1{ y_i &#x3D; k } \ln \left( \frac{e^{\theta^T_k x_i}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x_i}} \right)<br>$$</p>
+<h3 id="梯度推导"><a href="#梯度推导" class="headerlink" title="梯度推导"></a>梯度推导</h3><p>为了表示方便，这里定义参数矩阵 $\theta$ 为<br>$$<br>\theta &#x3D; \begin{bmatrix}<br>\theta_1 &amp; \theta_2 &amp; \cdots &amp; \theta_K<br>\end{bmatrix} &#x3D; \begin{bmatrix}<br>\theta_{11} &amp; \theta_{21} &amp; \cdots &amp; \theta_{K1} \<br>\theta_{12} &amp; \theta_{22} &amp; \cdots &amp; \theta_{K2} \<br>\vdots &amp; \vdots &amp; &amp; \vdots \<br>\theta_{1d} &amp; \theta_{2d} &amp; \cdots &amp; \theta_{Kd} \<br>\end{bmatrix}<br>$$<br>矩阵 $\theta$ 的大小为 $R^{d \times K}$，每一列为参数向量 $\theta_k , (k&#x3D;1, \ldots, K)$，因此损失函数 $J(\theta_1, \ldots, \theta_K)$ 简写为 $J(\theta)$。为了后面推导方便，首先将损失函数分解为两部分：<br>$$<br>\begin{align}<br>J(\theta) &amp; &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1{ y_i &#x3D; k } \ln \left( \frac{e^{\theta^T_k x_i}}{\sum_{j&#x3D;1}^K e^{\theta_j^T x_i}} \right) \<br>&amp; &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } \ln ( e^{\theta^T_k x_i} ) +\frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } \ln (\sum_{j&#x3D;1}^K e^{\theta_j^T x_i}) \<br>&amp; &#x3D;  -\frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } (\theta^T_k x_i )+\frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } \ln (\sum_{j&#x3D;1}^K e^{\theta_j^T x_i}) \<br>\end{align}<br>$$<br>令这两部分分别为 $f(\theta)$ 和 $g(\theta)$<br>$$<br>\begin{align}<br>f(\theta) &amp;&#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } (\theta^T_k x_i ) \<br>g(\theta) &amp; &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } \ln (\sum_{j&#x3D;1}^K e^{\theta_j^T x_i})<br>\end{align}<br>$$<br>损失函数 $J(\theta)$ 对矩阵 $\theta$ 某一个元素 $\theta_{pq}$ ($\theta_{pq}$ 代表参数向量 $\theta_q$ 的第 $p$ 个元素) 的偏导为：<br>$$<br>\frac{\partial{J(\theta)}}{\partial{\theta_{pq}}} &#x3D; \frac{\partial{f(\theta)}}{\partial{\theta_{pq}}} + \frac{\partial{g(\theta)}}{\partial{\theta_{pq}}}<br>$$</p>
+<h4 id="第一部分"><a href="#第一部分" class="headerlink" title="第一部分"></a>第一部分</h4><p>函数 $f(\theta)$ 对 $\theta_{pq}$ 偏导可以得到：<br>$$<br>\begin{align}<br>\frac{\partial{f(\theta)}}{\partial{\theta_{pq}}} &amp; &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^N 1{ y_i &#x3D; q } \frac{\partial{\theta_q^T x_i}}{\partial{\theta_{pq}}} \<br>&amp; &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^N 1{ y_i &#x3D; q } x_{ip}<br>\end{align}<br>$$</p>
+<h4 id="第二部分"><a href="#第二部分" class="headerlink" title="第二部分"></a>第二部分</h4><p>函数 $g(\theta)$ 对 $\theta_{pq}$  可以得到：<br>$$<br>\begin{align}<br>\frac{\partial{g(\theta)} }{\partial{\theta_{pq}}} &amp; &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } \frac{ \partial\ln(\sum_{j&#x3D;1}^K e^{\theta_j^Tx_i}) }{ \partial{\theta_{pq}} } \<br>&amp; &#x3D;  \frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } \frac{1}{ \sum_{j&#x3D;1}^K e^{\theta_j^Tx_i} } \frac{\partial{e^{\theta_q^T x_i}} }{\partial{\theta_{pq}}} \<br>&amp; &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } \frac{ e^{\theta_q^T x_i} }{ \sum_{j&#x3D;1}^K e^{\theta_j^Tx_i} } \frac{ \partial{\theta^T_q x_i}  }{\partial{\theta_{pq}}} \<br>&amp; &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^N \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } \frac{ x_{ip} e^{\theta_q^T x_i} }{ \sum_{j&#x3D;1}^K e^{\theta_j^Tx_i} } \<br>&amp; &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^N \frac{ x_{ip} e^{\theta_q^T x_i} }{ \sum_{j&#x3D;1}^K e^{\theta_j^Tx_i} } \sum_{k&#x3D;1}^K 1 { y_i &#x3D; k }<br>\end{align}<br>$$<br>由于 $\sum_{k&#x3D;1}^K 1 { y_i &#x3D; k } &#x3D; 1$，则最终可以得到<br>$$<br>\frac{\partial{g(\theta)} }{\partial{\theta_{pq}}} &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^N \frac{ x_{ip} e^{\theta_q^T x_i} }{ \sum_{j&#x3D;1}^K e^{\theta_j^Tx_i} }<br>$$</p>
+<h4 id="综合"><a href="#综合" class="headerlink" title="综合"></a>综合</h4><p>综合第一部分和第二部分的推导，可以得到<br>$$<br>\begin{align}<br>\frac{\partial{J(\theta)}}{\partial{\theta_{pq}}} &amp; &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^N 1{ y_i &#x3D; q } x_{ip} + \frac{1}{N} \sum_{i&#x3D;1}^N \frac{ x_{ip} e^{\theta_q^T x_i} }{ \sum_{j&#x3D;1}^K e^{\theta_j^Tx_i} } \<br>&amp; &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^N \left[  1{ y_i &#x3D; q } x_{ip} - \frac{ x_{ip} e^{\theta_q^T x_i} }{ \sum_{j&#x3D;1}^K e^{\theta_j^Tx_i} } \right] \<br>&amp; &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^N \left[ x_{ip} \left(  1{ y_i &#x3D; q }  - \frac{ e^{\theta_q^T x_i} }{ \sum_{j&#x3D;1}^K e^{\theta_j^Tx_i} } \right) \right]<br>\end{align}<br>$$<br>如果要表示梯度向量 $\frac{\partial{J(\theta)}}{\partial{\theta_q}}$，可以写成如下形式：<br>$$<br>\frac{\partial{J(\theta)}}{\partial{\theta_q}} &#x3D; -\frac{1}{N} \sum_{i&#x3D;1}^N \left[ x_{i} \left(  1{ y_i &#x3D; q }  - \frac{ e^{\theta_q^T x_i} }{ \sum_{j&#x3D;1}^K e^{\theta_j^Tx_i} } \right) \right]<br>$$</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="http://ufldl.stanford.edu/tutorial/supervised/SoftmaxRegression/">UFLDL Softmax Regression</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/03/30/Softmax-Regression/" data-id="clz2w7lbw0033yivhhy1e3rbo" data-title="Softmax Regression" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/30/LeetCode-15-3Sum/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          LeetCode 15 - 3Sum
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/29/Logistic-Regression/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Logistic Regression</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

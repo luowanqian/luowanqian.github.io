@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Cython调用BLAS | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="介绍看本文之前建议看文章”Typed Memoryviews“，该文章主要介绍的是Memoryviews，使用Memoryviews可以直接访问Numpy数组的memory buffer，直接操作Numpy数组的数据，同时是连接C数组与Numpy数组之间的桥梁。相关代码在：CythonDemos&#x2F;Demo1 BLASBLAS，全称Basic Linear Algebra Subprogr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cython调用BLAS">
+<meta property="og:url" content="http://example.com/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="介绍看本文之前建议看文章”Typed Memoryviews“，该文章主要介绍的是Memoryviews，使用Memoryviews可以直接访问Numpy数组的memory buffer，直接操作Numpy数组的数据，同时是连接C数组与Numpy数组之间的桥梁。相关代码在：CythonDemos&#x2F;Demo1 BLASBLAS，全称Basic Linear Algebra Subprogr">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-09-03T15:21:59.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.151Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Cython">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Cython调用BLAS" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/" class="article-date">
+  <time class="dt-published" datetime="2018-09-03T15:21:59.000Z" itemprop="datePublished">2018-09-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Cython调用BLAS
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>看本文之前建议看文章”<a target="_blank" rel="noopener" href="http://docs.cython.org/en/latest/src/userguide/memoryviews.html">Typed Memoryviews</a>“，该文章主要介绍的是<code>Memoryviews</code>，使用<code>Memoryviews</code>可以直接访问Numpy数组的memory buffer，直接操作Numpy数组的数据，同时是连接C数组与Numpy数组之间的桥梁。相关代码在：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/CythonDemos/tree/master/Demo1">CythonDemos&#x2F;Demo1</a></p>
+<h2 id="BLAS"><a href="#BLAS" class="headerlink" title="BLAS"></a>BLAS</h2><p><a target="_blank" rel="noopener" href="http://www.netlib.org/blas/">BLAS</a>，全称Basic Linear Algebra Subprograms，即基础线性代数子程序库，里面有大量已经编写好的关于线性代数运算的程序。BLAS库的API分三大类，分别为<code>Level 1</code>、<code>Level 2</code>以及<code>Level 3</code>。</p>
+<ul>
+<li>Level 1: 函数处理单一向量的线性运算以及两个向量的二元运算</li>
+<li>Level 2: 函数处理矩阵与向量的运算，同时也包含线性方程组求解</li>
+<li>Level 3: 函数处理矩阵与矩阵之间的运算</li>
+</ul>
+<p>API的全部介绍可以参考官方文档：<a target="_blank" rel="noopener" href="http://www.netlib.org/blas/blasqr.pdf">blasqr.pdf</a></p>
+<h2 id="Cython调用BLAS函数"><a href="#Cython调用BLAS函数" class="headerlink" title="Cython调用BLAS函数"></a>Cython调用BLAS函数</h2><p>Cython要调用BLAS函数，主要是通过BLAS库的C接口，接口的具体定义可以参考现有BLAS库的 <a target="_blank" rel="noopener" href="https://github.com/xianyi/OpenBLAS/blob/develop/cblas.h">cblas.h</a>，里面函数的命名和 <a target="_blank" rel="noopener" href="http://www.netlib.org/blas/blasqr.pdf">blasqr.pdf</a> 中函数命名是一一对应的，只不过函数前多了<code>cblas_</code>前缀。这里演示如何调用函数<code>cblas_dgemv</code>，在头文件  <a target="_blank" rel="noopener" href="https://github.com/xianyi/OpenBLAS/blob/develop/cblas.h">cblas.h</a> 中函数声明为</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">cblas_dgemv</span><span class="params">(OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_ORDER order, OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE trans, OPENBLAS_CONST blasint m, OPENBLAS_CONST blasint n, OPENBLAS_CONST <span class="type">double</span> alpha, OPENBLAS_CONST <span class="type">double</span> *a, OPENBLAS_CONST blasint lda, OPENBLAS_CONST <span class="type">double</span> *x, OPENBLAS_CONST blasint incx, OPENBLAS_CONST <span class="type">double</span> beta, <span class="type">double</span> *y, OPENBLAS_CONST blasint incy)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>去除一些宏以及替换定义的数据类型，简单表示就是</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">cblas_dgemv</span><span class="params">(<span class="keyword">enum</span> CBLAS_ORDER order, <span class="keyword">enum</span> CBLAS_TRANSPOSE trans, <span class="type">int</span> m, <span class="type">int</span> n, <span class="type">double</span> alpha, <span class="type">double</span> *a, <span class="type">int</span> lda, <span class="type">double</span> *x, <span class="type">int</span> incx, <span class="type">double</span> beta, <span class="type">double</span> *y, <span class="type">int</span> incy)</span></span><br></pre></td></tr></table></figure>
+
+<p>这个函数主要是实现的功能计算矩阵与向量相乘，在 <a target="_blank" rel="noopener" href="http://www.netlib.org/blas/blasqr.pdf">blasqr.pdf</a> 中对应的是<code>Level2</code>中<code>xGEMV</code>函数</p>
+<p>$$<br>y &#x3D; \alpha Ax + \beta y<br>$$</p>
+<p>在Cython调用BLAS函数首先要使用<code>cdef extern</code>引入头文件，然后声明函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cdef <span class="keyword">extern</span> from <span class="string">&#x27;cblas.h&#x27;</span>:</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">CBLAS_ORDER</span>:</span></span><br><span class="line">        CblasRowMajor=<span class="number">101</span></span><br><span class="line">        CblasColMajor=<span class="number">102</span></span><br><span class="line">    <span class="keyword">enum</span> CBLAS_TRANSPOSE:</span><br><span class="line">        CblasNoTrans=<span class="number">111</span></span><br><span class="line">        CblasTrans=<span class="number">112</span></span><br><span class="line">        CblasConjTrans=<span class="number">113</span></span><br><span class="line">        CblasConjNoTrans=<span class="number">114</span></span><br><span class="line">    <span class="type">void</span> dgemv <span class="string">&quot;cblas_dgemv&quot;</span>(CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA,</span><br><span class="line">                             <span class="type">int</span> M, <span class="type">int</span> N, <span class="type">double</span> alpha, <span class="type">double</span> *A, <span class="type">int</span> lda,</span><br><span class="line">                             <span class="type">double</span> *X, <span class="type">int</span> incX, <span class="type">double</span> beta,</span><br><span class="line">                             <span class="type">double</span> *Y, <span class="type">int</span> incY) nogil</span><br></pre></td></tr></table></figure>
+
+<p>关于<code>enum</code>中<code>CblasRowMajor</code>这些标识符的取值，是按照 <a target="_blank" rel="noopener" href="https://github.com/xianyi/OpenBLAS/blob/develop/cblas.h">cblas.h</a> 中定义来取值。函数声明后就可以编写一个wrapper函数来调用BLAS函数，之所以要写一个wrapper函数，是因为声明的BLAS函数只能在C中进行调用，我们还要使得其能够在Python中进行调用，wrapper函数定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cpdef <span class="title function_">blas_dgemv</span><span class="params">(<span class="type">double</span>[:, ::<span class="number">1</span>] A, <span class="type">double</span>[::<span class="number">1</span>] x, <span class="type">double</span>[::<span class="number">1</span>] y,</span></span><br><span class="line"><span class="params">                 <span class="type">int</span> M, <span class="type">int</span> N, <span class="type">double</span> alpha, <span class="type">double</span> beta)</span>:</span><br><span class="line">    cdef <span class="type">double</span> *A_ptr = &amp;A[<span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">    cdef <span class="type">double</span> *x_ptr = &amp;x[<span class="number">0</span>]</span><br><span class="line">    cdef <span class="type">double</span> *y_ptr = &amp;y[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    dgemv(CblasRowMajor, CblasNoTrans, M, N,</span><br><span class="line">          alpha, A_ptr, N, x_ptr, <span class="number">1</span>, beta, y_ptr, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>cpdef</code>可以使得定义的函数可以被Python调用。这里说一下如何将<code>MemoryViews</code>转化成C的指针，对于向量<code>x</code>可以通过对第一个元素进行取址来进行转换<code>&amp;x[0]</code>，对于矩阵<code>A</code>则是对其第一行第一列的元素进行取址操作<code>&amp;A[0, 0]</code>。</p>
+<p>由于BLAS库中将矩阵数据看成是一个一维数组，所以在调用BLAS函数时需要指定矩阵是Row Major还是Column Major，即参数<code>CBLAS_ORDER Order</code>，这里设定是Row Major，因此函数<code>blas_dgemv</code>中参数<code>A</code>限定是Row Major，即声明为<code>double[:, ::1]</code>。</p>
+<p>整个pyx文件的内容为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">cdef extern from &#x27;cblas.h&#x27;:</span><br><span class="line">    enum CBLAS_ORDER:</span><br><span class="line">        CblasRowMajor=101</span><br><span class="line">        CblasColMajor=102</span><br><span class="line">    enum CBLAS_TRANSPOSE:</span><br><span class="line">        CblasNoTrans=111</span><br><span class="line">        CblasTrans=112</span><br><span class="line">        CblasConjTrans=113</span><br><span class="line">        CblasConjNoTrans=114</span><br><span class="line">    void dgemv &quot;cblas_dgemv&quot;(CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA,</span><br><span class="line">                             int M, int N, double alpha, double *A, int lda,</span><br><span class="line">                             double *X, int incX, double beta,</span><br><span class="line">                             double *Y, int incY) nogil</span><br><span class="line"></span><br><span class="line">cpdef blas_dgemv(double[:, ::1] A, double[::1] x, double[::1] y,</span><br><span class="line">                 int M, int N, double alpha, double beta):</span><br><span class="line">    cdef double *A_ptr = &amp;A[0, 0]</span><br><span class="line">    cdef double *x_ptr = &amp;x[0]</span><br><span class="line">    cdef double *y_ptr = &amp;y[0]</span><br><span class="line"></span><br><span class="line">    dgemv(CblasRowMajor, CblasNoTrans, M, N,</span><br><span class="line">          alpha, A_ptr, N, x_ptr, 1, beta, y_ptr, 1)</span><br></pre></td></tr></table></figure>
+
+<p>剩下就是将pyx进行编译，然后就可以在Python中调用<code>blas_dgemv</code>函数了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://maciejkula.github.io/2015/01/01/calling-blas-from-cython/">Calling BLAS from Cython</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/" data-id="clz2w7lb50005yivh5nnl1bsk" data-title="Cython调用BLAS" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          保存和恢复Tmux会话
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/09/03/Pandas%E5%A4%87%E5%BF%98%E5%BD%952/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Pandas备忘录2</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

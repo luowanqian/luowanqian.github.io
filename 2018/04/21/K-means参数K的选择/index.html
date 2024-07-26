@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>K-means参数K的选择 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="介绍对于K均值算法中聚类个数K的选择，通常有四种方法：  按需选择 观察法 手肘法 Gap Statistic方法  本文相关算法的代码以及实验在：GitHub 按需选择简单地说就是按照建模的需求和目的来选择聚类的个数。比如说，一个游戏公司想把所有玩家做聚类分析，分成顶级、高级、中级、菜鸟四类，那么K&#x3D;4；如果房地产公司想把当地的商品房分成高中低三档，那么K&#x3D;3。按需选择法虽然">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K-means参数K的选择">
+<meta property="og:url" content="http://example.com/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="介绍对于K均值算法中聚类个数K的选择，通常有四种方法：  按需选择 观察法 手肘法 Gap Statistic方法  本文相关算法的代码以及实验在：GitHub 按需选择简单地说就是按照建模的需求和目的来选择聚类的个数。比如说，一个游戏公司想把所有玩家做聚类分析，分成顶级、高级、中级、菜鸟四类，那么K&#x3D;4；如果房地产公司想把当地的商品房分成高中低三档，那么K&#x3D;3。按需选择法虽然">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/elbow.png">
+<meta property="og:image" content="http://example.com/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/gap.png">
+<meta property="article:published_time" content="2018-04-21T07:27:05.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.151Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/elbow.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-K-means参数K的选择" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/" class="article-date">
+  <time class="dt-published" datetime="2018-04-21T07:27:05.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      K-means参数K的选择
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>对于K均值算法中聚类个数K的选择，通常有四种方法：</p>
+<ul>
+<li>按需选择</li>
+<li>观察法</li>
+<li>手肘法</li>
+<li>Gap Statistic方法</li>
+</ul>
+<p>本文相关算法的代码以及实验在：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/Kmeans">GitHub</a></p>
+<h2 id="按需选择"><a href="#按需选择" class="headerlink" title="按需选择"></a>按需选择</h2><p>简单地说就是按照建模的需求和目的来选择聚类的个数。比如说，一个游戏公司想把所有玩家做聚类分析，分成顶级、高级、中级、菜鸟四类，那么K&#x3D;4；如果房地产公司想把当地的商品房分成高中低三档，那么K&#x3D;3。按需选择法虽然合理，但是未必能保证在做K-Means时能够得到清晰的分界线。</p>
+<h2 id="观察法"><a href="#观察法" class="headerlink" title="观察法"></a>观察法</h2><p>观察法就是将数据可视化，然后用肉眼去观察这些数据点大概分成几堆。这个方法有个缺点，那就是数据维度不能太高，一般是二维或者三维，否则数据无法可视化出来。</p>
+<h2 id="手肘法"><a href="#手肘法" class="headerlink" title="手肘法"></a>手肘法</h2><p>手肘法 (Elbow Method) 本质上也是一种间接的观察法。当我们对数据 ${ x_1, \ldots, x_N }$ 进行K均值聚类后，我们将得到 $K$ 个聚类的中心点 $\mu_k, k&#x3D;1,2, \ldots, K$，以及数据点 $x_i$ 所对应的簇 $C_k, k&#x3D;1, 2, \ldots, K$，每个簇中有 $n_k$ 个数据点。我们定义每个簇中的所有点相互之间的距离的和为<br>$$<br>D_k &#x3D; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \Vert x_i - x_j \Vert^2<br>$$<br>其中 $\Vert \cdot \Vert$ 为2范数。则对于聚类个数为 $K$ 时，我们可以定义一个测度量为<br>$$<br>W_K &#x3D; \sum_{k&#x3D;1}^K \frac{1}{2n_k} D_k<br>$$<br>对于不同的 $K$，经过 K-means 算法后我们会得到不同的中心点和数据点所属的簇，从而得到不同的度量 $W_K$。将聚类个数 $K$ 作为横坐标，$W_K$ 作为纵坐标，我们可以得到类似下面的图像：</p>
+<img src="/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/elbow.png" class="">
+
+<p>图像中图形很像人的手肘，该方法的命名就是从这而来。从图像中我们可以观察到，$K &#x3D; 1$ 到 $4$ 下降很快，$K &#x3D; 4$ 之后趋于平稳，因此 $K &#x3D; 4$ 是一个拐点，手肘法认为这个拐点就是最佳的聚类个数 $K$。</p>
+<p>手肘法是一个经验方法，观察结果因人而异，特别是遇到拐点位置不是很明显时。相比于前面的观察法，该方法的优点在于其适用于高维度的数据。</p>
+<h3 id="Trick"><a href="#Trick" class="headerlink" title="Trick"></a>Trick</h3><p>如果每个簇的中心点为该簇中的所有数据点的平均值时，即<br>$$<br>\mu_k &#x3D; \frac{1}{n_k} \sum_{x_i \in C_k} x_i<br>$$<br>则 $D_k$ 可以写为<br>$$<br>D_k &#x3D; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \Vert x_i - x_j \Vert^2 &#x3D; 2n_k  \sum_{x_i \in C_k} \Vert x_i - \mu_k \Vert^2<br>$$<br>$W_K$ 写为<br>$$<br>W_K &#x3D; \sum_{k&#x3D;1}^K \frac{1}{2n_k} D_k &#x3D; \sum_{k&#x3D;1}^K  \sum_{x_i \in C_k} \Vert x_i - \mu_k \Vert^2<br>$$</p>
+<p><strong>Note:</strong> 以下为公式推导内容，可略过。将 $D_k$ 表达式分解可得：<br>$$<br>\begin{align}<br>&amp; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \Vert x_i - x_j \Vert^2 \<br>&#x3D; &amp; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \Vert (x_i - \mu_k) - (x_j - \mu_k) \Vert^2 \<br>&#x3D; &amp; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \left(  \Vert x_i - \mu_k \Vert^2 + \Vert x_j - \mu_k \Vert^2 - 2 \left&lt;  x_i - \mu_k, x_j - \mu_k \right&gt; \right) \<br>&#x3D; &amp; \sum_{x_i \in C_k} n_k \Vert x_i - \mu_k \Vert^2 + \sum_{x_j \in C_k} n_k \Vert x_j - \mu_k \Vert^2 - 2 \sum_{x_i \in C_k} \sum_{x_j \in C_k} \left&lt; x_i - \mu_k, x_j - \mu_k \right&gt; \<br>&#x3D; &amp; 2 \sum_{x_i \in C_k} n_k \Vert x_i - \mu_k \Vert^2 - 2 \sum_{x_i \in C_k} \sum_{x_j \in C_k} \left&lt; x_i - \mu_k, x_j - \mu_k \right&gt;<br>\end{align}<br>$$<br>其中<br>$$<br>\begin{align}<br>&amp; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \left&lt; x_i - \mu_k, x_j - \mu_k \right&gt; \<br>&#x3D; &amp; \sum_{x_i \in C_k} \left&lt;  x_i - \mu_k, \sum_{x_j \in C_k} (x_j - \mu_k) \right&gt;<br>\end{align}<br>$$<br>由于<br>$$<br>\sum_{x_j \in C_k} (x_j - \mu_k) &#x3D; \sum_{x_j \in C_k} x_j - n_k \mu_k &#x3D; ; n_k \mu_k - n_k \mu_k &#x3D; 0<br>$$<br>则<br>$$<br> \sum_{x_i \in C_k} \sum_{x_j \in C_k} \left&lt; x_i - \mu_k, x_j - \mu_k \right&gt;  &#x3D; 0<br>$$<br>因此可以得到<br>$$<br>\sum_{x_i \in C_k} \sum_{x_j \in C_k} \Vert x_i - x_j \Vert^2 &#x3D; 2 n_k \sum_{x_i \in C_k} \Vert x_i - \mu_k \Vert^2<br>$$</p>
+<h2 id="Gap-Statistic方法"><a href="#Gap-Statistic方法" class="headerlink" title="Gap Statistic方法"></a>Gap Statistic方法</h2><p>这个方法来源于论文[3]，详细内容可以去阅读该论文。延用前面关于度量 $W_K$ 的计算方式，该算法的流程如下：</p>
+<ol>
+<li><p>cluster the observed data, varying the total number of clusters from $K&#x3D;1, 2, \ldots, K_{\text{max}}$, and giving within-dispersion measures $W_K, K&#x3D;1, 2, \ldots, K_{\text{max}}$</p>
+</li>
+<li><p>generate $B$ reference data sets and cluster each one giving within-dispersion measures $W_{Kb}$, $b&#x3D;1,2, \ldots, B$, $K&#x3D;1, 2, \ldots, K_{\text{max}}$. Compute the gap statistic<br>$$<br>\text{Gap}(K) &#x3D;\frac{1}{B} \sum_{b&#x3D;1}^B \log(W_{Kb}) - \log(W_K)<br>$$</p>
+</li>
+<li><p>let $\bar{w} &#x3D; \frac{1}{B} \sum_{b&#x3D;1}^B \log(W_{Kb})$, compute the standard deviation<br>$$<br>\text{sd}<em>K &#x3D; \left[  \frac{1}{B} \sum</em>{b&#x3D;1}^B (\log(W_{Kb}) - \bar{w})^2 \right]^{\frac{1}{2}}<br>$$<br>and define $s_K &#x3D; \text{sd}_K \sqrt{1 + \frac{1}{B}}$</p>
+</li>
+<li><p>choose the number of clusters as the smallest $K$ such that $\text{Gap(K)} \ge \text{Gap(K+1)} - s_{K+1}$</p>
+</li>
+</ol>
+<p>关于 reference data sets 的生成，论文给了两种生成方法，这里只用其中一个，即对于生成的样本 $x_r$，其维度为 $d$，该样本的元素 $x_{ri}$ 的值按照均匀分布 $U(a, b)$ 随机生成，其中 $a$ 为待聚类的所有数据点的第 $i$ 位置元素的最小值， $b$ 为数据点的第 $i$ 位置元素的最大值。经过实验发现，这个算法的 3，4 步骤可以去掉，只用第 2 步计算出的 $\text{Gap}(K)$，然后选择最大 $\text{Gap}(K)$ 所对应的 $K$ 作为最优的聚类个数。这里贴出从一个数据集中得到的 $\text{Gap}(K)$ 的变化曲线图</p>
+ <img src="/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/gap.png" class="">
+
+<p>可以发现，当 $K &#x3D; 4$ 时，$\text{Gap}(K)$ 取得最大值，因此选择 $K &#x3D; 4$ 作为最优的聚类个数。该算法实现的代码为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def calculate_Wk(data, centroids, cluster):</span><br><span class="line">    K = centroids.shape[0]</span><br><span class="line">    wk = 0.0</span><br><span class="line">    for k in range(K):</span><br><span class="line">        data_in_cluster = data[cluster == k, :]</span><br><span class="line">        center = centroids[k, :]</span><br><span class="line">        num_points = data_in_cluster.shape[0]</span><br><span class="line">        for i in range(num_points):</span><br><span class="line">            wk = wk + np.linalg.norm(data_in_cluster[i, :]-center, ord=2) ** 2</span><br><span class="line"></span><br><span class="line">    return wk</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def bounding_box(data):</span><br><span class="line">    dim = data.shape[1]</span><br><span class="line">    boxes = []</span><br><span class="line">    for i in range(dim):</span><br><span class="line">        data_min = np.amin(data[:, i])</span><br><span class="line">        data_max = np.amax(data[:, i])</span><br><span class="line">        boxes.append((data_min, data_max))</span><br><span class="line"></span><br><span class="line">    return boxes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def gap_statistic(data, max_K, B, cluster_algorithm):</span><br><span class="line">    num_points, dim = data.shape</span><br><span class="line">    K_range = np.arange(1, max_K, dtype=int)</span><br><span class="line">    num_K = len(K_range)</span><br><span class="line">    boxes = bounding_box(data)</span><br><span class="line">    data_generate = np.zeros((num_points, dim))</span><br><span class="line"></span><br><span class="line">    &#x27;&#x27;&#x27; 写法1</span><br><span class="line">    log_Wks = np.zeros(num_K)</span><br><span class="line">    gaps = np.zeros(num_K)</span><br><span class="line">    sks = np.zeros(num_K)</span><br><span class="line">    for ind_K, K in enumerate(K_range):</span><br><span class="line">        cluster_centers, labels, _ = cluster_algorithm(data, K)</span><br><span class="line">        log_Wks[ind_K] = np.log(calculate_Wk(data, cluster_centers, labels))</span><br><span class="line"></span><br><span class="line">        # generate B reference data sets</span><br><span class="line">        log_Wkbs = np.zeros(B)</span><br><span class="line">        for b in range(B):</span><br><span class="line">            for i in range(num_points):</span><br><span class="line">                for j in range(dim):</span><br><span class="line">                    data_generate[i][j] = \</span><br><span class="line">                        np.random.uniform(boxes[j][0], boxes[j][1])</span><br><span class="line">            cluster_centers, labels, _ = cluster_algorithm(data_generate, K)</span><br><span class="line">            log_Wkbs[b] = \</span><br><span class="line">                np.log(calculate_Wk(data_generate, cluster_centers, labels))</span><br><span class="line">        gaps[ind_K] = np.mean(log_Wkbs) - log_Wks[ind_K]</span><br><span class="line">        sks[ind_K] = np.std(log_Wkbs) * np.sqrt(1 + 1.0 / B)</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">    &#x27;&#x27;&#x27; 写法2</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line">    log_Wks = np.zeros(num_K)</span><br><span class="line">    for indK, K in enumerate(K_range):</span><br><span class="line">        cluster_centers, labels, _ = cluster_algorithm(data, K)</span><br><span class="line">        log_Wks[indK] = np.log(calculate_Wk(data, cluster_centers, labels))</span><br><span class="line"></span><br><span class="line">    gaps = np.zeros(num_K)</span><br><span class="line">    sks = np.zeros(num_K)</span><br><span class="line">    log_Wkbs = np.zeros((B, num_K))</span><br><span class="line"></span><br><span class="line">    # generate B reference data sets</span><br><span class="line">    for b in range(B):</span><br><span class="line">        for i in range(num_points):</span><br><span class="line">            for j in range(dim):</span><br><span class="line">                data_generate[i, j] = \</span><br><span class="line">                    np.random.uniform(boxes[j][0], boxes[j][1])</span><br><span class="line">        for indK, K in enumerate(K_range):</span><br><span class="line">            cluster_centers, labels, _ = cluster_algorithm(data_generate, K)</span><br><span class="line">            log_Wkbs[b, indK] = \</span><br><span class="line">                np.log(calculate_Wk(data_generate, cluster_centers, labels))</span><br><span class="line"></span><br><span class="line">    for k in range(num_K):</span><br><span class="line">        gaps[k] = np.mean(log_Wkbs[:, k]) - log_Wks[k]</span><br><span class="line">        sks[k] = np.std(log_Wkbs[:, k]) * np.sqrt(1 + 1.0 / B)</span><br><span class="line"></span><br><span class="line">    return gaps, sks, log_Wks</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="http://sofasofa.io/forum_main_post.php?postid=1000282">K-means怎么选K?</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/29208148">k-means的k值该如何确定？</a></li>
+<li>Tibshirani R, Walther G, Hastie T. Estimating the number of clusters in a data set via the gap statistic[J]. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 2001, 63(2): 411-423.</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/" data-id="clz2w7lbb000nyivhhomh9q2f" data-title="K-means参数K的选择" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/21/LeetCode-387-First-Unique-Character-in-a-String/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          LeetCode 387 - First Unique Character in a String
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/21/LeetCode-819-Most-Common-Word/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">LeetCode 819 - Most Common Word</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

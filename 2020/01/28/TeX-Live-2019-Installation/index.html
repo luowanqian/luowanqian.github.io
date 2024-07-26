@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>TeX Live 2019 Installation | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1. 安装环境OS Version: OS X 10.11.6 2. 获取安装脚本这里没有选择 MacTex 安装方式，而是采用 Unix Install Script 进行在线安装。之所以不用 MaxTex 是由于电脑系统版本有点老，MacTeX-2019 需要 Mac OS 10.12 以上版本的系统。 下载 install-tl-unx.tar.gz 安装脚本，解压后，得到以下文件。   安">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TeX Live 2019 Installation">
+<meta property="og:url" content="http://example.com/2020/01/28/TeX-Live-2019-Installation/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. 安装环境OS Version: OS X 10.11.6 2. 获取安装脚本这里没有选择 MacTex 安装方式，而是采用 Unix Install Script 进行在线安装。之所以不用 MaxTex 是由于电脑系统版本有点老，MacTeX-2019 需要 Mac OS 10.12 以上版本的系统。 下载 install-tl-unx.tar.gz 安装脚本，解压后，得到以下文件。   安">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2020/01/28/TeX-Live-2019-Installation/1.png">
+<meta property="og:image" content="http://example.com/2020/01/28/TeX-Live-2019-Installation/2.png">
+<meta property="og:image" content="http://example.com/2020/01/28/TeX-Live-2019-Installation/3.png">
+<meta property="og:image" content="http://example.com/2020/01/28/TeX-Live-2019-Installation/4.png">
+<meta property="og:image" content="http://example.com/2020/01/28/TeX-Live-2019-Installation/5.png">
+<meta property="og:image" content="http://example.com/2020/01/28/TeX-Live-2019-Installation/6.png">
+<meta property="og:image" content="http://example.com/2020/01/28/TeX-Live-2019-Installation/7.png">
+<meta property="og:image" content="http://example.com/2020/01/28/TeX-Live-2019-Installation/8.png">
+<meta property="article:published_time" content="2020-01-28T13:32:26.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.161Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Tex Live">
+<meta property="article:tag" content="Software Installation">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/01/28/TeX-Live-2019-Installation/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-TeX-Live-2019-Installation" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/01/28/TeX-Live-2019-Installation/" class="article-date">
+  <time class="dt-published" datetime="2020-01-28T13:32:26.000Z" itemprop="datePublished">2020-01-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      TeX Live 2019 Installation
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="1-安装环境"><a href="#1-安装环境" class="headerlink" title="1. 安装环境"></a>1. 安装环境</h1><p>OS Version: OS X 10.11.6</p>
+<h1 id="2-获取安装脚本"><a href="#2-获取安装脚本" class="headerlink" title="2. 获取安装脚本"></a>2. 获取安装脚本</h1><p>这里没有选择 <a target="_blank" rel="noopener" href="http://www.tug.org/mactex/index.html">MacTex</a> 安装方式，而是采用 <a target="_blank" rel="noopener" href="https://www.tug.org/texlive/acquire-netinstall.html">Unix Install Script</a> 进行在线安装。之所以不用 <code>MaxTex</code> 是由于电脑系统版本有点老，MacTeX-2019 需要 Mac OS 10.12 以上版本的系统。</p>
+<p>下载 <a target="_blank" rel="noopener" href="http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz">install-tl-unx.tar.gz</a> 安装脚本，解压后，得到以下文件。</p>
+<img src="/2020/01/28/TeX-Live-2019-Installation/1.png" class="" width="500">
+
+<p>安装脚本为 <code>install-tl</code></p>
+<h1 id="3-开始安装"><a href="#3-开始安装" class="headerlink" title="3. 开始安装"></a>3. 开始安装</h1><p>启动安装只需要执行 <code>install-tl</code> 即可。这里直接在控制台执行安装脚本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./install-tl-20200127/install-tl</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/01/28/TeX-Live-2019-Installation/2.png" class="" width="500">
+
+<h1 id="4-安装配置"><a href="#4-安装配置" class="headerlink" title="4. 安装配置"></a>4. 安装配置</h1><h2 id="4-1-配置镜像地址"><a href="#4-1-配置镜像地址" class="headerlink" title="4.1. 配置镜像地址"></a>4.1. 配置镜像地址</h2><p>安装第一步是配置镜像地址，具体镜像的选择根据所处网络环境进行决定，这里选择了清华大学的镜像地址。</p>
+<img src="/2020/01/28/TeX-Live-2019-Installation/3.png" class="" width="700">
+
+<p>选择完镜像后，安装界面会显示切换后的镜像地址。</p>
+<img src="/2020/01/28/TeX-Live-2019-Installation/4.png" class="" width="500">
+
+<h2 id="4-2-详细配置"><a href="#4-2-详细配置" class="headerlink" title="4.2. 详细配置"></a>4.2. 详细配置</h2><p>接下来是安装配置，简易设置仅仅设置安装路径以及默认纸张。如果要非root安装Tex Live，安装路径设为用户目录即可，这里设置安装路径为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Users/luowanqian/local/texlive/2019</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/01/28/TeX-Live-2019-Installation/5.png" class="" width="500">
+
+<p>如果要更加详细的配置，点 <code>Advanced</code> 按钮即可。</p>
+<img src="/2020/01/28/TeX-Live-2019-Installation/6.png" class="" width="800">
+
+<p>配置完后点 <code>安装</code> 启动安装。</p>
+<h2 id="4-3-等待安装完毕"><a href="#4-3-等待安装完毕" class="headerlink" title="4.3. 等待安装完毕"></a>4.3. 等待安装完毕</h2><p>启动安装后，安装程序会自动下载包进行安装。这部分时间消耗较长，耐心等待即可。</p>
+<img src="/2020/01/28/TeX-Live-2019-Installation/7.png" class="" width="500">
+
+<p>安装完毕会显示如下图。</p>
+<img src="/2020/01/28/TeX-Live-2019-Installation/8.png" class="" width="500">
+
+<p>__注意__：安装完毕后，界面（见上图）会提示相关环境变量的设置，内容大概如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">欢迎进入 TeX Live 的世界！</span><br><span class="line"></span><br><span class="line">See /Users/luowanqian/local/texlive/2019/index.html for links to documentation.</span><br><span class="line">The TeX Live web site (https://tug.org/texlive/) contains any updates and corrections. TeX Live is a joint project of the TeX user groups around the world; please consider supporting it by joining the group best for you. The list of groups is available on the web at https://tug.org/usergroups.html.</span><br><span class="line"></span><br><span class="line">Add /Users/luowanqian/local/texlive/2019/texmf-dist/doc/man to MANPATH.</span><br><span class="line">Add /Users/luowanqian/local/texlive/2019/texmf-dist/doc/info to INFOPATH.</span><br><span class="line">Most importantly, add /Users/luowanqian/local/texlive/2019/bin/x86_64-darwinlegacy</span><br><span class="line">to your PATH for current and future sessions.</span><br></pre></td></tr></table></figure>
+
+<h1 id="5-环境变量设置"><a href="#5-环境变量设置" class="headerlink" title="5. 环境变量设置"></a>5. 环境变量设置</h1><p>安装最后一步是设置环境变量，由前面提示可知，要设置的环境变量有三个：<code>MANPATH</code>、<code>INFOPATH</code> 以及 <code>PATH</code>。</p>
+<p>根据提示在 <code>.bashrc</code> 文件中设置环境变量即可完成安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> MANPATH=<span class="string">&quot;<span class="variable">$MANPATH</span>:/Users/luowanqian/local/texlive/2019/texmf-dist/doc/man&quot;</span></span><br><span class="line"><span class="built_in">export</span> INFOPATH=<span class="string">&quot;<span class="variable">$INFOPATH</span>:/Users/luowanqian/local/texlive/2019/texmf-dist/doc/info&quot;</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="variable">$PATH</span>:/Users/luowanqian/local/texlive/2019/bin/x86_64-darwinlegacy&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p>1: <a target="_blank" rel="noopener" href="https://www.tug.org/texlive/quickinstall.html">TeX Live - Quick install</a></p>
+<p>2: <a target="_blank" rel="noopener" href="http://www.tug.org/mactex/mactex-unix-download.html">Unix Install of TeXLive 2019</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/01/28/TeX-Live-2019-Installation/" data-id="clz2w7lbx0038yivhfup8h8mz" data-title="TeX Live 2019 Installation" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/22/LeetCode-50-Pow/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          LeetCode 50 - Pow(x, n)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/28/101-NumPy-Exercises/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">101 NumPy Exercises</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

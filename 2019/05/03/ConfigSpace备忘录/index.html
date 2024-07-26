@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>ConfigSpace备忘录 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="介绍ConfigSpace是一个用于管理算法参数空间的Python包，主要用于算法参数选择任务。一些AutoML库，例如SMAC3、BOHB以及auto-sklearn，会用到该包。项目主页为：https:&#x2F;&#x2F;github.com&#x2F;automl&#x2F;ConfigSpace。 注明：本文章相关代码在Gist 初始化使用ConfigSpace包时通常要创建一个参数空间实例 1234import Confi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ConfigSpace备忘录">
+<meta property="og:url" content="http://example.com/2019/05/03/ConfigSpace%E5%A4%87%E5%BF%98%E5%BD%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="介绍ConfigSpace是一个用于管理算法参数空间的Python包，主要用于算法参数选择任务。一些AutoML库，例如SMAC3、BOHB以及auto-sklearn，会用到该包。项目主页为：https:&#x2F;&#x2F;github.com&#x2F;automl&#x2F;ConfigSpace。 注明：本文章相关代码在Gist 初始化使用ConfigSpace包时通常要创建一个参数空间实例 1234import Confi">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-05-03T02:10:09.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.151Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ConfigSpace备忘录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/05/03/ConfigSpace%E5%A4%87%E5%BF%98%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2019-05-03T02:10:09.000Z" itemprop="datePublished">2019-05-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      ConfigSpace备忘录
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>ConfigSpace是一个用于管理算法参数空间的Python包，主要用于算法参数选择任务。一些AutoML库，例如<a target="_blank" rel="noopener" href="https://github.com/automl/SMAC3">SMAC3</a>、<a target="_blank" rel="noopener" href="https://github.com/automl/HpBandSter">BOHB</a>以及<a target="_blank" rel="noopener" href="https://github.com/automl/auto-sklearn">auto-sklearn</a>，会用到该包。项目主页为：<a target="_blank" rel="noopener" href="https://github.com/automl/ConfigSpace">https://github.com/automl/ConfigSpace</a>。</p>
+<p>注明：本文章相关代码在<a target="_blank" rel="noopener" href="https://gist.github.com/luowanqian/5fd452f204b60a56e5297c96489ed6dc">Gist</a></p>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>使用ConfigSpace包时通常要创建一个参数空间实例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import ConfigSpace as CS</span><br><span class="line">import ConfigSpace.hyperparameters as CSH</span><br><span class="line"></span><br><span class="line">cs = CS.ConfigurationSpace()</span><br></pre></td></tr></table></figure>
+
+<p>这个参数空间集合实例<code>cs</code>包含所有参数的设置</p>
+<h2 id="整数参数和浮点参数"><a href="#整数参数和浮点参数" class="headerlink" title="整数参数和浮点参数"></a>整数参数和浮点参数</h2><p>本节开始将介绍如何配置算法的参数空间，这里举例的算法为SVM分类算法，算法具体实现为<a target="_blank" rel="noopener" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">sklearn.svm.SVC</a>。由SVC类介绍可以知道两个参数：</p>
+<ol>
+<li><code>C</code>为惩罚参数，数据类型为浮点数，且$C \ge 0$</li>
+<li><code>max_iter</code>为最大迭代次数，数据类型为整数</li>
+</ol>
+<p>假设要限定<code>C</code>的取值范围为$[0, 1]$以及<code>max_iter</code>的取值范围为$[10, 100]$，可以用<code>UniformFloatHyperparameter</code>和<code>UniformIntegerHyperparameter</code>设定参数范围</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">param_c = CSH.UniformFloatHyperparameter(name=&#x27;C&#x27;, lower=0, upper=1)</span><br><span class="line">param_max_iter = CSH.UniformIntegerHyperparameter(name=&#x27;max_iter&#x27;, lower=10, upper=100)</span><br></pre></td></tr></table></figure>
+
+<p>设定完参数空间后，需要添加到参数空间集合实例<code>cs</code>中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cs.add_hyperparameter(param_c)</span><br><span class="line">cs.add_hyperparameter(param_max_iter)</span><br></pre></td></tr></table></figure>
+
+<p>此时可以使用<code>cs</code>的<code>sample_configuration</code>方法进行采样获得一组随机的参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cs.sample_configuration()</span><br></pre></td></tr></table></figure>
+
+<p>此时输出类似下面这种情况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Configuration:</span><br><span class="line">  C, Value: 0.7114185317566737</span><br><span class="line">  max_iter, Value: 84</span><br></pre></td></tr></table></figure>
+
+<h2 id="Categorical参数和参数之间的联系"><a href="#Categorical参数和参数之间的联系" class="headerlink" title="Categorical参数和参数之间的联系"></a>Categorical参数和参数之间的联系</h2><p>由<code>sklearn.svm.SVC</code>类介绍可知，算法核类型由参数<code>kernel</code>控制 </p>
+<ul>
+<li><code>kernel</code>限定算法的核类型，取值主要有<code>&#39;linear&#39;</code>，<code>&#39;poly&#39;</code>，<code>&#39;rbf&#39;</code>，<code>&#39;sigmoid&#39;</code></li>
+</ul>
+<p>此时可以用<code>CategoricalHyperparameter</code>来代表参数<code>kernel</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">param_kernel = CSH.CategoricalHyperparameter(name=&#x27;kernel&#x27;, choices=[&#x27;linear&#x27;, &#x27;poly&#x27;, &#x27;rbf&#x27;, &#x27;sigmoid&#x27;])</span><br><span class="line"></span><br><span class="line">cs.add_hyperparameter(param_kernel)</span><br></pre></td></tr></table></figure>
+
+<p>每一种核还有相应的参数设置（设定SVC类对应的参数），即</p>
+<ul>
+<li>Linear核$K(x, y)&#x3D;x^Ty$，无参数</li>
+<li>Poly核$K(x, y)&#x3D;(\gamma x^Ty + r)^d$，其中参数$\gamma$对应<code>gamma</code>，参数$r$对应<code>coef0</code>，参数$d$对应<code>degree</code></li>
+<li>RBF核$K(x, y)&#x3D;\exp(-\gamma \Vert x - y\Vert^2)$，其中参数$\gamma$对应<code>gamma</code></li>
+<li>Sigmoid核$K(x, y)&#x3D;\tanh(\gamma x^T y + r)$，其中参数$\gamma$对应<code>gamma</code>，参数$r$对应<code>coef0</code></li>
+</ul>
+<p>首先创建参数<code>degree</code>、<code>coef0</code>以及<code>gamma</code>的参数空间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">param_degree = CSH.UniformIntegerHyperparameter(name=&#x27;degree&#x27;, lower=2, upper=4)</span><br><span class="line">param_coef0 = CSH.UniformFloatHyperparameter(name=&#x27;coef0&#x27;, lower=0, upper=1)</span><br><span class="line">param_gamma = CSH.UniformFloatHyperparameter(name=&#x27;gamma&#x27;, lower=1e-5, upper=1e2)</span><br><span class="line"></span><br><span class="line">cs.add_hyperparameters([param_degree, param_coef0, param_gamma])</span><br></pre></td></tr></table></figure>
+
+<p>有前面的描述可以知道不同的核对应不同的参数，也就是说核参数和核类型参数之间是由关联的</p>
+<ul>
+<li>参数<code>degree</code>关联Poly核</li>
+<li>参数<code>coef0</code>关联Poly核和Sigmoid核</li>
+<li>参数<code>gamma</code>关联Poly核、RBF核和Sigmoid核</li>
+</ul>
+<p>要想表示这种参数之间的关系，可以使用<code>EqualsCondition</code>以及<code>OrConjunction</code>，即</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cond1 = CS.EqualsCondition(param_degree, param_kernel, &#x27;poly&#x27;)</span><br><span class="line">cond2 = CS.OrConjunction(CS.EqualsCondition(param_coef0, param_kernel, &#x27;poly&#x27;),</span><br><span class="line">                         CS.EqualsCondition(param_coef0, param_kernel, &#x27;sigmoid&#x27;))</span><br><span class="line">cond3 = CS.OrConjunction(CS.EqualsCondition(param_gamma, param_kernel, &#x27;rbf&#x27;),</span><br><span class="line">                         CS.EqualsCondition(param_gamma, param_kernel, &#x27;poly&#x27;),</span><br><span class="line">                         CS.EqualsCondition(param_gamma, param_kernel, &#x27;sigmoid&#x27;))</span><br><span class="line"></span><br><span class="line">cs.add_conditions([cond1, cond2, cond3])</span><br></pre></td></tr></table></figure>
+
+<p>其中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CS.EqualsCondition(param_degree, param_kernel, &#x27;poly&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>意思为参数<code>kernel</code>值为<code>&#39;poly&#39;</code>时，设定参数<code>degree</code>的值。如果有多个条件，需要用<code>OrConjunction</code>来OR这些条件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cond2 = CS.OrConjunction(CS.EqualsCondition(param_coef0, param_kernel, &#x27;poly&#x27;),</span><br><span class="line">                         CS.EqualsCondition(param_coef0, param_kernel, &#x27;sigmoid&#x27;))</span><br></pre></td></tr></table></figure>
+
+<p>意思为当参数<code>kernel</code>值为<code>&#39;poly&#39;</code>时，设定参数<code>coef0</code>值，或者当参数<code>kernel</code>值为<code>&#39;sigmoid&#39;</code>时，设定参数<code>coef0</code>值。</p>
+<h2 id="禁止参数取值组合出现"><a href="#禁止参数取值组合出现" class="headerlink" title="禁止参数取值组合出现"></a>禁止参数取值组合出现</h2><p>前面我们设定了<code>sklearn.svm.SVC</code>类某些参数的参数空间，假如SVC的核选择的是Linear核，即参数<code>kernel</code>取值为<code>&#39;Linear&#39;</code>，此时SVM变成了LinearSVM。如果SVC类的LinearSVM实现为<a target="_blank" rel="noopener" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html">sklearn.svm.LinearSVC</a>，这时可以用LinearSVC类参数进一步控制算法的运行过程。<br><code>注：这里只是假设一种情况，即SVC类有LinearSVC类的全部参数，真实情况是SVC类并没有LinearSVC类的全部参数。</code></p>
+<p>LinearSVC类部分参数如下</p>
+<ul>
+<li><code>penalty</code>设置正则项类型，数据类型为字符串，取值为<code>&#39;l1&#39;</code>或者<code>&#39;l2&#39;</code></li>
+<li><code>loss</code>设置损失函数类型，数据类型为字符串，取值为<code>&#39;hinge&#39;</code>或者<code>&#39;squared_hinge&#39;</code></li>
+<li><code>dual</code>设置算法是否求解对偶问题，数据类型为布尔值，实际可以替换成字符串类型</li>
+</ul>
+<p>首先根据这三个参数设置参数空间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">param_penalty = CSH.CategoricalHyperparameter(name=&#x27;penalty&#x27;, choices=[&#x27;l1&#x27;, &#x27;l2&#x27;], default_value=&#x27;l2&#x27;)</span><br><span class="line">param_loss = CSH.CategoricalHyperparameter(name=&#x27;loss&#x27;, choices=[&#x27;hinge&#x27;, &#x27;squared_hinge&#x27;], default_value=&#x27;squared_hinge&#x27;)</span><br><span class="line">param_dual = CSH.CategoricalHyperparameter(name=&#x27;dual&#x27;, choices=[&#x27;True&#x27;,&#x27;False&#x27;], default_value=&#x27;False&#x27;)</span><br><span class="line"></span><br><span class="line">cs.add_hyperparameters([param_penalty, param_loss, param_dual])</span><br></pre></td></tr></table></figure>
+
+<p>当核类型为Linear核时，这三个参数才会被设置，因此要进行参数关联</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cond1 = CS.EqualsCondition(param_penalty, param_kernel, &#x27;linear&#x27;)</span><br><span class="line">cond2 = CS.EqualsCondition(param_loss, param_kernel, &#x27;linear&#x27;)</span><br><span class="line">cond3 = CS.EqualsCondition(param_dual, param_kernel, &#x27;linear&#x27;)</span><br><span class="line"></span><br><span class="line">cs.add_conditions([cond1, cond2, cond3])</span><br></pre></td></tr></table></figure>
+
+<p>这里限定一些参数组合不能出现</p>
+<ul>
+<li>参数<code>penalty</code>取值<code>&#39;l1&#39;</code>，参数<code>loss</code>取值<code>&#39;hinge&#39;</code></li>
+<li>参数<code>dual</code>取值<code>&#39;False&#39;</code>，参数<code>penalty</code>取值<code>&#39;l2&#39;</code>，参数<code>loss</code>取值<code>&#39;hinge&#39;</code></li>
+<li>参数<code>dual</code>取值<code>&#39;False&#39;</code>，参数<code>&#39;penalty&#39;</code>取值<code>&#39;l1&#39;</code></li>
+</ul>
+<p>要禁止出现某些参数组合，可以使用<code>ForbiddenEqualsClause</code>，如果有多个组合，需要使用<code>ForbiddenAndConjunction</code>进行OR</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">penalty_loss = CS.ForbiddenAndConjunction(</span><br><span class="line">        CS.ForbiddenEqualsClause(param_penalty, &#x27;l2&#x27;),</span><br><span class="line">        CS.ForbiddenEqualsClause(param_loss, &#x27;hinge&#x27;)</span><br><span class="line">)</span><br><span class="line">dual_penalty_loss = CS.ForbiddenAndConjunction(</span><br><span class="line">        CS.ForbiddenEqualsClause(param_dual, &#x27;False&#x27;),</span><br><span class="line">        CS.ForbiddenEqualsClause(param_penalty, &#x27;l2&#x27;),</span><br><span class="line">        CS.ForbiddenEqualsClause(param_loss, &#x27;hinge&#x27;)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">penalty_dual = CS.ForbiddenAndConjunction(</span><br><span class="line">        CS.ForbiddenEqualsClause(param_dual, &#x27;False&#x27;),</span><br><span class="line">        CS.ForbiddenEqualsClause(param_penalty, &#x27;l1&#x27;)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">cs.add_forbidden_clause(penalty_loss)</span><br><span class="line">cs.add_forbidden_clause(dual_penalty_loss)</span><br><span class="line">cs.add_forbidden_clause(penalty_dual)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/05/03/ConfigSpace%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz2w7lb40003yivh34qw813f" data-title="ConfigSpace备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/12/Python-Iterable-Container-Implementation/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Python Iterable Container Implementation
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/05/01/Ubuntu18-04%E5%AE%89%E8%A3%85VNC/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Ubuntu18.04安装VNC</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

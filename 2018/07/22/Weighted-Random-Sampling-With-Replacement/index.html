@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Weighted Random Sampling With Replacement | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Weighted random sampling with replacement，中文翻译为带权重的有放回地采样，简单来说就是每一个样本都有一个权重，然后根据样本权重大小有放回地采样数据，样本的权重越大，样本被选择的概率也就越大。该问题换种方式描述就是，给定一个权重数组 $w$，大小为 $N$，然后根据权重大小，在下标数组 ${0, 1, \ldots, N-1}$ 中进行有放回地采样，下标 $">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Weighted Random Sampling With Replacement">
+<meta property="og:url" content="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Weighted random sampling with replacement，中文翻译为带权重的有放回地采样，简单来说就是每一个样本都有一个权重，然后根据样本权重大小有放回地采样数据，样本的权重越大，样本被选择的概率也就越大。该问题换种方式描述就是，给定一个权重数组 $w$，大小为 $N$，然后根据权重大小，在下标数组 ${0, 1, \ldots, N-1}$ 中进行有放回地采样，下标 $">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/rejection.png">
+<meta property="og:image" content="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/sampling-visual.png">
+<meta property="og:image" content="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/test.png">
+<meta property="article:published_time" content="2018-07-22T07:07:18.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.161Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/rejection.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Weighted-Random-Sampling-With-Replacement" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/22/Weighted-Random-Sampling-With-Replacement/" class="article-date">
+  <time class="dt-published" datetime="2018-07-22T07:07:18.000Z" itemprop="datePublished">2018-07-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Weighted Random Sampling With Replacement
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Weighted random sampling with replacement，中文翻译为带权重的有放回地采样，简单来说就是每一个样本都有一个权重，然后根据样本权重大小有放回地采样数据，样本的权重越大，样本被选择的概率也就越大。该问题换种方式描述就是，给定一个权重数组 $w$，大小为 $N$，然后根据权重大小，在下标数组 ${0, 1, \ldots, N-1}$ 中进行有放回地采样，下标 $i$ 被选中的概率为 $w[i]&#x2F;\text{sum}(w)$。</p>
+<p>这个采样方法一个应用是在Boosting算法中，Boosting算法每次训练完模型时，根据模型分类的情况改变数据样本的权重，然后用带权重的样本训练下一个模型，如果模型的训练不支持带权重的样本，则进行带权重的样本采样。</p>
+<blockquote>
+<p>本文主要将博文 <a target="_blank" rel="noopener" href="https://www.aarondefazio.com/tangentially/?p=58">WEIGHTED RANDOM SAMPLING WITH REPLACEMENT WITH DYNAMIC WEIGHTS</a> 内容进行解析 (文章拷贝：<a href="/2018/07/22/Weighted-Random-Sampling-With-Replacement/copy.pdf" title="Copy">Copy</a>)。算法实现代码在：<a target="_blank" rel="noopener" href="https://github.com/adefazio/sampler">adefazio&#x2F;sampler</a></p>
+</blockquote>
+<h2 id="Rejection-Sampling"><a href="#Rejection-Sampling" class="headerlink" title="Rejection Sampling"></a>Rejection Sampling</h2><p>这个思想很简单，给定一个权重数组 $w \in R^N$，权重最大值为 $w_\max$，然后在下标数组 ${ 0, 1, \ldots, N-1 }$ 中随机采样得到下标 $i$，接下来就是判断该下标是否被accept，首先根据分布 $X \sim U(0, 1)$ 获得一个随机数 $x$，然后判断 $w_\max * x \le w[i]$，如果符合该条件，则accept该下标 $i$，否则就reject该下标。</p>
+<p>算法实现的代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">w = [1,4,2,5] # Some data</span><br><span class="line">w_max = max(w)</span><br><span class="line">n = len(w)</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">	idx = random.randrange(n)</span><br><span class="line">	u = w_max*random.random()</span><br><span class="line">	if u &lt;= w[idx]:</span><br><span class="line">		break</span><br><span class="line">print idx</span><br></pre></td></tr></table></figure>
+
+<p>算法思想可以用下面图表示：</p>
+<img src="/2018/07/22/Weighted-Random-Sampling-With-Replacement/rejection.png" class="">
+
+<p>橘色区域代表accept区域，灰色区域代表reject区域。这个算法有个缺点就是当数据不平衡时，性能会很低，因为如果小部分数据权重很大时，$w_\max$ 会变的很大，数据权重小的下标很难被accept，而且权重小的占大部分，这导致算法会经过很多次循环。</p>
+<h2 id="Level-Rejection-Sampling"><a href="#Level-Rejection-Sampling" class="headerlink" title="Level Rejection Sampling"></a>Level Rejection Sampling</h2><p>这个是在Rejection Sampling之前对下标进行分层 (level)，根据权重 $w[i]$ 的大小将下标 $i$ 分到不同层中，第 $k$ 层权重的范围为 $[2^k, 2^{k+1}]$，由于每一层内的权重的差距不会偏大，对该层进行Rejection Sampling效率会较高。</p>
+<p>该方法的思想如下图所示：</p>
+<img src="/2018/07/22/Weighted-Random-Sampling-With-Replacement/sampling-visual.png" class="">
+
+<p>如图所示，总共分了5层，每一层存储的是数组下标。下标分层后，在进行采样时，首先随机选择某一层，然后进行Rejection Sampling获得最终想要的下标。</p>
+<h3 id="模拟实验"><a href="#模拟实验" class="headerlink" title="模拟实验"></a>模拟实验</h3><p>贴出一段实验代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sampler <span class="keyword">import</span> Sampler</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    weights = np.array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">2</span>], dtype=<span class="string">&#x27;d&#x27;</span>)</span><br><span class="line">    num_entries = <span class="built_in">len</span>(weights)</span><br><span class="line">    normalized_weights = weights / np.<span class="built_in">sum</span>(weights)</span><br><span class="line"></span><br><span class="line">    weight_sampler = Sampler(num_entries, max_value=<span class="number">100</span>, min_value=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_entries):</span><br><span class="line">        weight_sampler.add(i, weights[i])</span><br><span class="line"></span><br><span class="line">    num_samples = <span class="number">10000</span></span><br><span class="line">    distro = np.zeros(num_entries)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_samples):</span><br><span class="line">        idx = weight_sampler.sample()</span><br><span class="line">        distro[idx] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    normalized_distro = distro / np.<span class="built_in">sum</span>(distro)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Sample distribution: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(distro))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Weights distribution: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(weights))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Normalized sample distribution: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(normalized_distro))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Normalized weights distribution: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(normalized_weights))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># plot frequency</span></span><br><span class="line">    plt.bar(np.arange(num_entries),</span><br><span class="line">            normalized_weights, width=<span class="number">0.35</span>,</span><br><span class="line">            label=<span class="string">&#x27;Normalized Weights Distribution&#x27;</span>)</span><br><span class="line">    plt.bar(np.arange(num_entries)+<span class="number">0.35</span>,</span><br><span class="line">            normalized_distro, width=<span class="number">0.35</span>,</span><br><span class="line">            label=<span class="string">&#x27;Normalized Sample Distribution&#x27;</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Sample distribution: [ 843.  824. 2513. 4182. 1638.]</span><br><span class="line">Weights distribution: [1. 1. 3. 5. 2.]</span><br><span class="line">Normalized sample distribution: [0.0843 0.0824 0.2513 0.4182 0.1638]</span><br><span class="line">Normalized weights distribution: [0.08333333 0.08333333 0.25 0.41666667 0.16666667]</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果如下图所示：</p>
+<img src="/2018/07/22/Weighted-Random-Sampling-With-Replacement/test.png" class="">
+
+<p>图中横坐标代表数组下标，蓝色柱代表各个下标的权重大小 (归一化)，橘色柱代表经过大量采样时，各个下标被采中的比例。从图中可以看出，采样结果基本符合权重分布规律，权重越大，被采中的概率也就越大。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/" data-id="clz2w7lbz003gyivh30suhwly" data-title="Weighted Random Sampling With Replacement" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/09/03/Pandas%E5%A4%87%E5%BF%98%E5%BD%952/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Pandas备忘录2
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/18/%E4%BB%A5Column-major-Order%E8%AF%BB%E5%8F%96HDF5%E6%95%B0%E6%8D%AE/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">以Column-major Order读取HDF5数据</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

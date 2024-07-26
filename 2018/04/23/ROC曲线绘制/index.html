@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>ROC曲线绘制 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="介绍关于ROC曲线的详细介绍，可以参考周志华的西瓜书 (《机器学习》)，本文主要介绍如何使用Python绘制该曲线。ROC曲线的纵轴是“真正例率” (True Positive Rate，简称TPR)，横轴是“假正例率” (False Positive Rate，简称FPR)，两者定义为：$$\begin{align}TPR &amp; &#x3D; \frac{TP}{TP + FN} \FPR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROC曲线绘制">
+<meta property="og:url" content="http://example.com/2018/04/23/ROC%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="介绍关于ROC曲线的详细介绍，可以参考周志华的西瓜书 (《机器学习》)，本文主要介绍如何使用Python绘制该曲线。ROC曲线的纵轴是“真正例率” (True Positive Rate，简称TPR)，横轴是“假正例率” (False Positive Rate，简称FPR)，两者定义为：$$\begin{align}TPR &amp; &#x3D; \frac{TP}{TP + FN} \FPR">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2018/04/23/ROC%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6/matrix.png">
+<meta property="article:published_time" content="2018-04-23T02:50:53.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.161Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2018/04/23/ROC%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6/matrix.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ROC曲线绘制" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/23/ROC%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6/" class="article-date">
+  <time class="dt-published" datetime="2018-04-23T02:50:53.000Z" itemprop="datePublished">2018-04-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      ROC曲线绘制
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>关于ROC曲线的详细介绍，可以参考周志华的西瓜书 (《机器学习》)，本文主要介绍如何使用Python绘制该曲线。ROC曲线的纵轴是“真正例率” (True Positive Rate，简称TPR)，横轴是“假正例率” (False Positive Rate，简称FPR)，两者定义为：<br>$$<br>\begin{align}<br>TPR &amp; &#x3D; \frac{TP}{TP + FN} \<br>FPR &amp; &#x3D; \frac{FP}{TN + FP}<br>\end{align}<br>$$<br>相关的符号定义为：</p>
+<img src="/2018/04/23/ROC%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6/matrix.png" class="" width="500">
+
+<p>在现实任务中，我们获取有限个 (FPR, TPR) 坐标对来勾勒出ROC曲线。要获得多个坐标对需要多组二分类结果，而我们做二分类任务时，通常只能获取一组分类结果，此时我们利用这组结果生成多组分类结果，具体做法是：给定 $m$ 个正例和 $n$ 个反例，根据分类器的预测值对样例进行从大到小排序，然后把分类阈值设为样例预测值中最大的那个，将样例进行正反例分类，计算相应的TPR和FPR，然后令分类阈值依次设为每个样例的预测值，将样例进行正反例分类，接着计算TPR和FPR，重复这个操作，直到分类阈值取完所有样例的预测值。</p>
+<p>关于分类器对样例的预测值，我们可以用分类器判定样例为正例的概率值，也可以用分类器对样例的评分值，预测值大于等于分类阈值时，分类器判定样例为正例，否则判定为负例。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>已知10样例的真实标签 (0: 反例，1: 正例) 以及分类器对该样例的评分值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y_true = [0, 1, 1, 0, 1, 0, 1, 1, 1, 0]</span><br><span class="line">y_score = [0.505, 0.6, 0.8, 0.52, 0.55, 0.53, 0.54, 0.9, 0.51, 0.7]</span><br></pre></td></tr></table></figure>
+
+<p>根据评分值将样例进行从大到小排序，可以得到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y_true = [1, 1, 0, 1, 1, 1, 0, 0, 1, 0]</span><br><span class="line">y_score = [0.9, 0.8, 0.7, 0.6, 0.55, 0.54, 0.53, 0.52, 0.51, 0.505]</span><br></pre></td></tr></table></figure>
+
+<p>将分类阈值设为 0.9，此时样例的分类为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y_true = [1, 1, 0, 1, 1, 1, 0, 0, 1, 0]</span><br><span class="line">y_predict = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]</span><br></pre></td></tr></table></figure>
+
+<p>可以得到 TP &#x3D; 1，FP &#x3D; 0，FN &#x3D; 5，TN &#x3D; 4，则可得到 TPR &#x3D; 1&#x2F;(1+5) &#x3D; 1&#x2F;6 以及 FPR &#x3D; 0。接着将分类阈值设为 0.8，然后将样例进行正反例分类，接着计算相应的TPR和FPR，直到分类阈值取完所有评分值，最终可以得到下面的TPR和FPR列表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TPR = [0.16666667, 0.33333333, 0.33333333, 0.5, 0.66666667, 0.83333333, 0.83333333, 0.83333333, 1.0, 1.0]</span><br><span class="line">FPR = [0.0, 0.0, 0.25, 0.25, 0.25, 0.25, 0.5, 0.75, 0.75, 1.0]</span><br></pre></td></tr></table></figure>
+
+<p>然后根据这一系列的 (FPR, TPR) 坐标对画出ROC曲线。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>相关代码以及运用可以参考：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/Metrics">GitHub</a></p>
+<h3 id="Scikit-learn实现"><a href="#Scikit-learn实现" class="headerlink" title="Scikit-learn实现"></a>Scikit-learn实现</h3><p>Scikit-learn库提供了一个名为 <code>roc_curve</code> 函数来获取FPR以及TRP，函数原型如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sklearn.metrics.roc_curve(y_true, y_score, pos_label=None, sample_weight=None, drop_intermediate=True)</span><br></pre></td></tr></table></figure>
+
+<p>要想得到上面例子的计算结果，需要把 <code>drop_intermediate</code> 设为 False。</p>
+<h3 id="个人实现"><a href="#个人实现" class="headerlink" title="个人实现"></a>个人实现</h3><p>我这里直接照搬[1]中的实现，贴出代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">def binary_clf_curve(y_true, y_score, pos_label=None):</span><br><span class="line">    if pos_label is None:</span><br><span class="line">        pos_label = 1.0</span><br><span class="line"></span><br><span class="line">    # make y_true a boolean vector</span><br><span class="line">    y_true = (y_true == pos_label)</span><br><span class="line"></span><br><span class="line">    # sort scores</span><br><span class="line">    desc_score_indices = np.argsort(y_score)[::-1]</span><br><span class="line">    thresholds = y_score[desc_score_indices]</span><br><span class="line"></span><br><span class="line">    fps = []</span><br><span class="line">    tps = []</span><br><span class="line">    for threshold in thresholds:</span><br><span class="line">        # 大于等于阈值判定为 1 (正类)，否则为 0 (负类)</span><br><span class="line">        y_predict = [1 if i &gt;= threshold else 0 for i in y_score]</span><br><span class="line">        # 预测值是否等于真实值</span><br><span class="line">        result = [i == j for i, j in zip(y_true, y_predict)]</span><br><span class="line">        # 预测值是否为 1 (正类)</span><br><span class="line">        positive = [i == 1 for i in y_predict]</span><br><span class="line"></span><br><span class="line">        # 预测为正类且预测错误</span><br><span class="line">        fp = [(not i) and j for i, j in zip(result, positive)].count(True)</span><br><span class="line">        # 预测为正类且预测正确</span><br><span class="line">        tp = [i and j for i, j in zip(result, positive)].count(True)</span><br><span class="line"></span><br><span class="line">        fps.append(fp)</span><br><span class="line">        tps.append(tp)</span><br><span class="line">    fps = np.array(fps)</span><br><span class="line">    tps = np.array(tps)</span><br><span class="line"></span><br><span class="line">    return fps, tps, thresholds</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def roc_curve(y_true, y_score, pos_label=None):</span><br><span class="line">    fps, tps, thresholds = binary_clf_curve(y_true, y_score, pos_label)</span><br><span class="line"></span><br><span class="line">    fpr = fps / fps[-1]</span><br><span class="line">    tpr = tps / tps[-1]</span><br><span class="line"></span><br><span class="line">    return fpr, tpr, thresholds</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/40748327">通过一个例子来绘制一条ROC曲线?</a></li>
+<li><a target="_blank" rel="noopener" href="http://nphard.me/2017/08/17/roc-auc/">roc-auc</a></li>
+<li><a target="_blank" rel="noopener" href="http://alexkong.net/2013/06/introduction-to-auc-and-roc/">ROC和AUC介绍以及如何计算AUC</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/23/ROC%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6/" data-id="clz2w7lbv002yyivhgt3l70vg" data-title="ROC曲线绘制" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/23/Shell-Snippets-Part-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Shell Snippets Part 1
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/22/CPP-Snippets-Part-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">C++ Snippets Part 1</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>图像数据转换成LMDB文件 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="介绍在使用 Caffe 时，一个经常使用的数据输入来源就是LMDB数据库，通常我们手头的数据是一堆图片，此时需要将图片数据放入到LMDB数据库中。Caffe 有自个的转换程序，是一个用 C++ 编写的程序，需要编译，由于本文主要使用 Python语言，因此使用[3]提供的包来做数据转换。 Note: 相关的代码和图片数据在 GitHub LMDB读写数据描述已有 10 张图片，放在目录 data">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像数据转换成LMDB文件">
+<meta property="og:url" content="http://example.com/2018/04/28/%E5%9B%BE%E5%83%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E6%88%90LMDB%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="介绍在使用 Caffe 时，一个经常使用的数据输入来源就是LMDB数据库，通常我们手头的数据是一堆图片，此时需要将图片数据放入到LMDB数据库中。Caffe 有自个的转换程序，是一个用 C++ 编写的程序，需要编译，由于本文主要使用 Python语言，因此使用[3]提供的包来做数据转换。 Note: 相关的代码和图片数据在 GitHub LMDB读写数据描述已有 10 张图片，放在目录 data">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-04-28T02:54:12.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:18:33.171Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Caffe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-图像数据转换成LMDB文件" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/28/%E5%9B%BE%E5%83%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E6%88%90LMDB%E6%96%87%E4%BB%B6/" class="article-date">
+  <time class="dt-published" datetime="2018-04-28T02:54:12.000Z" itemprop="datePublished">2018-04-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      图像数据转换成LMDB文件
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>在使用 Caffe 时，一个经常使用的数据输入来源就是LMDB数据库，通常我们手头的数据是一堆图片，此时需要将图片数据放入到LMDB数据库中。Caffe 有自个的转换程序，是一个用 C++ 编写的程序，需要编译，由于本文主要使用 Python语言，因此使用[3]提供的包来做数据转换。</p>
+<p><strong>Note:</strong> 相关的代码和图片数据在 <a target="_blank" rel="noopener" href="https://github.com/luowanqian/CaffeTutorials/tree/master/LMDB">GitHub</a></p>
+<h2 id="LMDB读写"><a href="#LMDB读写" class="headerlink" title="LMDB读写"></a>LMDB读写</h2><h3 id="数据描述"><a href="#数据描述" class="headerlink" title="数据描述"></a>数据描述</h3><p>已有 10 张图片，放在目录 <code>data</code> 中，图片文件名列表为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ ls data | sort -n</span><br><span class="line">1.png</span><br><span class="line">2.png</span><br><span class="line">3.png</span><br><span class="line">4.png</span><br><span class="line">5.png</span><br><span class="line">6.png</span><br><span class="line">7.png</span><br><span class="line">8.png</span><br><span class="line">9.png</span><br><span class="line">10.png</span><br></pre></td></tr></table></figure>
+
+<p>每张图片都有一个类别，存在文件 <code>labels.csv</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ cat labels.csv</span><br><span class="line">id,label</span><br><span class="line">1,frog</span><br><span class="line">2,truck</span><br><span class="line">3,truck</span><br><span class="line">4,deer</span><br><span class="line">5,automobile</span><br><span class="line">6,automobile</span><br><span class="line">7,bird</span><br><span class="line">8,horse</span><br><span class="line">9,ship</span><br><span class="line">10,cat</span><br></pre></td></tr></table></figure>
+
+<p>文件中第一列是图片文件名 (不包含后缀名)，第二列是图片的类别。</p>
+<h3 id="LMDB写入"><a href="#LMDB写入" class="headerlink" title="LMDB写入"></a>LMDB写入</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import pandas as pd</span><br><span class="line">from skimage import io</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">import os</span><br><span class="line">import lmdb</span><br><span class="line">import caffe</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def make_datum(image, label, channels, height, width):</span><br><span class="line">    datum = caffe.proto.caffe_pb2.Datum()</span><br><span class="line">    datum.channels = channels</span><br><span class="line">    datum.label = int(label)</span><br><span class="line">    datum.height = height</span><br><span class="line">    datum.width = width</span><br><span class="line">    datum.data = image.tobytes()</span><br><span class="line"></span><br><span class="line">    return datum</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># data path and lmdb path</span><br><span class="line">dataset_path = &#x27;./data&#x27;</span><br><span class="line">label_file = &#x27;labels.csv&#x27;</span><br><span class="line">lmdb_path = &#x27;cifar10_lmdb&#x27;</span><br><span class="line"></span><br><span class="line"># labels mapping</span><br><span class="line">labels_mapping = &#123;&#x27;airplane&#x27;: 0, &#x27;automobile&#x27;: 1,</span><br><span class="line">                  &#x27;bird&#x27;: 2, &#x27;cat&#x27;: 3, &#x27;deer&#x27;: 4, &#x27;dog&#x27;: 5,</span><br><span class="line">                  &#x27;frog&#x27;: 6, &#x27;horse&#x27;: 7, &#x27;ship&#x27;: 8, &#x27;truck&#x27;: 9&#125;</span><br><span class="line">classes = &#123;&#125;</span><br><span class="line">for key in labels_mapping:</span><br><span class="line">    classes[labels_mapping[key]] = key</span><br><span class="line"></span><br><span class="line"># load data</span><br><span class="line">df = pd.read_csv(label_file)</span><br><span class="line">df[&#x27;label&#x27;] = df[&#x27;label&#x27;].map(labels_mapping)</span><br><span class="line">images = list(df.id)</span><br><span class="line">labels = list(df.label)</span><br><span class="line"></span><br><span class="line"># write data to LMDB</span><br><span class="line">map_size = 1e6</span><br><span class="line">batch_size = 4</span><br><span class="line"></span><br><span class="line">count = 0</span><br><span class="line">lmdb_env = lmdb.open(lmdb_path, map_size=map_size)</span><br><span class="line">lmdb_txn = lmdb_env.begin(write=True)</span><br><span class="line"></span><br><span class="line">for image_id, label in zip(images, labels):</span><br><span class="line">    count = count + 1</span><br><span class="line">    image_file = os.path.join(dataset_path, str(image_id) + &#x27;.png&#x27;)</span><br><span class="line">    image = io.imread(image_file)</span><br><span class="line">    height, width, channels = image.shape</span><br><span class="line">    datum = make_datum(image, label, channels, height, width)</span><br><span class="line">    str_id = &#x27;&#123;:08&#125;&#x27;.format(count)</span><br><span class="line">    lmdb_txn.put(str_id, datum.SerializeToString())</span><br><span class="line"></span><br><span class="line">    if count % batch_size == 0:</span><br><span class="line">        lmdb_txn.commit()</span><br><span class="line">        lmdb_txn = lmdb_env.begin(write=True)</span><br><span class="line"></span><br><span class="line">lmdb_txn.commit()</span><br><span class="line">lmdb_env.close()</span><br></pre></td></tr></table></figure>
+
+<h3 id="LMDB读取"><a href="#LMDB读取" class="headerlink" title="LMDB读取"></a>LMDB读取</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">lmdb_env = lmdb.open(lmdb_path)</span><br><span class="line">lmdb_txn = lmdb_env.begin()</span><br><span class="line">lmdb_cursor = lmdb_txn.cursor()</span><br><span class="line">datum = caffe.proto.caffe_pb2.Datum()</span><br><span class="line"></span><br><span class="line">count = 0</span><br><span class="line">for key, value in lmdb_cursor:</span><br><span class="line">    datum.ParseFromString(value)</span><br><span class="line">    label = datum.label</span><br><span class="line">    height = datum.height</span><br><span class="line">    width = datum.width</span><br><span class="line">    channels = datum.channels</span><br><span class="line">    data = datum.data</span><br><span class="line">    count = count + 1</span><br><span class="line"></span><br><span class="line">    if count == 2:</span><br><span class="line">        image = np.frombuffer(data, dtype=np.uint8)</span><br><span class="line">        image = np.reshape(image, (height, width, channels))</span><br><span class="line">        print(&#x27;Label: &#123;&#125;, Class: &#123;&#125;&#x27;.format(label, classes[label]))</span><br><span class="line">        plt.imshow(image)</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">print(&#x27;Number of items: &#123;&#125;&#x27;.format(count))</span><br><span class="line"></span><br><span class="line">lmdb_env.close()</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="http://deepdish.io/2015/04/28/creating-lmdb-in-python/">Creating an LMDB database in Python</a></li>
+<li><a target="_blank" rel="noopener" href="https://gist.github.com/twmht/ad0769dde3b1e1d002752207a207e6dc">Write mnist image to lmdb with python</a></li>
+<li><a target="_blank" rel="noopener" href="https://lmdb.readthedocs.io/en/release/">lmdb</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/28/%E5%9B%BE%E5%83%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E6%88%90LMDB%E6%96%87%E4%BB%B6/" data-id="clz2w7lc30042yivh9lkahy9t" data-title="图像数据转换成LMDB文件" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/28/H5py%E6%94%AF%E6%8C%81Parallel-HDF5/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          H5py支持Parallel HDF5
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/27/H5py%E5%A4%87%E5%BF%98%E5%BD%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">H5py备忘录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

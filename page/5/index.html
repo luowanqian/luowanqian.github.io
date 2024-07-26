@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-LeetCode-696-Count-Binary-Substrings" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/21/LeetCode-696-Count-Binary-Substrings/" class="article-date">
+  <time class="dt-published" datetime="2018-04-21T14:35:26.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/21/LeetCode-696-Count-Binary-Substrings/">LeetCode 696 - Count Binary Substrings</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Give a string <code>s</code>, count the number of non-empty (contiguous) substrings that have the same number of 0’s and 1’s, and all the 0’s and all the 1’s in these substrings are grouped consecutively.</p>
+<p>Substrings that occur multiple times are counted the number of times they occur.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;00110011&quot;</span><br><span class="line">Output: 6</span><br><span class="line">Explanation: There are 6 substrings that have equal number of consecutive 1&#x27;s and 0&#x27;s: &quot;0011&quot;, &quot;01&quot;, &quot;1100&quot;, &quot;10&quot;, &quot;0011&quot;, and &quot;01&quot;.</span><br><span class="line"></span><br><span class="line">Notice that some of these substrings repeat and are counted the number of times they occur.</span><br><span class="line"></span><br><span class="line">Also, &quot;00110011&quot; is not a valid substring because all the 0&#x27;s (and 1&#x27;s) are not grouped together.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;10101&quot;</span><br><span class="line">Output: 4</span><br><span class="line">Explanation: There are 4 substrings: &quot;10&quot;, &quot;01&quot;, &quot;10&quot;, &quot;01&quot; that have equal number of consecutive 1&#x27;s and 0&#x27;s.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ul>
+<li><p>s.length will be between 1 and 50,000.</p>
+</li>
+<li><p>s will only consist of “0” or “1” characters.</p>
+</li>
+</ul>
+<p><strong>Related Topics:</strong> String</p>
+<p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/count-binary-substrings/description/">696. Count Binary Substrings</a></p>
+<p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/count-binary-substrings/description/">696. 计数二进制子串</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>如果使用暴力方法进行解决，很容易超时，因为字符串 <code>s</code> 最长为 50000，因此需要考虑一些取巧的方法。这里可以创建一个数组，数组元素存储每个连续子串的长度，例如，将字符串 <code>1111000011010001011</code> 转化为数组 <code>[4, 4, 2, 1, 1, 3, 1, 1, 2]</code>，根据这个数组，我们可以很方便地获得满足条件的子串个数，只需要将数组中相邻元素之间最小的那个求和即可，即</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">n = min(4, 4) + min(4, 2) + min(2, 1) + min(1, 1)</span><br><span class="line">	+ min(1, 3) + min(3, 1) + min(1, 1) + min(1, 2)</span><br><span class="line">  = 4 + 2 + 1 + 1 + 1 + 1 + 1 + 1</span><br><span class="line">  = 12</span><br></pre></td></tr></table></figure>
+
+<p>实现代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    int countBinarySubstrings(string s)</span><br><span class="line">    &#123;</span><br><span class="line">        vector&lt;int&gt; trans;</span><br><span class="line">        int num_bs = 0;</span><br><span class="line">        int count;</span><br><span class="line"></span><br><span class="line">        count = 0;</span><br><span class="line">        for (int i=0; i&lt;s.size(); i++) &#123;</span><br><span class="line">            count++;</span><br><span class="line">            if (i+1 &lt; s.size() &amp;&amp; s[i] != s[i+1]) &#123;</span><br><span class="line">                trans.push_back(count);</span><br><span class="line">                count = 0;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (count &gt; 0)</span><br><span class="line">            trans.push_back(count);</span><br><span class="line"></span><br><span class="line">        for (int i=0; i&lt;trans.size()-1; i++)</span><br><span class="line">            num_bs += trans[i] &gt; trans[i+1] ? trans[i+1] : trans[i];</span><br><span class="line"></span><br><span class="line">        return num_bs;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line"></span><br><span class="line">    string str1 = &quot;00110011&quot;;</span><br><span class="line">    cout &lt;&lt; str1 &lt;&lt; &quot;: &quot; &lt;&lt; solu.countBinarySubstrings(str1) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    string str2 = &quot;10101&quot;;</span><br><span class="line">    cout &lt;&lt; str2 &lt;&lt; &quot;: &quot; &lt;&lt; solu.countBinarySubstrings(str2) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/21/LeetCode-696-Count-Binary-Substrings/" data-id="clz2w7lbp0027yivheosbckxh" data-title="LeetCode 696 - Count Binary Substrings" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LeetCode-387-First-Unique-Character-in-a-String" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/21/LeetCode-387-First-Unique-Character-in-a-String/" class="article-date">
+  <time class="dt-published" datetime="2018-04-21T13:23:56.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/21/LeetCode-387-First-Unique-Character-in-a-String/">LeetCode 387 - First Unique Character in a String</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given a string, find the first non-repeating character in it and return it’s index. If it doesn’t exist, return -1.</p>
+<p><strong>Examples:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;leetcode&quot;</span><br><span class="line">return 0.</span><br><span class="line"></span><br><span class="line">s = &quot;loveleetcode&quot;,</span><br><span class="line">return 2.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong> You may assume the string contain only lowercase letters.</p>
+<p><strong>Related Topics:</strong> Hash Table, String</p>
+<p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/first-unique-character-in-a-string/description/">387. First Unique Character in a String</a></p>
+<p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/first-unique-character-in-a-string/description/">387. 字符串中的第一个唯一字符</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>本题需要找到第一个不重复出现的字符的位置，因此在遍历字符串时需要保存字符的位置。由于字符串中只有小写字母，因此可以创建一个大小为 26 的数组，存储 26 个字母在字符串中出现位置，由于还需要判断该字母是否重复出现，这时可以用一个特殊值表示该字母在字符串中重复出现。数组元素的值分三种情况：</p>
+<ul>
+<li>-1 表示该字母已经重复出现</li>
+<li>0 表示该字母未在字符串中出现</li>
+<li>正整数表示该字母第一次在字符串中出现的位置 (位置从 1 开始)</li>
+</ul>
+<p>根据输入的字符串构造出这个数组后，我们可以很快找到第一个不重复出现的字符的位置 (即数组元素中值最小的那个，不包括 -1 和 0)。实现代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;cstring&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    int firstUniqChar(string s)</span><br><span class="line">    &#123;</span><br><span class="line">        if (s.size() == 0)</span><br><span class="line">            return -1;</span><br><span class="line">        else if (s.size() == 1)</span><br><span class="line">            return 0;</span><br><span class="line"></span><br><span class="line">        /* letters[i]</span><br><span class="line">         * -1 means letter repeat</span><br><span class="line">         * 0 means letter not appear</span><br><span class="line">         * &gt; 0 means position of letter in string (index starts from 1)</span><br><span class="line">         */</span><br><span class="line">        int letters[26];</span><br><span class="line">        int pos;</span><br><span class="line"></span><br><span class="line">        memset(letters, 0, sizeof(letters));</span><br><span class="line">        for (int i=0; i&lt;s.size(); i++) &#123;</span><br><span class="line">            pos = s[i] - &#x27;a&#x27;;</span><br><span class="line">            if (letters[pos] &gt; 0)</span><br><span class="line">                letters[pos] = -1;</span><br><span class="line">            else if (letters[pos] == 0)</span><br><span class="line">                letters[pos] = i + 1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int ret = -1;</span><br><span class="line">        for (int i=0; i&lt;26; i++) &#123;</span><br><span class="line">            if (letters[i] &gt; 0) &#123;</span><br><span class="line">                if (ret == -1)</span><br><span class="line">                    ret = letters[i] - 1;</span><br><span class="line">                else if (ret &gt; letters[i] - 1)</span><br><span class="line">                    ret = letters[i] - 1;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line"></span><br><span class="line">    string str1 = &quot;aadadaad&quot;;</span><br><span class="line">    cout &lt;&lt; str1 &lt;&lt; &quot;: &quot; &lt;&lt; solu.firstUniqChar(str1) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    string str2 = &quot;loveleetcode&quot;;</span><br><span class="line">    cout &lt;&lt; str2 &lt;&lt; &quot;: &quot; &lt;&lt; solu.firstUniqChar(str2) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/21/LeetCode-387-First-Unique-Character-in-a-String/" data-id="clz2w7lbm001tyivh6o8q1qtj" data-title="LeetCode 387 - First Unique Character in a String" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-K-means参数K的选择" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/" class="article-date">
+  <time class="dt-published" datetime="2018-04-21T07:27:05.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/">K-means参数K的选择</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>对于K均值算法中聚类个数K的选择，通常有四种方法：</p>
+<ul>
+<li>按需选择</li>
+<li>观察法</li>
+<li>手肘法</li>
+<li>Gap Statistic方法</li>
+</ul>
+<p>本文相关算法的代码以及实验在：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/Kmeans">GitHub</a></p>
+<h2 id="按需选择"><a href="#按需选择" class="headerlink" title="按需选择"></a>按需选择</h2><p>简单地说就是按照建模的需求和目的来选择聚类的个数。比如说，一个游戏公司想把所有玩家做聚类分析，分成顶级、高级、中级、菜鸟四类，那么K&#x3D;4；如果房地产公司想把当地的商品房分成高中低三档，那么K&#x3D;3。按需选择法虽然合理，但是未必能保证在做K-Means时能够得到清晰的分界线。</p>
+<h2 id="观察法"><a href="#观察法" class="headerlink" title="观察法"></a>观察法</h2><p>观察法就是将数据可视化，然后用肉眼去观察这些数据点大概分成几堆。这个方法有个缺点，那就是数据维度不能太高，一般是二维或者三维，否则数据无法可视化出来。</p>
+<h2 id="手肘法"><a href="#手肘法" class="headerlink" title="手肘法"></a>手肘法</h2><p>手肘法 (Elbow Method) 本质上也是一种间接的观察法。当我们对数据 ${ x_1, \ldots, x_N }$ 进行K均值聚类后，我们将得到 $K$ 个聚类的中心点 $\mu_k, k&#x3D;1,2, \ldots, K$，以及数据点 $x_i$ 所对应的簇 $C_k, k&#x3D;1, 2, \ldots, K$，每个簇中有 $n_k$ 个数据点。我们定义每个簇中的所有点相互之间的距离的和为<br>$$<br>D_k &#x3D; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \Vert x_i - x_j \Vert^2<br>$$<br>其中 $\Vert \cdot \Vert$ 为2范数。则对于聚类个数为 $K$ 时，我们可以定义一个测度量为<br>$$<br>W_K &#x3D; \sum_{k&#x3D;1}^K \frac{1}{2n_k} D_k<br>$$<br>对于不同的 $K$，经过 K-means 算法后我们会得到不同的中心点和数据点所属的簇，从而得到不同的度量 $W_K$。将聚类个数 $K$ 作为横坐标，$W_K$ 作为纵坐标，我们可以得到类似下面的图像：</p>
+<img src="/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/elbow.png" class="">
+
+<p>图像中图形很像人的手肘，该方法的命名就是从这而来。从图像中我们可以观察到，$K &#x3D; 1$ 到 $4$ 下降很快，$K &#x3D; 4$ 之后趋于平稳，因此 $K &#x3D; 4$ 是一个拐点，手肘法认为这个拐点就是最佳的聚类个数 $K$。</p>
+<p>手肘法是一个经验方法，观察结果因人而异，特别是遇到拐点位置不是很明显时。相比于前面的观察法，该方法的优点在于其适用于高维度的数据。</p>
+<h3 id="Trick"><a href="#Trick" class="headerlink" title="Trick"></a>Trick</h3><p>如果每个簇的中心点为该簇中的所有数据点的平均值时，即<br>$$<br>\mu_k &#x3D; \frac{1}{n_k} \sum_{x_i \in C_k} x_i<br>$$<br>则 $D_k$ 可以写为<br>$$<br>D_k &#x3D; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \Vert x_i - x_j \Vert^2 &#x3D; 2n_k  \sum_{x_i \in C_k} \Vert x_i - \mu_k \Vert^2<br>$$<br>$W_K$ 写为<br>$$<br>W_K &#x3D; \sum_{k&#x3D;1}^K \frac{1}{2n_k} D_k &#x3D; \sum_{k&#x3D;1}^K  \sum_{x_i \in C_k} \Vert x_i - \mu_k \Vert^2<br>$$</p>
+<p><strong>Note:</strong> 以下为公式推导内容，可略过。将 $D_k$ 表达式分解可得：<br>$$<br>\begin{align}<br>&amp; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \Vert x_i - x_j \Vert^2 \<br>&#x3D; &amp; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \Vert (x_i - \mu_k) - (x_j - \mu_k) \Vert^2 \<br>&#x3D; &amp; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \left(  \Vert x_i - \mu_k \Vert^2 + \Vert x_j - \mu_k \Vert^2 - 2 \left&lt;  x_i - \mu_k, x_j - \mu_k \right&gt; \right) \<br>&#x3D; &amp; \sum_{x_i \in C_k} n_k \Vert x_i - \mu_k \Vert^2 + \sum_{x_j \in C_k} n_k \Vert x_j - \mu_k \Vert^2 - 2 \sum_{x_i \in C_k} \sum_{x_j \in C_k} \left&lt; x_i - \mu_k, x_j - \mu_k \right&gt; \<br>&#x3D; &amp; 2 \sum_{x_i \in C_k} n_k \Vert x_i - \mu_k \Vert^2 - 2 \sum_{x_i \in C_k} \sum_{x_j \in C_k} \left&lt; x_i - \mu_k, x_j - \mu_k \right&gt;<br>\end{align}<br>$$<br>其中<br>$$<br>\begin{align}<br>&amp; \sum_{x_i \in C_k} \sum_{x_j \in C_k} \left&lt; x_i - \mu_k, x_j - \mu_k \right&gt; \<br>&#x3D; &amp; \sum_{x_i \in C_k} \left&lt;  x_i - \mu_k, \sum_{x_j \in C_k} (x_j - \mu_k) \right&gt;<br>\end{align}<br>$$<br>由于<br>$$<br>\sum_{x_j \in C_k} (x_j - \mu_k) &#x3D; \sum_{x_j \in C_k} x_j - n_k \mu_k &#x3D; ; n_k \mu_k - n_k \mu_k &#x3D; 0<br>$$<br>则<br>$$<br> \sum_{x_i \in C_k} \sum_{x_j \in C_k} \left&lt; x_i - \mu_k, x_j - \mu_k \right&gt;  &#x3D; 0<br>$$<br>因此可以得到<br>$$<br>\sum_{x_i \in C_k} \sum_{x_j \in C_k} \Vert x_i - x_j \Vert^2 &#x3D; 2 n_k \sum_{x_i \in C_k} \Vert x_i - \mu_k \Vert^2<br>$$</p>
+<h2 id="Gap-Statistic方法"><a href="#Gap-Statistic方法" class="headerlink" title="Gap Statistic方法"></a>Gap Statistic方法</h2><p>这个方法来源于论文[3]，详细内容可以去阅读该论文。延用前面关于度量 $W_K$ 的计算方式，该算法的流程如下：</p>
+<ol>
+<li><p>cluster the observed data, varying the total number of clusters from $K&#x3D;1, 2, \ldots, K_{\text{max}}$, and giving within-dispersion measures $W_K, K&#x3D;1, 2, \ldots, K_{\text{max}}$</p>
+</li>
+<li><p>generate $B$ reference data sets and cluster each one giving within-dispersion measures $W_{Kb}$, $b&#x3D;1,2, \ldots, B$, $K&#x3D;1, 2, \ldots, K_{\text{max}}$. Compute the gap statistic<br>$$<br>\text{Gap}(K) &#x3D;\frac{1}{B} \sum_{b&#x3D;1}^B \log(W_{Kb}) - \log(W_K)<br>$$</p>
+</li>
+<li><p>let $\bar{w} &#x3D; \frac{1}{B} \sum_{b&#x3D;1}^B \log(W_{Kb})$, compute the standard deviation<br>$$<br>\text{sd}<em>K &#x3D; \left[  \frac{1}{B} \sum</em>{b&#x3D;1}^B (\log(W_{Kb}) - \bar{w})^2 \right]^{\frac{1}{2}}<br>$$<br>and define $s_K &#x3D; \text{sd}_K \sqrt{1 + \frac{1}{B}}$</p>
+</li>
+<li><p>choose the number of clusters as the smallest $K$ such that $\text{Gap(K)} \ge \text{Gap(K+1)} - s_{K+1}$</p>
+</li>
+</ol>
+<p>关于 reference data sets 的生成，论文给了两种生成方法，这里只用其中一个，即对于生成的样本 $x_r$，其维度为 $d$，该样本的元素 $x_{ri}$ 的值按照均匀分布 $U(a, b)$ 随机生成，其中 $a$ 为待聚类的所有数据点的第 $i$ 位置元素的最小值， $b$ 为数据点的第 $i$ 位置元素的最大值。经过实验发现，这个算法的 3，4 步骤可以去掉，只用第 2 步计算出的 $\text{Gap}(K)$，然后选择最大 $\text{Gap}(K)$ 所对应的 $K$ 作为最优的聚类个数。这里贴出从一个数据集中得到的 $\text{Gap}(K)$ 的变化曲线图</p>
+ <img src="/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/gap.png" class="">
+
+<p>可以发现，当 $K &#x3D; 4$ 时，$\text{Gap}(K)$ 取得最大值，因此选择 $K &#x3D; 4$ 作为最优的聚类个数。该算法实现的代码为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def calculate_Wk(data, centroids, cluster):</span><br><span class="line">    K = centroids.shape[0]</span><br><span class="line">    wk = 0.0</span><br><span class="line">    for k in range(K):</span><br><span class="line">        data_in_cluster = data[cluster == k, :]</span><br><span class="line">        center = centroids[k, :]</span><br><span class="line">        num_points = data_in_cluster.shape[0]</span><br><span class="line">        for i in range(num_points):</span><br><span class="line">            wk = wk + np.linalg.norm(data_in_cluster[i, :]-center, ord=2) ** 2</span><br><span class="line"></span><br><span class="line">    return wk</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def bounding_box(data):</span><br><span class="line">    dim = data.shape[1]</span><br><span class="line">    boxes = []</span><br><span class="line">    for i in range(dim):</span><br><span class="line">        data_min = np.amin(data[:, i])</span><br><span class="line">        data_max = np.amax(data[:, i])</span><br><span class="line">        boxes.append((data_min, data_max))</span><br><span class="line"></span><br><span class="line">    return boxes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def gap_statistic(data, max_K, B, cluster_algorithm):</span><br><span class="line">    num_points, dim = data.shape</span><br><span class="line">    K_range = np.arange(1, max_K, dtype=int)</span><br><span class="line">    num_K = len(K_range)</span><br><span class="line">    boxes = bounding_box(data)</span><br><span class="line">    data_generate = np.zeros((num_points, dim))</span><br><span class="line"></span><br><span class="line">    &#x27;&#x27;&#x27; 写法1</span><br><span class="line">    log_Wks = np.zeros(num_K)</span><br><span class="line">    gaps = np.zeros(num_K)</span><br><span class="line">    sks = np.zeros(num_K)</span><br><span class="line">    for ind_K, K in enumerate(K_range):</span><br><span class="line">        cluster_centers, labels, _ = cluster_algorithm(data, K)</span><br><span class="line">        log_Wks[ind_K] = np.log(calculate_Wk(data, cluster_centers, labels))</span><br><span class="line"></span><br><span class="line">        # generate B reference data sets</span><br><span class="line">        log_Wkbs = np.zeros(B)</span><br><span class="line">        for b in range(B):</span><br><span class="line">            for i in range(num_points):</span><br><span class="line">                for j in range(dim):</span><br><span class="line">                    data_generate[i][j] = \</span><br><span class="line">                        np.random.uniform(boxes[j][0], boxes[j][1])</span><br><span class="line">            cluster_centers, labels, _ = cluster_algorithm(data_generate, K)</span><br><span class="line">            log_Wkbs[b] = \</span><br><span class="line">                np.log(calculate_Wk(data_generate, cluster_centers, labels))</span><br><span class="line">        gaps[ind_K] = np.mean(log_Wkbs) - log_Wks[ind_K]</span><br><span class="line">        sks[ind_K] = np.std(log_Wkbs) * np.sqrt(1 + 1.0 / B)</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">    &#x27;&#x27;&#x27; 写法2</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line">    log_Wks = np.zeros(num_K)</span><br><span class="line">    for indK, K in enumerate(K_range):</span><br><span class="line">        cluster_centers, labels, _ = cluster_algorithm(data, K)</span><br><span class="line">        log_Wks[indK] = np.log(calculate_Wk(data, cluster_centers, labels))</span><br><span class="line"></span><br><span class="line">    gaps = np.zeros(num_K)</span><br><span class="line">    sks = np.zeros(num_K)</span><br><span class="line">    log_Wkbs = np.zeros((B, num_K))</span><br><span class="line"></span><br><span class="line">    # generate B reference data sets</span><br><span class="line">    for b in range(B):</span><br><span class="line">        for i in range(num_points):</span><br><span class="line">            for j in range(dim):</span><br><span class="line">                data_generate[i, j] = \</span><br><span class="line">                    np.random.uniform(boxes[j][0], boxes[j][1])</span><br><span class="line">        for indK, K in enumerate(K_range):</span><br><span class="line">            cluster_centers, labels, _ = cluster_algorithm(data_generate, K)</span><br><span class="line">            log_Wkbs[b, indK] = \</span><br><span class="line">                np.log(calculate_Wk(data_generate, cluster_centers, labels))</span><br><span class="line"></span><br><span class="line">    for k in range(num_K):</span><br><span class="line">        gaps[k] = np.mean(log_Wkbs[:, k]) - log_Wks[k]</span><br><span class="line">        sks[k] = np.std(log_Wkbs[:, k]) * np.sqrt(1 + 1.0 / B)</span><br><span class="line"></span><br><span class="line">    return gaps, sks, log_Wks</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="http://sofasofa.io/forum_main_post.php?postid=1000282">K-means怎么选K?</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/29208148">k-means的k值该如何确定？</a></li>
+<li>Tibshirani R, Walther G, Hastie T. Estimating the number of clusters in a data set via the gap statistic[J]. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 2001, 63(2): 411-423.</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/" data-id="clz2w7lbb000nyivhhomh9q2f" data-title="K-means参数K的选择" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LeetCode-819-Most-Common-Word" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/21/LeetCode-819-Most-Common-Word/" class="article-date">
+  <time class="dt-published" datetime="2018-04-21T03:08:30.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/21/LeetCode-819-Most-Common-Word/">LeetCode 819 - Most Common Word</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given a paragraph and a list of banned words, return the most frequent word that is not in the list of banned words.  It is guaranteed there is at least one word that isn’t banned, and that the answer is unique.</p>
+<p>Words in the list of banned words are given in lowercase, and free of punctuation.  Words in the paragraph are not case sensitive.  The answer is in lowercase.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Input:</span><br><span class="line">paragraph = &quot;Bob hit a ball, the hit BALL flew far after it was hit.&quot;</span><br><span class="line">banned = [&quot;hit&quot;]</span><br><span class="line"></span><br><span class="line">Output: &quot;ball&quot;</span><br><span class="line"></span><br><span class="line">Explanation:</span><br><span class="line">&quot;hit&quot; occurs 3 times, but it is a banned word.</span><br><span class="line">&quot;ball&quot; occurs twice (and no other word does), so it is the most frequent non-banned word in the paragraph.</span><br><span class="line">Note that words in the paragraph are not case sensitive,</span><br><span class="line">that punctuation is ignored (even if adjacent to words, such as &quot;ball,&quot;),</span><br><span class="line">and that &quot;hit&quot; isn&#x27;t the answer even though it occurs more because it is banned.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ul>
+<li><code>1 &lt;= paragraph.length &lt;= 1000</code>.</li>
+<li><code>1 &lt;= banned.length &lt;= 100</code>.</li>
+<li><code>1 &lt;= banned[i].length &lt;= 10</code>.</li>
+<li>The answer is unique, and written in lowercase (even if its occurrences in <code>paragraph</code> may have uppercase symbols, and even if it is a proper noun.)</li>
+<li><code>paragraph</code> only consists of letters, spaces, or the punctuation symbols <code>!?&#39;,;.</code></li>
+<li>Different words in <code>paragraph</code> are always separated by a space.</li>
+<li>There are no hyphens or hyphenated words.</li>
+<li>Words only consist of letters, never apostrophes or other punctuation symbols.</li>
+</ul>
+<p><strong>Related Topics:</strong> String</p>
+<p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/most-common-word/description/">819. Most Common Word</a></p>
+<p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/most-common-word/description/">819. Most Common Word</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>题目要求在字符串 <code>paragraph</code> 中找到出现次数最多的单词，并且单词不能是列表 <code>banned</code> 中的单词。解决该题可以设定两个哈希表，第一个哈希表的 key 为列表 <code>banned</code> 中的单词，用于判断单词是否在列表中，第二个哈希表的 key 为字符串 <code>paragraph</code> 中的单词，value 为该单词的出现次数。依次取出字符串 <code>paragraph</code> 中的单词，由于题目要求单词都是小写，所以要将单词转换成小写，然后在第一个哈希表中查找该单词是否存在，如果不存在，将第二个哈希表中该单词的出现次数加1，否则取字符串下一个单词，依次重复这个操作直到遍历完字符串 <code>paragraph</code> 的所有单词，接着根据第二个哈希表找出出现次数最多的单词。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    bool delimter(char ch)</span><br><span class="line">    &#123;</span><br><span class="line">        if (ch == &#x27; &#x27; || ch == &#x27;!&#x27; ||</span><br><span class="line">            ch == &#x27;?&#x27; || ch == &#x27;\&#x27;&#x27; ||</span><br><span class="line">            ch == &#x27;,&#x27; || ch == &#x27;;&#x27; || ch == &#x27;.&#x27;)</span><br><span class="line">            return true;</span><br><span class="line">        else</span><br><span class="line">            return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void lowercase(string&amp; str)</span><br><span class="line">    &#123;</span><br><span class="line">        transform(str.begin(), str.end(), str.begin(), ::tolower);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    string mostCommonWord(string paragraph, vector&lt;string&gt;&amp; banned)</span><br><span class="line">    &#123;</span><br><span class="line">        unordered_set&lt;string&gt; banned_list;</span><br><span class="line">        for (int i=0; i&lt;banned.size(); i++)</span><br><span class="line">            banned_list.insert(banned[i]);</span><br><span class="line"></span><br><span class="line">        int times, max_times;</span><br><span class="line">        string str, common_str;</span><br><span class="line">        int start, end;</span><br><span class="line">        unordered_map&lt;string, int&gt; word_counts;</span><br><span class="line"></span><br><span class="line">        start = 0;</span><br><span class="line">        max_times = 0;</span><br><span class="line">        common_str = &quot;&quot;;</span><br><span class="line">        for (int i=0; i&lt;paragraph.size(); i++) &#123;</span><br><span class="line">            if (delimter(paragraph[i])) &#123;</span><br><span class="line">                end = i;</span><br><span class="line"></span><br><span class="line">                str = string(paragraph, start, end-start);</span><br><span class="line">                lowercase(str);</span><br><span class="line"></span><br><span class="line">                if (banned_list.find(str) == banned_list.end()) &#123;</span><br><span class="line">                    auto it = word_counts.find(str);</span><br><span class="line">                    if (it == word_counts.end()) &#123;</span><br><span class="line">                        word_counts.insert(make_pair(str, 1));</span><br><span class="line">                        times = 1;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        it-&gt;second = it-&gt;second + 1;</span><br><span class="line">                        times = it-&gt;second;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (times &gt; max_times) &#123;</span><br><span class="line">                        common_str = str;</span><br><span class="line">                        max_times = times;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                while (i&lt;paragraph.size() &amp;&amp; delimter(paragraph[i]))</span><br><span class="line">                    i++;</span><br><span class="line"></span><br><span class="line">                start = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // the last word</span><br><span class="line">        end = paragraph.size();</span><br><span class="line">        if (start &lt; end) &#123;</span><br><span class="line">            str = string(paragraph, start, end-start);</span><br><span class="line">            lowercase(str);</span><br><span class="line">            if (banned_list.find(str) == banned_list.end()) &#123;</span><br><span class="line">                auto it = word_counts.find(str);</span><br><span class="line">                if (it == word_counts.end()) &#123;</span><br><span class="line">                    word_counts.insert(make_pair(str, 1));</span><br><span class="line">                    times = 1;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    it-&gt;second = it-&gt;second + 1;</span><br><span class="line">                    times = it-&gt;second;</span><br><span class="line">                &#125;</span><br><span class="line">                if (times &gt; max_times) &#123;</span><br><span class="line">                    common_str = str;</span><br><span class="line">                    max_times = times;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return common_str;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    string paragraph = &quot;Bob hit a ball, the hit BALL flew far after it was hit.&quot;;</span><br><span class="line">    vector&lt;string&gt; banned = &#123;&quot;hit&quot;&#125;;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; solu.mostCommonWord(paragraph, banned) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/21/LeetCode-819-Most-Common-Word/" data-id="clz2w7lbq0029yivh8mz27z2d" data-title="LeetCode 819 - Most Common Word" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LeetCode-657-Judge-Route-Circle" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/21/LeetCode-657-Judge-Route-Circle/" class="article-date">
+  <time class="dt-published" datetime="2018-04-21T02:40:53.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/21/LeetCode-657-Judge-Route-Circle/">LeetCode 657 - Judge Route Circle</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Initially, there is a Robot at position (0, 0). Given a sequence of its moves, judge if this robot makes a circle, which means it moves back to <strong>the original place</strong>.</p>
+<p>The move sequence is represented by a string. And each move is represent by a character. The valid robot moves are <code>R</code> (Right), <code>L</code> (Left), <code>U</code> (Up) and <code>D</code> (down). The output should be true or false representing whether the robot makes a circle.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;UD&quot;</span><br><span class="line">Output: true</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;LL&quot;</span><br><span class="line">Output: false</span><br></pre></td></tr></table></figure>
+
+<p><strong>Related Topics:</strong> String</p>
+<p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/judge-route-circle/description/">657. Judge Route Circle</a></p>
+<p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/judge-route-circle/description/">657. 判断路线成圈</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>根据题目描述，可以设定一个二维坐标 (x, y)，根据指令做相应的改变：</p>
+<ul>
+<li>Right: x &#x3D; x + 1</li>
+<li>Left: x &#x3D; x - 1</li>
+<li>Up: y &#x3D; y + 1</li>
+<li>Down: y &#x3D; y - 1</li>
+</ul>
+<p>最后判断二维坐标 (x, y) 是否为原点 (0, 0) 即可。实现代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    bool judgeCircle(string moves)</span><br><span class="line">    &#123;</span><br><span class="line">        int x = 0, y = 0;</span><br><span class="line"></span><br><span class="line">        for (int i=0; i&lt;moves.size(); i++) &#123;</span><br><span class="line">            switch (moves[i]) &#123;</span><br><span class="line">                case &#x27;U&#x27;:</span><br><span class="line">                    y++;</span><br><span class="line">                    break;</span><br><span class="line">                case &#x27;D&#x27;:</span><br><span class="line">                    y--;</span><br><span class="line">                    break;</span><br><span class="line">                case &#x27;L&#x27;:</span><br><span class="line">                    x--;</span><br><span class="line">                    break;</span><br><span class="line">                case &#x27;R&#x27;:</span><br><span class="line">                    x++;</span><br><span class="line">                    break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return (x == 0 &amp;&amp; y == 0);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    string str1 = &quot;UD&quot;;</span><br><span class="line">    cout &lt;&lt; str1 &lt;&lt; &quot;: &quot; &lt;&lt; solu.judgeCircle(str1) &lt;&lt; endl;</span><br><span class="line">    string str2 = &quot;LL&quot;;</span><br><span class="line">    cout &lt;&lt; str2 &lt;&lt; &quot;: &quot; &lt;&lt; solu.judgeCircle(str2) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/21/LeetCode-657-Judge-Route-Circle/" data-id="clz2w7lbo0023yivhb6u2as0e" data-title="LeetCode 657 - Judge Route Circle" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LeetCode-13-Roman-to-Integer" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/21/LeetCode-13-Roman-to-Integer/" class="article-date">
+  <time class="dt-published" datetime="2018-04-21T02:23:51.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/21/LeetCode-13-Roman-to-Integer/">LeetCode 13 - Roman to Integer</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Symbol       Value</span><br><span class="line">I             1</span><br><span class="line">V             5</span><br><span class="line">X             10</span><br><span class="line">L             50</span><br><span class="line">C             100</span><br><span class="line">D             500</span><br><span class="line">M             1000</span><br></pre></td></tr></table></figure>
+
+<p>For example, two is written as <code>II</code> in Roman numeral, just two one’s added together. Twelve is written as, <code>XII</code>, which is simply <code>X</code> + <code>II</code>. The number twenty seven is written as <code>XXVII</code>, which is <code>XX</code> + <code>V</code> + <code>II</code>.</p>
+<p>Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not <code>IIII</code>. Instead, the number four is written as <code>IV</code>. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as <code>IX</code>. There are six instances where subtraction is used:</p>
+<ul>
+<li><code>I</code> can be placed before <code>V</code> (5) and <code>X</code> (10) to make 4 and 9.</li>
+<li><code>X</code> can be placed before <code>L</code> (50) and <code>C</code> (100) to make 40 and 90.</li>
+<li><code>C</code> can be placed before <code>D</code> (500) and <code>M</code> (1000) to make 400 and 900.</li>
+</ul>
+<p>Given a roman numeral, convert it to an integer. Input is guaranteed to be within the range from 1 to 3999.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;III&quot;</span><br><span class="line">Output: 3</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;IV&quot;</span><br><span class="line">Output: 4</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;IX&quot;</span><br><span class="line">Output: 9</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 4:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;LVIII&quot;</span><br><span class="line">Output: 58</span><br><span class="line">Explanation: C = 100, L = 50, XXX = 30 and III = 3.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 5:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;MCMXCIV&quot;</span><br><span class="line">Output: 1994</span><br><span class="line">Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Related Topics:</strong> Math, String</p>
+<p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/roman-to-integer/description/">13. Roman to Integer</a></p>
+<p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/roman-to-integer/description/">13. 罗马数字转整数</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>题目难度不大，根据题目描述可以写出代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    int romanToInt(string s)</span><br><span class="line">    &#123;</span><br><span class="line">        int num = 0;</span><br><span class="line">        int j;</span><br><span class="line">        char ch;</span><br><span class="line"></span><br><span class="line">        for (int i=0; i&lt;s.size(); i++) &#123;</span><br><span class="line">            ch = s[i];</span><br><span class="line">            j = i + 1;</span><br><span class="line">            switch (ch) &#123;</span><br><span class="line">                case &#x27;I&#x27;:   // value 1</span><br><span class="line">                    if (j &lt; s.size() &amp;&amp; (s[j] == &#x27;V&#x27; || s[j] == &#x27;X&#x27;))</span><br><span class="line">                        num -= 1;</span><br><span class="line">                    else</span><br><span class="line">                        num += 1;</span><br><span class="line">                    break;</span><br><span class="line">                case &#x27;V&#x27;:   // value 5</span><br><span class="line">                    num += 5;</span><br><span class="line">                    break;</span><br><span class="line">                case &#x27;X&#x27;:   // value 10</span><br><span class="line">                    if (j &lt; s.size() &amp;&amp; (s[j] == &#x27;L&#x27; || s[j] == &#x27;C&#x27;))</span><br><span class="line">                        num -= 10;</span><br><span class="line">                    else</span><br><span class="line">                        num += 10;</span><br><span class="line">                    break;</span><br><span class="line">                case &#x27;L&#x27;:   // value 50</span><br><span class="line">                    num += 50;</span><br><span class="line">                    break;</span><br><span class="line">                case &#x27;C&#x27;:   // value 100</span><br><span class="line">                    if (j &lt; s.size() &amp;&amp; (s[j] == &#x27;D&#x27; || s[j] == &#x27;M&#x27;))</span><br><span class="line">                        num -= 100;</span><br><span class="line">                    else</span><br><span class="line">                        num += 100;</span><br><span class="line">                    break;</span><br><span class="line">                case &#x27;D&#x27;:   // value 500</span><br><span class="line">                    num += 500;</span><br><span class="line">                    break;</span><br><span class="line">                case &#x27;M&#x27;:   // value 1000</span><br><span class="line">                    num += 1000;</span><br><span class="line">                    break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return num;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    string str1 = &quot;MCMXCIV&quot;;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; str1 &lt;&lt; &quot;: &quot; &lt;&lt; solu.romanToInt(str1) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/21/LeetCode-13-Roman-to-Integer/" data-id="clz2w7lbc000qyivha1yl52co" data-title="LeetCode 13 - Roman to Integer" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LeetCode-383-Ransom-Note" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/21/LeetCode-383-Ransom-Note/" class="article-date">
+  <time class="dt-published" datetime="2018-04-21T01:57:31.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/21/LeetCode-383-Ransom-Note/">LeetCode 383 - Ransom Note</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given an arbitrary ransom note string and another string containing letters from all the magazines, write a function that will return true if the ransom note can be constructed from the magazines ; otherwise, it will return false.</p>
+<p>Each letter in the magazine string can only be used once in your ransom note.</p>
+<p><strong>Note:</strong></p>
+<p>You may assume that both strings contain only lowercase letters.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">canConstruct(&quot;a&quot;, &quot;b&quot;) -&gt; false</span><br><span class="line">canConstruct(&quot;aa&quot;, &quot;ab&quot;) -&gt; false</span><br><span class="line">canConstruct(&quot;aa&quot;, &quot;aab&quot;) -&gt; true</span><br></pre></td></tr></table></figure>
+
+<p><strong>Related Topics:</strong> String</p>
+<p>原问题：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/ransom-note/description/">383. Ransom Note</a></p>
+<p>中文翻译版：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/ransom-note/description/">383. 赎金信</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>这道题要求字符串 ransom note 中的字符都能从字符串 magazine 中找到，而且 ransom note 中的字符的重复次数要小于等于 magazine 相对应字符的重复次数。基于上面的要求，有个很简单的解决方案，对字符串 ransom note 和字符串 magazine 分别构造一个大小为 26 的数组，存储 26 个字母在字符串中出现的次数，然后遍历数组，判断 ransom note 中的字符的重复次数是否小于等于 magazine 相对应字符的重复次数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;cstring&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    bool canConstruct(string ransomNote, string magazine)</span><br><span class="line">    &#123;</span><br><span class="line">        if (ransomNote.size() &gt; magazine.size())</span><br><span class="line">            return false;</span><br><span class="line"></span><br><span class="line">        int rmap[26], mmap[26];</span><br><span class="line"></span><br><span class="line">        memset(rmap, 0, sizeof(rmap));</span><br><span class="line">        memset(mmap, 0, sizeof(mmap));</span><br><span class="line"></span><br><span class="line">        int i = 0, j = 0;</span><br><span class="line">        while (i &lt; ransomNote.size() || j &lt; magazine.size()) &#123;</span><br><span class="line">            if (i &lt; ransomNote.size())</span><br><span class="line">                rmap[ransomNote[i++] - &#x27;a&#x27;] += 1;</span><br><span class="line">            if (j &lt; magazine.size())</span><br><span class="line">                mmap[magazine[j++] - &#x27;a&#x27;] += 1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for (i=0; i&lt;26; i++)</span><br><span class="line">            if (rmap[i] &gt; mmap[i])</span><br><span class="line">                return false;</span><br><span class="line"></span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line"></span><br><span class="line">    string r1 = &quot;ab&quot;;</span><br><span class="line">    string m1 = &quot;aba&quot;;</span><br><span class="line">    cout &lt;&lt; r1 &lt;&lt; &quot; &quot; &lt;&lt; m1 &lt;&lt; &quot;: &quot; &lt;&lt; solu.canConstruct(r1, m1);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/21/LeetCode-383-Ransom-Note/" data-id="clz2w7lbl001ryivh11fhct3j" data-title="LeetCode 383 - Ransom Note" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LeetCode-521-Longest-Uncommon-Subsequence-I" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/15/LeetCode-521-Longest-Uncommon-Subsequence-I/" class="article-date">
+  <time class="dt-published" datetime="2018-04-15T14:26:45.000Z" itemprop="datePublished">2018-04-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/15/LeetCode-521-Longest-Uncommon-Subsequence-I/">LeetCode 521 - Longest Uncommon Subsequence I</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given a group of two strings, you need to find the longest uncommon subsequence of this group of two strings. The longest uncommon subsequence is defined as the longest subsequence of one of these strings and this subsequence should not be <strong>any</strong> subsequence of the other strings.</p>
+<p>A <strong>subsequence</strong> is a sequence that can be derived from one sequence by deleting some characters without changing the order of the remaining elements. Trivially, any string is a subsequence of itself and an empty string is a subsequence of any string.</p>
+<p>The input will be two strings, and the output needs to be the length of the longest uncommon subsequence. If the longest uncommon subsequence doesn’t exist, return -1.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;aba&quot;, &quot;cdc&quot;</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: The longest uncommon subsequence is &quot;aba&quot; (or &quot;cdc&quot;),</span><br><span class="line">because &quot;aba&quot; is a subsequence of &quot;aba&quot;,</span><br><span class="line">but not a subsequence of any other strings in the group of two strings.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ol>
+<li>Both strings’ lengths will not exceed 100.</li>
+<li>Only letters from a ~ z will appear in input strings.</li>
+</ol>
+<p><strong>Related Topics:</strong> String</p>
+<p>原问题：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-uncommon-subsequence-i/description/">521. Longest Uncommon Subsequence I</a></p>
+<p>中文翻译版：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/longest-uncommon-subsequence-i/description/">521. 最长特殊序列 Ⅰ</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>这道题粗看以为是一道很难的题目，但是解决该问题只需要考虑三种情况：</p>
+<ol>
+<li>$a &#x3D; b$<br>  If both the strings are identical, it is obvious that no subsequence will be uncommon. Hence, return -1.</li>
+<li>$length(a) &#x3D; length(b)$ and $a \ne b$<br>  Example: $abc$ and $abd$. In this case we can consider any string i.e. $abc$ or $abd$ as a required subsequence, as out of these two strings one string will never be a subsequence of other string. Hence, return $length(a)$ or $length(b)$.</li>
+<li>$length(a) \ne length(b)$<br>  Example: $abcd$ and $abc$. In this case we can consider bigger string as a required subsequence because bigger string can’t be a subsequence of smaller string. Hence, return $\max{(length(a), length(b))}$.</li>
+</ol>
+<p>贴上实现代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    int findLUSlength(string a, string b)</span><br><span class="line">    &#123;</span><br><span class="line">        int i = 0, j = 0;</span><br><span class="line"></span><br><span class="line">        if (a.size() == b.size()) &#123;</span><br><span class="line">            while (i &lt; a.size() &amp;&amp; j &lt; a.size() &amp;&amp; a[i] == b[j]) &#123;</span><br><span class="line">                i++;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            if (i &lt; a.size() || j &lt; b.size())</span><br><span class="line">                return a.size();</span><br><span class="line">            else</span><br><span class="line">                return -1;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return a.size() &gt; b.size() ? a.size() : b.size();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    string str1 = &quot;abcd&quot;, str2 = &quot;abc&quot;;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; solu.findLUSlength(str1, str2) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/15/LeetCode-521-Longest-Uncommon-Subsequence-I/" data-id="clz2w7lbn001xyivhcihshwut" data-title="LeetCode 521 - Longest Uncommon Subsequence I" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LeetCode-557-Reverse-Words-in-a-String-III" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/13/LeetCode-557-Reverse-Words-in-a-String-III/" class="article-date">
+  <time class="dt-published" datetime="2018-04-13T15:44:37.000Z" itemprop="datePublished">2018-04-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/13/LeetCode-557-Reverse-Words-in-a-String-III/">LeetCode 557 - Reverse Words in a String III</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given a string, you need to reverse the order of characters in each word within a sentence while still preserving whitespace and initial word order.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;Let&#x27;s take LeetCode contest&quot;</span><br><span class="line">Output: &quot;s&#x27;teL ekat edoCteeL tsetnoc&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong> In the string, each word is separated by single space and there will not be any extra space in the string.</p>
+<p><strong>Related Topics:</strong> String</p>
+<p>原问题：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/reverse-words-in-a-string-iii/description/">557. Reverse Words in a String III</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>题目主要意思是反转字符串中的每一个单词，因此这道题目主要是找到单词的位置，这里我们可以设定两个指针，分别命名为<code>start</code>和<code>end</code>，指针<code>start</code>指向单词的第一个字母的位置，指针<code>end</code>指向单词的最后一个字母的位置，然后将<code>[start, end]</code>里面的单词反转即可。至于指针怎么设置，我们可以先设置指针<code>start</code>指向第一个字母，然后找到空格字符的前一个字符的位置赋给指针<code>end</code>；接着找到下一个字母的位置赋给指针<code>start</code>，然后找到下一个空格字符的位置，将该空格字符的前一个字符的位置赋给指针<code>end</code>，如此循环，直到字符串被遍历完。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    string reverseWords(string s)</span><br><span class="line">    &#123;</span><br><span class="line">        int start, end;</span><br><span class="line">        char tmp;</span><br><span class="line"></span><br><span class="line">        start = 0;</span><br><span class="line">        end = s.size();</span><br><span class="line">        for (int i=0; i&lt;s.size(); i++) &#123;</span><br><span class="line">            if (s[i] == &#x27; &#x27;) &#123;</span><br><span class="line">                end = i - 1;</span><br><span class="line"></span><br><span class="line">                // reverse word</span><br><span class="line">                while (start &lt; end) &#123;</span><br><span class="line">                    tmp = s[start];</span><br><span class="line">                    s[start] = s[end];</span><br><span class="line">                    s[end] = tmp;</span><br><span class="line">                    start++;</span><br><span class="line">                    end--;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                while (i &lt; s.size() &amp;&amp; s[i] == &#x27; &#x27;)</span><br><span class="line">                    i++;</span><br><span class="line">                start = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // process last word</span><br><span class="line">        end = s.size() - 1;</span><br><span class="line">        while (start &lt; end) &#123;</span><br><span class="line">            tmp = s[start];</span><br><span class="line">            s[start] = s[end];</span><br><span class="line">            s[end] = tmp;</span><br><span class="line">            start++;</span><br><span class="line">            end--;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    string str1 = &quot;Let&#x27;s take LeetCode contest&quot;;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; str1 &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; solu.reverseWords(str1) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/13/LeetCode-557-Reverse-Words-in-a-String-III/" data-id="clz2w7lbo0021yivh0mfjd7at" data-title="LeetCode 557 - Reverse Words in a String III" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-基于Docker的Caffe环境搭建" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/07/%E5%9F%BA%E4%BA%8EDocker%E7%9A%84Caffe%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
+  <time class="dt-published" datetime="2018-04-07T15:16:50.000Z" itemprop="datePublished">2018-04-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/07/%E5%9F%BA%E4%BA%8EDocker%E7%9A%84Caffe%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">基于Docker的Caffe环境搭建</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>本文主要介绍如何利用Docker搭建Caffe的开发环境，内容分两部分，第一部分是CPU模式环境搭建，第二部分是GPU模式环境搭建。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>由于本文需要用到Docker的，所以要先装好Docker，这个教程可以参考官方提供的最新教程 <a target="_blank" rel="noopener" href="https://docs.docker.com/install/">Install Docker</a>，这里就不详细介绍了。按照官方教程，装好Docker的社区版 (Community Edition)。</p>
+<h2 id="CPU模式"><a href="#CPU模式" class="headerlink" title="CPU模式"></a>CPU模式</h2><p>如果要想直接使用Caffe提供的Docker镜像 (<a target="_blank" rel="noopener" href="https://hub.docker.com/r/bvlc/caffe/">bvlc&#x2F;caffe</a>)，可以直接使用 <code>docker pull</code> 命令把镜像下下来，然后使用 <code>docker run</code> 运行一个容器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull bvlc/caffe:cpu</span><br><span class="line">docker run -it bvlc/caffe:cpu bash</span><br></pre></td></tr></table></figure>
+
+<p>此时，CPU模式的环境就可以使用了。如果需要在这个镜像的基础上添加点东西，例如安装 Jupyter Notebook 从而方便地使用Caffe的Python接口，这就需要自己编写一个Dockerfile了，然后生成一个镜像。</p>
+<h3 id="编写Dockerfile"><a href="#编写Dockerfile" class="headerlink" title="编写Dockerfile"></a>编写Dockerfile</h3><p>我这里直接贴上一份Dockerfile，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">FROM bvlc/caffe:cpu</span><br><span class="line"></span><br><span class="line">RUN pip install -U pip \</span><br><span class="line">    &amp;&amp; pip install -U scipy \</span><br><span class="line">    &amp;&amp; pip install -U scikit-learn \</span><br><span class="line">    &amp;&amp; pip install -U matplotlib \</span><br><span class="line">    &amp;&amp; pip install -U jupyter \</span><br><span class="line">    &amp;&amp; pip install -U lmdb \</span><br><span class="line">    &amp;&amp; pip install -U python-mnist</span><br><span class="line"></span><br><span class="line"># Set the working directory to /caffe</span><br><span class="line">WORKDIR /caffe</span><br><span class="line"></span><br><span class="line">VOLUME [&quot;/caffe/data&quot;, &quot;/caffe/notebooks&quot;]</span><br><span class="line"></span><br><span class="line"># Expose port 8888 (jupyter uses)</span><br><span class="line">EXPOSE 8888</span><br><span class="line"></span><br><span class="line">CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token=&#x27;science&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>关于Dockerfile的编写规则，可以参考<a target="_blank" rel="noopener" href="https://yeasy.gitbooks.io/docker_practice/content/">Docker - 从入门到实践</a>这个电子书，内容写的很不错。Dockerfile选择Caffe作为基础镜像，然后安装了一些Python 包。在这个Dockerfile中我使用 <code>VOLUME</code> 命令定义了两个匿名卷</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VOLUME [&quot;/caffe/data&quot;, &quot;/caffe/notebooks&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>后面我会把主机的真实目录挂载为这两个匿名卷，这样你在容器里往这两个目录写入东西就会保存到主机的真实目录里面。Dockerfile还指定了容器启动命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token=&#x27;science&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>每次使用 <code>Docker run</code> 启动容器都会运行这个命令，这里我选择启动 Jupyter Notebook，这样我就可以通过浏览器访问 Jupyter Notebook了。</p>
+<h3 id="制作镜像"><a href="#制作镜像" class="headerlink" title="制作镜像"></a>制作镜像</h3><p>在Dockerfile所在目录使用命令即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t mycaffe .</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><p>创建两个目录，分别为 <code>data</code> 和 <code>notebooks</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir data</span><br><span class="line">mkdir notebooks</span><br></pre></td></tr></table></figure>
+
+<p>这两个目录就是所要挂载的目录，我要将这两个目录挂载到容器的匿名卷上。使用 <code>Docker run</code> 启动一个容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name DeepLearning -d --mount type=bind,source=`pwd`/data,target=/caffe/data --mount type=bind,source=`pwd`/LeNet,target=/caffe/notebooks -p 8887:8888 mycaffe</span><br></pre></td></tr></table></figure>
+
+<p>这里解析下命令，首先是挂载两个匿名卷，将目录 <code>data</code> 挂载到 <code>/caffe/data</code>，将目录 <code>notebooks</code> 挂载到 <code>/caffe/notebooks</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--mount type=bind,source=`pwd`/data,target=/caffe/data --mount type=bind,source=`pwd`/LeNet,target=/caffe/notebooks</span><br></pre></td></tr></table></figure>
+
+<p>然后是 <code>-p 8887:8888</code> 将容器8888端口映射到本机的8887端口上，<code>-d</code> 是让容器后台运行，<code>--name DeepLearning</code> 将这个容器命名为 DeepLearning。运行成功后，可以使用浏览器访问 Jupyter Notebook了，访问地址为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8887/</span><br></pre></td></tr></table></figure>
+
+<h2 id="GPU模式"><a href="#GPU模式" class="headerlink" title="GPU模式"></a>GPU模式</h2><p>GPU模式稍微复杂点，主要是GPU模式下需要CUDA以及显卡驱动，不过Caffe镜像已经集成了相应的CUDA，剩下就是安装显卡对应的驱动了。不同于CPU模式，这里启动容器需要使用 <code>nvidia-docker</code>，具体安装可以参考 <a target="_blank" rel="noopener" href="https://github.com/NVIDIA/nvidia-docker">GitHub Nvida Docker</a>，安装过程很简单，很快就可以安装好了。接下来就需要编写Dockerfile了，大体内容类似CPU模式的Dockerfile，不过基础镜像选择 <code>bvlc/caffe:gpu</code>。</p>
+<h3 id="编写Dockerfile-1"><a href="#编写Dockerfile-1" class="headerlink" title="编写Dockerfile"></a>编写Dockerfile</h3><p>选用 <code>bvlc/caffe:gpu</code> 作为基础镜像，编写Dockerfile如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">FROM bvlc/caffe:gpu</span><br><span class="line"></span><br><span class="line">RUN pip install -U pip \</span><br><span class="line">    &amp;&amp; pip install -U scipy \</span><br><span class="line">    &amp;&amp; pip install -U scikit-learn \</span><br><span class="line">    &amp;&amp; pip install -U matplotlib \</span><br><span class="line">    &amp;&amp; pip install -U jupyter \</span><br><span class="line">    &amp;&amp; pip install -U lmdb \</span><br><span class="line">    &amp;&amp; pip install -U python-mnist</span><br><span class="line"></span><br><span class="line"># Set the working directory to /caffe</span><br><span class="line">WORKDIR /caffe</span><br><span class="line"></span><br><span class="line">VOLUME [&quot;/caffe/data&quot;, &quot;/caffe/notebooks&quot;]</span><br><span class="line"></span><br><span class="line"># Expose port 8888 (jupyter uses)</span><br><span class="line">EXPOSE 8888</span><br><span class="line"></span><br><span class="line">CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token=&#x27;science&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="制作镜像-1"><a href="#制作镜像-1" class="headerlink" title="制作镜像"></a>制作镜像</h3><p>在Dockerfile所在目录执行命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t mycaffe .</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动容器-1"><a href="#启动容器-1" class="headerlink" title="启动容器"></a>启动容器</h3><p>同前面所述，先创建好两个目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir data</span><br><span class="line">mkdir notebooks</span><br></pre></td></tr></table></figure>
+
+<p>然后启动容器，启动容器使用的是 <code>nvidia-docker</code> 而不是 <code>docker</code>，启动命令如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-docker run --name DeepLearning -d --mount type=bind,source=`pwd`/data,target=/caffe/data --mount type=bind,source=`pwd`/LeNet,target=/caffe/notebooks -p 8887:8888 mycaffe</span><br></pre></td></tr></table></figure>
+
+<p>启动完后可以直接通过浏览器访问容器内部的 Jupyter Notebook 了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/BVLC/caffe/tree/master/docker">Docker Setup Cafee</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/07/%E5%9F%BA%E4%BA%8EDocker%E7%9A%84Caffe%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="clz2w7lc30045yivh5tmibdwk" data-title="基于Docker的Caffe环境搭建" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/" rel="tag">Alogrithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/" rel="tag">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Face-Database/" rel="tag">Face Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDF5/" rel="tag">HDF5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Matplotlib/" rel="tag">Matplotlib</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pandas/" rel="tag">Pandas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyTorch/" rel="tag">PyTorch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Software-Installation/" rel="tag">Software Installation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tex-Live/" rel="tag">Tex Live</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 17.14px;">Algorithm</a> <a href="/tags/Alogrithm/" style="font-size: 10px;">Alogrithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Caffe/" style="font-size: 11.43px;">Caffe</a> <a href="/tags/Cython/" style="font-size: 10px;">Cython</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Face-Database/" style="font-size: 10px;">Face Database</a> <a href="/tags/HDF5/" style="font-size: 12.86px;">HDF5</a> <a href="/tags/Hadoop/" style="font-size: 14.29px;">Hadoop</a> <a href="/tags/Java/" style="font-size: 11.43px;">Java</a> <a href="/tags/LeetCode/" style="font-size: 18.57px;">LeetCode</a> <a href="/tags/Makefile/" style="font-size: 10px;">Makefile</a> <a href="/tags/Matplotlib/" style="font-size: 10px;">Matplotlib</a> <a href="/tags/Numpy/" style="font-size: 11.43px;">Numpy</a> <a href="/tags/Pandas/" style="font-size: 11.43px;">Pandas</a> <a href="/tags/PyTorch/" style="font-size: 10px;">PyTorch</a> <a href="/tags/Python/" style="font-size: 17.14px;">Python</a> <a href="/tags/Shell/" style="font-size: 11.43px;">Shell</a> <a href="/tags/Software-Installation/" style="font-size: 11.43px;">Software Installation</a> <a href="/tags/Tex-Live/" style="font-size: 10px;">Tex Live</a> <a href="/tags/Tmux/" style="font-size: 10px;">Tmux</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 11.43px;">数学</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 15.71px;">机器学习</a> <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12.86px;">笔试</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" style="font-size: 12.86px;">编程语言</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" style="font-size: 11.43px;">软件配置</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/">LeetCode 142 - Linked List Cycle II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/18/LeetCode-155-Min-Stack/">LeetCode 155 - Min Stack</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
