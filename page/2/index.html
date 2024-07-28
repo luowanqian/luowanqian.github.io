@@ -69,6 +69,74 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-LeetCode-141-Linked-List-Cycle" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/04/27/LeetCode-141-Linked-List-Cycle/" class="article-date">
+  <time class="dt-published" datetime="2020-04-27T12:43:26.000Z" itemprop="datePublished">2020-04-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/04/27/LeetCode-141-Linked-List-Cycle/">LeetCode 141 - Linked List Cycle</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given a linked list, determine if it has a cycle in it.</p>
+<p>To represent a cycle in the given linked list, we use an integer <code>pos</code> which represents the position (0-indexed) in the linked list where tail connects to. If <code>pos</code> is <code>-1</code>, then there is no cycle in the linked list.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: head = [3,2,0,-4], pos = 1</span><br><span class="line">Output: true</span><br><span class="line">Explanation: There is a cycle in the linked list, where tail connects to the second node.</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/04/27/LeetCode-141-Linked-List-Cycle/circularlinkedlist.png" class="" width="350">
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: head = [1,2], pos = 0</span><br><span class="line">Output: true</span><br><span class="line">Explanation: There is a cycle in the linked list, where tail connects to the first node.</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/04/27/LeetCode-141-Linked-List-Cycle/circularlinkedlist_test2.png" class="" width="180">
+
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: head = [1], pos = -1</span><br><span class="line">Output: false</span><br><span class="line">Explanation: There is no cycle in the linked list.</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/04/27/LeetCode-141-Linked-List-Cycle/circularlinkedlist_test3.png" class="" width="60">
+
+<p><strong>Follow up:</strong></p>
+<p>Can you solve it using <code>O(1)</code> (i.e. constant) memory?</p>
+<p><strong>Related Topics:</strong> <code>Linked List</code>, <code>Two Pointers</code></p>
+<p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/linked-list-cycle/">141. Linked List Cycle</a></p>
+<p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/linked-list-cycle/">141. 环形链表</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>该题可以使用双指针方法进行解决，设定快指针 <code>fast</code> 和慢指针 <code>slow</code>，两指针同时从头节点 <code>head</code> 出发，慢指针每前进一个节点，快指针就前进两个节点，如果链表有环，由于两指针前进速度不同，最终两指针会汇聚在同一个节点，即 <code>fast == slow</code>，否则，快指针会最先到达链表节点，两指针不会汇聚在一起。</p>
+<details>
+<summary>参考解题代码</summary>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;List.h&quot;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">hasCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">NULL</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        ListNode *fast, *slow;</span><br><span class="line">        fast = slow = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="literal">NULL</span> &amp;&amp; fast-&gt;next != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            slow = slow-&gt;next;</span><br><span class="line">            fast = fast-&gt;next-&gt;next;</span><br><span class="line">            <span class="keyword">if</span> (slow == fast)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ListNode *node1 = <span class="built_in">create_list_node</span>(<span class="number">1</span>);</span><br><span class="line">    ListNode *node2 = <span class="built_in">create_list_node</span>(<span class="number">2</span>);</span><br><span class="line">    ListNode *node3 = <span class="built_in">create_list_node</span>(<span class="number">3</span>);</span><br><span class="line">    ListNode *node4 = <span class="built_in">create_list_node</span>(<span class="number">4</span>);</span><br><span class="line">    <span class="built_in">connect_list_nodes</span>(node1, node2);</span><br><span class="line">    <span class="built_in">connect_list_nodes</span>(node2, node3);</span><br><span class="line">    <span class="built_in">connect_list_nodes</span>(node3, node4);</span><br><span class="line">    <span class="built_in">connect_list_nodes</span>(node4, node2);</span><br><span class="line"></span><br><span class="line">    Solution solu;</span><br><span class="line">    cout &lt;&lt; solu.<span class="built_in">hasCycle</span>(node1) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</details>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/04/27/LeetCode-141-Linked-List-Cycle/" data-id="clz5f5j4v000y9uvh491t5j9x" data-title="LeetCode 141 - Linked List Cycle" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-LeetCode-36-Valid-Sudoku" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/04/24/LeetCode-36-Valid-Sudoku/" class="article-date">
@@ -146,7 +214,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/24/LeetCode-36-Valid-Sudoku/" data-id="clz2w7lbk001nyivh0og20y1c" data-title="LeetCode 36 - Valid Sudoku" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2020/04/24/LeetCode-36-Valid-Sudoku/" data-id="clz5f5j55001q9uvh4fgh9gkn" data-title="LeetCode 36 - Valid Sudoku" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -206,7 +274,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/23/LeetCode-69-SqrtX/" data-id="clz2w7lbp0025yivhf926hv8h" data-title="LeetCode 69 - Sqrt(x)" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2020/04/23/LeetCode-69-SqrtX/" data-id="clz5f5j5b00289uvhbhzoht8u" data-title="LeetCode 69 - Sqrt(x)" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -289,7 +357,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/22/LeetCode-50-Pow/" data-id="clz2w7lbm001vyivhfl8dguxs" data-title="LeetCode 50 - Pow(x, n)" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2020/04/22/LeetCode-50-Pow/" data-id="clz5f5j58001y9uvhc8emdg3t" data-title="LeetCode 50 - Pow(x, n)" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -370,7 +438,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/01/28/TeX-Live-2019-Installation/" data-id="clz2w7lbx0038yivhfup8h8mz" data-title="TeX Live 2019 Installation" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2020/01/28/TeX-Live-2019-Installation/" data-id="clz5f5j5q003a9uvh67uhchhd" data-title="TeX Live 2019 Installation" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2230,7 +2298,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/01/28/101-NumPy-Exercises/" data-id="clz2w7laz0000yivhc67xg6sr" data-title="101 NumPy Exercises" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2020/01/28/101-NumPy-Exercises/" data-id="clz5f5j4h00059uvhh31eernt" data-title="101 NumPy Exercises" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2278,7 +2346,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/01/12/Python-Iterable-Container-Implementation/" data-id="clz2w7lbu002tyivhdfc4e8d3" data-title="Python Iterable Container Implementation" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2020/01/12/Python-Iterable-Container-Implementation/" data-id="clz5f5j5k002v9uvh9110hr52" data-title="Python Iterable Container Implementation" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2394,7 +2462,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/05/03/ConfigSpace%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz2w7lb40003yivh34qw813f" data-title="ConfigSpace备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2019/05/03/ConfigSpace%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz5f5j4g00039uvhgjxi1dae" data-title="ConfigSpace备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2492,7 +2560,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/05/01/Ubuntu18-04%E5%AE%89%E8%A3%85VNC/" data-id="clz2w7lby003byivhdw3o0stq" data-title="Ubuntu18.04安装VNC" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2019/05/01/Ubuntu18-04%E5%AE%89%E8%A3%85VNC/" data-id="clz5f5j5r003d9uvh9gbkhwzf" data-title="Ubuntu18.04安装VNC" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -2597,84 +2665,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/04/19/%E5%BF%AB%E9%80%9F%E7%94%9F%E6%88%90Kernel-Matrix/" data-id="clz2w7lc5004cyivh94hxe8ef" data-title="快速生成Kernel Matrix" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2019/04/19/%E5%BF%AB%E9%80%9F%E7%94%9F%E6%88%90Kernel-Matrix/" data-id="clz5f5j63004c9uvh6t3vfxrj" data-title="快速生成Kernel Matrix" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-保存和恢复Tmux会话" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/" class="article-date">
-  <time class="dt-published" datetime="2018-09-09T14:14:38.000Z" itemprop="datePublished">2018-09-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/">保存和恢复Tmux会话</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>使用Tmux时经常会遇到的一个问题，那就是系统重启时，Session会被清除，每次打开电脑都要重启建一个Session，然后创建一堆Window以及Pane，这极大地降低了Tmux使用效率，因此需要想一个办法能够保存Tmux的Session。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>该问题的解决方案是安装一个叫<code>Tmux Resurrect</code>的插件。Tmux要安装插件，可以通过<code>Tmux Plugin Manager</code>这个插件进行安装，该插件相当于一个插件管理系统，可以快速地安装、更新以及删除插件。</p>
-<h3 id="Tmux-Plugin-Manager"><a href="#Tmux-Plugin-Manager" class="headerlink" title="Tmux Plugin Manager"></a>Tmux Plugin Manager</h3><p>安装<code>Tmux Plugin Manager</code>插件可以参考该插件的GitHub：<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tpm">tmux-plugins&#x2F;tpm</a>。安装很简单，首先clone插件到本地</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">clone</span> https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm</span></span><br></pre></td></tr></table></figure>
-
-<p>然后修改<code>.tmux.conf</code>，在文件最底部添加以下内容</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># List of plugins</span><br><span class="line">set -g @plugin &#x27;tmux-plugins/tpm&#x27;</span><br><span class="line">set -g @plugin &#x27;tmux-plugins/tmux-sensible&#x27;</span><br><span class="line"></span><br><span class="line"># Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)</span><br><span class="line">run &#x27;~/.tmux/plugins/tpm/tpm&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>重新加载配置文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">type</span> this <span class="keyword">in</span> terminal <span class="keyword">if</span> tmux is already running</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">tmux <span class="built_in">source</span> ~/.tmux.conf</span></span><br></pre></td></tr></table></figure>
-
-<p>然后就可以在Tmux中使用快捷<code>prefix + I</code>(注意这里的<code>I</code>是大写)安装配置文件<code>.tmux.conf</code>中定义的插件了。</p>
-<p><strong>补充：</strong></p>
-<p>如果Tmux安装了<a target="_blank" rel="noopener" href="https://github.com/gpakosz/.tmux">gpakosz&#x2F;.tmux</a>，在文件<code>.tmux.conf.local</code>中配置好<code>Tmux Plugin Manager</code>后，在Tmux中使用<code>prefix + I</code>安装插件会没有效果，相关的讨论见<a target="_blank" rel="noopener" href="https://github.com/gpakosz/.tmux/issues/61">“run ‘~&#x2F;.tmux&#x2F;plugins&#x2F;tpm&#x2F;tpm’” has no effect in .tmux.conf.local #61</a>，具体的解决方案是用另一种写法写<code>set -g @plugin</code>，即将</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set -g @plugin &#x27;tmux-plugins/tpm&#x27;</span><br><span class="line">set -g @plugin &#x27;tmux-plugins/tmux-sensible&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>改写为</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set -g @tpm_plugins &#x27;          \</span><br><span class="line">  tmux-plugins/tpm             \</span><br><span class="line">  tmux-plugins/tmux-sensible</span><br><span class="line">&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>解决方案来源于：<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tpm/blob/master/docs/tpm_not_working.md">Help, tpm not working!</a></p>
-<h2 id="Tmux-Resurrect"><a href="#Tmux-Resurrect" class="headerlink" title="Tmux Resurrect"></a>Tmux Resurrect</h2><p>安装好<code>Tmux Plugin Manager</code>后，就可以安装<code>Tmux Resurrect</code>插件(<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tmux-resurrect">tmux-plugins&#x2F;tmux-resurrect</a>)了。在Tmux配置文件<code>.tmux.conf</code>中添加</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set -g @plugin &#x27;tmux-plugins/tmux-resurrect&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>然后使用快捷键<code>prefix + I</code>就可以安装插件了。</p>
-<h2 id="保存和恢复"><a href="#保存和恢复" class="headerlink" title="保存和恢复"></a>保存和恢复</h2><p>安装完<code>Tmux Plugin Manager</code>，就可以使用下面快捷键保存和恢复Session了。</p>
-<ul>
-<li><code>prefix + Ctrl-s</code> - save</li>
-<li><code>prefix + Ctrl-r</code> - restore</li>
-</ul>
-<p>平常重启电脑后，首先在终端打开Tmux，然后使用<code>prefix + Ctrl-r</code>就可以恢复保存的Session了，如果有多个Session可以使用<code>prefix + s</code>来选择Session。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://liam0205.me/2016/09/10/tmux-plugin-resurrect/">保存和恢复 Tmux 会话</a></li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/" data-id="clz2w7lc1003syivh2e78dii1" data-title="保存和恢复Tmux会话" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li></ul>
 
     </footer>
   </div>
@@ -2734,6 +2729,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/28/ICS-2023-PA1/">南京大学ICS2023 PA1记录</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/28/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BABlog/">Hexo搭建个人Blog</a>
           </li>
         
@@ -2747,10 +2746,6 @@
         
           <li>
             <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
           </li>
         
       </ul>

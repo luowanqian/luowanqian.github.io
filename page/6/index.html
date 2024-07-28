@@ -69,6 +69,94 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-基于Docker的Caffe环境搭建" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/07/%E5%9F%BA%E4%BA%8EDocker%E7%9A%84Caffe%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
+  <time class="dt-published" datetime="2018-04-07T15:16:50.000Z" itemprop="datePublished">2018-04-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/07/%E5%9F%BA%E4%BA%8EDocker%E7%9A%84Caffe%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">基于Docker的Caffe环境搭建</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>本文主要介绍如何利用Docker搭建Caffe的开发环境，内容分两部分，第一部分是CPU模式环境搭建，第二部分是GPU模式环境搭建。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>由于本文需要用到Docker的，所以要先装好Docker，这个教程可以参考官方提供的最新教程 <a target="_blank" rel="noopener" href="https://docs.docker.com/install/">Install Docker</a>，这里就不详细介绍了。按照官方教程，装好Docker的社区版 (Community Edition)。</p>
+<h2 id="CPU模式"><a href="#CPU模式" class="headerlink" title="CPU模式"></a>CPU模式</h2><p>如果要想直接使用Caffe提供的Docker镜像 (<a target="_blank" rel="noopener" href="https://hub.docker.com/r/bvlc/caffe/">bvlc&#x2F;caffe</a>)，可以直接使用 <code>docker pull</code> 命令把镜像下下来，然后使用 <code>docker run</code> 运行一个容器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull bvlc/caffe:cpu</span><br><span class="line">docker run -it bvlc/caffe:cpu bash</span><br></pre></td></tr></table></figure>
+
+<p>此时，CPU模式的环境就可以使用了。如果需要在这个镜像的基础上添加点东西，例如安装 Jupyter Notebook 从而方便地使用Caffe的Python接口，这就需要自己编写一个Dockerfile了，然后生成一个镜像。</p>
+<h3 id="编写Dockerfile"><a href="#编写Dockerfile" class="headerlink" title="编写Dockerfile"></a>编写Dockerfile</h3><p>我这里直接贴上一份Dockerfile，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">FROM bvlc/caffe:cpu</span><br><span class="line"></span><br><span class="line">RUN pip install -U pip \</span><br><span class="line">    &amp;&amp; pip install -U scipy \</span><br><span class="line">    &amp;&amp; pip install -U scikit-learn \</span><br><span class="line">    &amp;&amp; pip install -U matplotlib \</span><br><span class="line">    &amp;&amp; pip install -U jupyter \</span><br><span class="line">    &amp;&amp; pip install -U lmdb \</span><br><span class="line">    &amp;&amp; pip install -U python-mnist</span><br><span class="line"></span><br><span class="line"># Set the working directory to /caffe</span><br><span class="line">WORKDIR /caffe</span><br><span class="line"></span><br><span class="line">VOLUME [&quot;/caffe/data&quot;, &quot;/caffe/notebooks&quot;]</span><br><span class="line"></span><br><span class="line"># Expose port 8888 (jupyter uses)</span><br><span class="line">EXPOSE 8888</span><br><span class="line"></span><br><span class="line">CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token=&#x27;science&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>关于Dockerfile的编写规则，可以参考<a target="_blank" rel="noopener" href="https://yeasy.gitbooks.io/docker_practice/content/">Docker - 从入门到实践</a>这个电子书，内容写的很不错。Dockerfile选择Caffe作为基础镜像，然后安装了一些Python 包。在这个Dockerfile中我使用 <code>VOLUME</code> 命令定义了两个匿名卷</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VOLUME [&quot;/caffe/data&quot;, &quot;/caffe/notebooks&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>后面我会把主机的真实目录挂载为这两个匿名卷，这样你在容器里往这两个目录写入东西就会保存到主机的真实目录里面。Dockerfile还指定了容器启动命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token=&#x27;science&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>每次使用 <code>Docker run</code> 启动容器都会运行这个命令，这里我选择启动 Jupyter Notebook，这样我就可以通过浏览器访问 Jupyter Notebook了。</p>
+<h3 id="制作镜像"><a href="#制作镜像" class="headerlink" title="制作镜像"></a>制作镜像</h3><p>在Dockerfile所在目录使用命令即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t mycaffe .</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><p>创建两个目录，分别为 <code>data</code> 和 <code>notebooks</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir data</span><br><span class="line">mkdir notebooks</span><br></pre></td></tr></table></figure>
+
+<p>这两个目录就是所要挂载的目录，我要将这两个目录挂载到容器的匿名卷上。使用 <code>Docker run</code> 启动一个容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name DeepLearning -d --mount type=bind,source=`pwd`/data,target=/caffe/data --mount type=bind,source=`pwd`/LeNet,target=/caffe/notebooks -p 8887:8888 mycaffe</span><br></pre></td></tr></table></figure>
+
+<p>这里解析下命令，首先是挂载两个匿名卷，将目录 <code>data</code> 挂载到 <code>/caffe/data</code>，将目录 <code>notebooks</code> 挂载到 <code>/caffe/notebooks</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--mount type=bind,source=`pwd`/data,target=/caffe/data --mount type=bind,source=`pwd`/LeNet,target=/caffe/notebooks</span><br></pre></td></tr></table></figure>
+
+<p>然后是 <code>-p 8887:8888</code> 将容器8888端口映射到本机的8887端口上，<code>-d</code> 是让容器后台运行，<code>--name DeepLearning</code> 将这个容器命名为 DeepLearning。运行成功后，可以使用浏览器访问 Jupyter Notebook了，访问地址为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8887/</span><br></pre></td></tr></table></figure>
+
+<h2 id="GPU模式"><a href="#GPU模式" class="headerlink" title="GPU模式"></a>GPU模式</h2><p>GPU模式稍微复杂点，主要是GPU模式下需要CUDA以及显卡驱动，不过Caffe镜像已经集成了相应的CUDA，剩下就是安装显卡对应的驱动了。不同于CPU模式，这里启动容器需要使用 <code>nvidia-docker</code>，具体安装可以参考 <a target="_blank" rel="noopener" href="https://github.com/NVIDIA/nvidia-docker">GitHub Nvida Docker</a>，安装过程很简单，很快就可以安装好了。接下来就需要编写Dockerfile了，大体内容类似CPU模式的Dockerfile，不过基础镜像选择 <code>bvlc/caffe:gpu</code>。</p>
+<h3 id="编写Dockerfile-1"><a href="#编写Dockerfile-1" class="headerlink" title="编写Dockerfile"></a>编写Dockerfile</h3><p>选用 <code>bvlc/caffe:gpu</code> 作为基础镜像，编写Dockerfile如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">FROM bvlc/caffe:gpu</span><br><span class="line"></span><br><span class="line">RUN pip install -U pip \</span><br><span class="line">    &amp;&amp; pip install -U scipy \</span><br><span class="line">    &amp;&amp; pip install -U scikit-learn \</span><br><span class="line">    &amp;&amp; pip install -U matplotlib \</span><br><span class="line">    &amp;&amp; pip install -U jupyter \</span><br><span class="line">    &amp;&amp; pip install -U lmdb \</span><br><span class="line">    &amp;&amp; pip install -U python-mnist</span><br><span class="line"></span><br><span class="line"># Set the working directory to /caffe</span><br><span class="line">WORKDIR /caffe</span><br><span class="line"></span><br><span class="line">VOLUME [&quot;/caffe/data&quot;, &quot;/caffe/notebooks&quot;]</span><br><span class="line"></span><br><span class="line"># Expose port 8888 (jupyter uses)</span><br><span class="line">EXPOSE 8888</span><br><span class="line"></span><br><span class="line">CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token=&#x27;science&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="制作镜像-1"><a href="#制作镜像-1" class="headerlink" title="制作镜像"></a>制作镜像</h3><p>在Dockerfile所在目录执行命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t mycaffe .</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动容器-1"><a href="#启动容器-1" class="headerlink" title="启动容器"></a>启动容器</h3><p>同前面所述，先创建好两个目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir data</span><br><span class="line">mkdir notebooks</span><br></pre></td></tr></table></figure>
+
+<p>然后启动容器，启动容器使用的是 <code>nvidia-docker</code> 而不是 <code>docker</code>，启动命令如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-docker run --name DeepLearning -d --mount type=bind,source=`pwd`/data,target=/caffe/data --mount type=bind,source=`pwd`/LeNet,target=/caffe/notebooks -p 8887:8888 mycaffe</span><br></pre></td></tr></table></figure>
+
+<p>启动完后可以直接通过浏览器访问容器内部的 Jupyter Notebook 了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/BVLC/caffe/tree/master/docker">Docker Setup Cafee</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/07/%E5%9F%BA%E4%BA%8EDocker%E7%9A%84Caffe%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="clz5f5j6000449uvhfe7tbkfj" data-title="基于Docker的Caffe环境搭建" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-决策树可视化" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2018/04/07/%E5%86%B3%E7%AD%96%E6%A0%91%E5%8F%AF%E8%A7%86%E5%8C%96/" class="article-date">
@@ -105,7 +193,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/07/%E5%86%B3%E7%AD%96%E6%A0%91%E5%8F%AF%E8%A7%86%E5%8C%96/" data-id="clz2w7lc2003vyivh0cqfa10j" data-title="决策树可视化" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/07/%E5%86%B3%E7%AD%96%E6%A0%91%E5%8F%AF%E8%A7%86%E5%8C%96/" data-id="clz5f5j5y003u9uvh2wkvhm7n" data-title="决策树可视化" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -274,7 +362,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/05/%E8%85%BE%E8%AE%AF2018%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B2%97%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98/" data-id="clz2w7lcn008myivh566pcu3e" data-title="腾讯2018数据分析岗实习笔试题" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/05/%E8%85%BE%E8%AE%AF2018%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B2%97%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98/" data-id="clz5f5j64004h9uvh7rsvf8yv" data-title="腾讯2018数据分析岗实习笔试题" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -331,7 +419,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/03/LeetCode-191-Number-of-1-Bits/" data-id="clz2w7lbh0019yivhb9s5d3a8" data-title="LeetCode 191 - Number of 1 Bits" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/03/LeetCode-191-Number-of-1-Bits/" data-id="clz5f5j51001c9uvhc1fv3pt6" data-title="LeetCode 191 - Number of 1 Bits" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -441,7 +529,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/03/CMake%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/" data-id="clz2w7lb50004yivh0d2m0v9x" data-title="CMake使用笔记" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/03/CMake%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/" data-id="clz5f5j4800009uvharm611z4" data-title="CMake使用笔记" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -491,7 +579,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/30/LeetCode-167-Two-Sum-II-Input-array-is-sorted/" data-id="clz2w7lbg0015yivh8b331dqz" data-title="LeetCode 167 - Two Sum II - Input array is sorted" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/30/LeetCode-167-Two-Sum-II-Input-array-is-sorted/" data-id="clz5f5j4z00199uvh4y2w6i4u" data-title="LeetCode 167 - Two Sum II - Input array is sorted" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -548,7 +636,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/30/LeetCode-15-3Sum/" data-id="clz2w7lbe000wyivhcmr4bto5" data-title="LeetCode 15 - 3Sum" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/30/LeetCode-15-3Sum/" data-id="clz5f5j4x00129uvhckaz80al" data-title="LeetCode 15 - 3Sum" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -598,7 +686,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/30/Softmax-Regression/" data-id="clz2w7lbw0033yivhhy1e3rbo" data-title="Softmax Regression" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/30/Softmax-Regression/" data-id="clz5f5j5o00359uvh85p5da28" data-title="Softmax Regression" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -648,7 +736,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/29/Logistic-Regression/" data-id="clz2w7lbr002eyivh5uuwd68m" data-title="Logistic Regression" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/29/Logistic-Regression/" data-id="clz5f5j5e002g9uvh0odt7667" data-title="Logistic Regression" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -743,183 +831,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/" data-id="clz2w7lb60007yivh6xp7gst0" data-title="Coordinate Descent Algorithm for Lasso Problem" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/" data-id="clz5f5j4h00049uvha3b1f1xz" data-title="Coordinate Descent Algorithm for Lasso Problem" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-今日头条2018春季校园招聘编程题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/03/24/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A12018%E6%98%A5%E5%AD%A3%E6%A0%A1%E5%9B%AD%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/" class="article-date">
-  <time class="dt-published" datetime="2018-03-24T14:54:56.000Z" itemprop="datePublished">2018-03-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/03/24/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A12018%E6%98%A5%E5%AD%A3%E6%A0%A1%E5%9B%AD%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/">今日头条2018春季校园招聘编程题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="题目一-找到差值为k的数字对的个数"><a href="#题目一-找到差值为k的数字对的个数" class="headerlink" title="题目一 找到差值为k的数字对的个数"></a>题目一 找到差值为k的数字对的个数</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在n个元素的数组中，找到差值为k的数字对去重后的个数</p>
-<p><strong>输入描述：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">第一行，n和k，n表示数字个数，k表示差值</span><br><span class="line">第二行，n个正整数</span><br></pre></td></tr></table></figure>
-
-<p><strong>输出描述：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">差值为k的数字对去重后的个数</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例 1</strong></p>
-<p>输入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">5 2</span><br><span class="line">1 5 3 4 2</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
-
-<p>说明</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其中数字对分别为 (1, 3), (5, 3), (4, 2)</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例 2</strong></p>
-<p>输入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">6 2</span><br><span class="line">1 5 3 3 4 2</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
-
-<p>说明</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其中数字对分别为 (1, 3), (5, 3), (4, 2)</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例 3</strong></p>
-<p>输入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">4 0</span><br><span class="line">1 1 1 1</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1</span><br></pre></td></tr></table></figure>
-
-<p>说明</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其中数字对分别为 (1, 1)</span><br></pre></td></tr></table></figure>
-
-<p><strong>备注：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">数据范围：</span><br><span class="line">对于 100% 的数据，0 &lt;= k &lt; 100</span><br><span class="line">对于 100% 的数据，数组内数值范围在 [0, 100000000]</span><br><span class="line">对于 30% 的数据，0 &lt; n &lt; 1000</span><br><span class="line">对于 80% 的数据，0 &lt; n &lt; 100000</span><br><span class="line">对于 100% 的数据，0 &lt; n &lt; 1000000</span><br></pre></td></tr></table></figure>
-
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>这道题目在 LeetCode 有相应的题目，题目为 <a target="_blank" rel="noopener" href="https://leetcode.com/problems/k-diff-pairs-in-an-array/description/">532. K-diff Pairs in an Array</a>，这道题目我在另一篇博文做了解答，可以参考 <a href="/2018/03/24/LeetCode-532-K-diff-Pairs-in-an-Array/" title="LeetCode 532 - K-diff Pairs in an Array">LeetCode 532 - K-diff Pairs in an Array</a></p>
-<h2 id="题目二-求函数调用次数"><a href="#题目二-求函数调用次数" class="headerlink" title="题目二 求函数调用次数"></a>题目二 求函数调用次数</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>定义两个字符串变量：s 和 m，再定义两种操作。</p>
-<p>第一种操作：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">m = s;</span><br><span class="line">s = s + s;</span><br></pre></td></tr></table></figure>
-
-<p>第二种操作：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s = s + m;</span><br></pre></td></tr></table></figure>
-
-<p>假设 s, m 初始化如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;a&quot;;</span><br><span class="line">m = s;</span><br></pre></td></tr></table></figure>
-
-<p>求最小的操作步骤数，可以将 s 拼接到长度等 n</p>
-<p><strong>输入描述：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">一个整数n，表明我们需要得到s字符串长度</span><br><span class="line">对于100%的数据，0 &lt; n &lt; 10000</span><br></pre></td></tr></table></figure>
-
-<p><strong>输出描述：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个整数，表明总共操作次数</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例 1</strong></p>
-<p>输入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
-
-<p>说明</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输入是6，表明我们需要得到s字符串长度为6，也就是s最终为&quot;aaaaaa&quot;，那么依次使用2次&quot;第一次操作“和1次&quot;第二种操作&quot;就能达到目的，总共操作次数是3。</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例2</strong></p>
-<p>输入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
-
-<p>说明</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设n=5，表明我们需要得到s字符串长度为5，也就是s最终为&quot;aaaaa&quot;，那么直接使用4次&quot;第二种操作“就能达到目的，总共操作次数是4。</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例3</strong></p>
-<p>输入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
-
-<p>说明</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设n=4，表明我们需要得到s字符串长度为4，也就是s最终为&quot;aaaa&quot;，那么直接使用2次&quot;第一种操作&quot;就能达到目的，总共操作次数是2。</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="题目三"><a href="#题目三" class="headerlink" title="题目三"></a>题目三</h2><p>没记录到。。。</p>
-<h2 id="题目四-Magic"><a href="#题目四-Magic" class="headerlink" title="题目四 Magic"></a>题目四 Magic</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>给一个包含n个整数元素的集合a，一个包含m个整数元素的集合b。定义magic操作为，从一个集合中取出一个元素，放到另一个集合里，且操作过后每个集合的平均值大于操作前。注意以下两点：</p>
-<ol>
-<li>不可以把一个集合的元素取空，这样就没有平均值了</li>
-<li>值为x的元素从集合b取出放入集合a，但集合a中已有值为x的元素，则a的平均值不变 (因为集合元素不会重复)，b的平均值可能会改变 (因为x被取出了)</li>
-</ol>
-<p>问最多可以进行多少次magic操作？</p>
-<p><strong>输入描述：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">第一行为两个整数n，m</span><br><span class="line">第二行n个整数，表示集合a中的元素</span><br><span class="line">第三行m个整数，表示集合b中的元素</span><br><span class="line">对于30%的数据，最终结果 &lt;= 1</span><br><span class="line">对于70%的数据，输入中的a，b集合元素完全没有重复，即 |a| + |b| = |a 并 b|</span><br><span class="line">对于100%的数据，1 &lt; n, m &lt; 100,000，0 &lt; a[i], b[i] &lt; 100,000,000，集合a中元素互不相同，集合b中元素互不相同</span><br></pre></td></tr></table></figure>
-
-<p><strong>输出描述：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输出一个整数，表示最多可以进行的操作次数。</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例 1</strong></p>
-<p>输入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3 5</span><br><span class="line">1 2 5</span><br><span class="line">2 3 4 5 6</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
-
-<p>说明</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">依次从b集合取出3，4元素放入a集合</span><br></pre></td></tr></table></figure>
-
-<h2 id="题目五-跳板小游戏"><a href="#题目五-跳板小游戏" class="headerlink" title="题目五 跳板小游戏"></a>题目五 跳板小游戏</h2><h3 id="问题描述-3"><a href="#问题描述-3" class="headerlink" title="问题描述"></a>问题描述</h3><p>小T最近迷上了一款跳板小游戏。已知空中有N个高度互不相同的跳板，小T刚开始在高度为0的地方，每次跳跃可以选择与自己当前高度绝对值差小于等于H的跳板，跳跃过后到达以跳板为轴的镜像位置，问小T在最多跳K次的情况下最高能跳多高？ (任意时刻，高度不能为负)</p>
-<p><strong>输入描述：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">第一行三个整数N，K，H</span><br><span class="line">以下N行，每行一个整数Ti，表示第i个跳板的离地高度</span><br></pre></td></tr></table></figure>
-
-<p><strong>输出描述：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个整数，表示最高能跳到的高度</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例 1</strong></p>
-<p>输入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">3 3 2</span><br><span class="line">1</span><br><span class="line">3</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">8</span><br></pre></td></tr></table></figure>
-
-<p>说明</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">小T初始在高度为0的地方</span><br><span class="line">第一次跳跃只能选择高度为1的跳板，结束后到达高度为2的地方，计算方式：高度1 = 初始高度 + (跳板1高度 - 初始高度)*2 = 0 + (1-0)*2 = 2</span><br><span class="line">第二次跳跃选择高度为3的跳板，结束后到达高度为4的地方，计算方式：高度2 = 高度1 + (跳板2高度 - 高度1)*2 = 2 + (3-2)*2 = 4</span><br><span class="line">第三次跳跃选择高度为6的跳板，结束后到达高度为8的地方，计算方式：高度3 = 高度2 + (跳板3高度 - 高度2)*2 = 4 + (6-4)*2 = 8</span><br></pre></td></tr></table></figure>
-
-<p><strong>备注：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">对于40%的数据，1 &lt;= N, K, H, Ti &lt;= 20</span><br><span class="line">对于100%的数据，1 &lt;= N, K, Ti &lt;= 100,000, 1 &lt;= H &lt;= 100</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/24/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A12018%E6%98%A5%E5%AD%A3%E6%A0%A1%E5%9B%AD%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/" data-id="clz2w7lc0003nyivh4okegw59" data-title="今日头条2018春季校园招聘编程题" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li></ul>
 
     </footer>
   </div>
@@ -979,6 +895,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/28/ICS-2023-PA1/">南京大学ICS2023 PA1记录</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/28/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BABlog/">Hexo搭建个人Blog</a>
           </li>
         
@@ -992,10 +912,6 @@
         
           <li>
             <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
           </li>
         
       </ul>

@@ -69,6 +69,64 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-LeetCode-349-Intersection-of-Two-Arrays" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/21/LeetCode-349-Intersection-of-Two-Arrays/" class="article-date">
+  <time class="dt-published" datetime="2018-04-21T14:57:41.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/21/LeetCode-349-Intersection-of-Two-Arrays/">LeetCode 349 - Intersection of Two Arrays</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given two arrays, write a function to compute their intersection.</p>
+<p><strong>Example:</strong></p>
+<p>Given nums1 &#x3D; <code>[1, 2, 2, 1]</code>, nums2 &#x3D; <code>[2, 2]</code>, return <code>[2]</code>.</p>
+<p><strong>Note:</strong></p>
+<ul>
+<li><p>Each element in the result must be unique.</p>
+</li>
+<li><p>The result can be in any order.</p>
+</li>
+</ul>
+<p><strong>Related Topics:</strong> Hash Table, Two Pointers, Binary Search, Sort</p>
+<p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/intersection-of-two-arrays/description/">349. Intersection of Two Arrays</a></p>
+<p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/intersection-of-two-arrays/description/">349. 两个数组的交集</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h3><p>可以创建两个哈希表，首先遍历数组 nums1，将数组元素添加到第一个哈希表中，然后遍历数组 nums2，如果数组元素在第一个哈希表中不存在，则将该数组元素添加到第二个哈希表中，遍历完数组 nums2 后，将第二个哈希表的中元素作为结果输出。实现代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    vector&lt;int&gt; intersection(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2)</span><br><span class="line">    &#123;</span><br><span class="line">        unordered_set&lt;int&gt; unique_nums1;</span><br><span class="line">        for (auto it=nums1.begin(); it!=nums1.end(); it++)</span><br><span class="line">            unique_nums1.insert(*it);</span><br><span class="line"></span><br><span class="line">        unordered_set&lt;int&gt; unique_nums;</span><br><span class="line">        for (auto it=nums2.begin(); it!=nums2.end(); it++) &#123;</span><br><span class="line">            if (unique_nums1.find(*it) != unique_nums1.end())</span><br><span class="line">                unique_nums.insert(*it);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        vector&lt;int&gt; ret;</span><br><span class="line">        for (auto it=unique_nums.begin(); it!=unique_nums.end(); it++)</span><br><span class="line">            ret.push_back(*it);</span><br><span class="line"></span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    vector&lt;int&gt; nums1 = &#123;1, 2, 2, 1&#125;;</span><br><span class="line">    vector&lt;int&gt; nums2 = &#123;2, 2&#125;;</span><br><span class="line">    vector&lt;int&gt; ret = solu.intersection(nums1, nums2);</span><br><span class="line"></span><br><span class="line">    for (auto it=ret.begin(); it!=ret.end(); it++)</span><br><span class="line">        cout &lt;&lt; *it &lt;&lt; &quot; &quot;;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h3><p>将数组 nums1 和数组 nums2 进行从小到大排序，设置两个指针 p1 和 p2 分别指向数组 nums1 和数组 nums2 的第一个元素。开始遍历数组时，如果指针 p1 和指针 p2 指向的元素不相等，则移动指向元素中较小值的指针，如果指针 p1 和指针 p2 指向的元素相等，则同时移动指针 p1 和 p2，并记录该相等的元素 (找到相等元素时先判断该元素是否和这个记录值相等，如果相等则说明交集已经存在该元素，不需要添加到交集中，否则添加到交集中)，依次操作，直到其中一个集合没有元素可比较为止。实现代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    vector&lt;int&gt; intersection(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2)</span><br><span class="line">    &#123;</span><br><span class="line">        vector&lt;int&gt; ret;</span><br><span class="line">        if (nums1.size() == 0)</span><br><span class="line">            return ret;</span><br><span class="line">        else if (nums2.size() == 0)</span><br><span class="line">            return ret;</span><br><span class="line"></span><br><span class="line">        sort(nums1.begin(), nums1.end());</span><br><span class="line">        sort(nums2.begin(), nums2.end());</span><br><span class="line"></span><br><span class="line">        int p1, p2, repeat;</span><br><span class="line">        p1 = p2 = 0;</span><br><span class="line">        repeat = nums1[0] &lt; nums2[0] ? nums1[0] - 1 : nums2[0] - 1;</span><br><span class="line">        while (p1 &lt; nums1.size() &amp;&amp; p2 &lt; nums2.size()) &#123;</span><br><span class="line">            if (nums1[p1] &lt; nums2[p2]) &#123;</span><br><span class="line">                p1++;</span><br><span class="line">            &#125; else if (nums1[p1] &gt; nums2[p2]) &#123;</span><br><span class="line">                p2++;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (repeat != nums1[p1])</span><br><span class="line">                    ret.push_back(nums1[p1]);</span><br><span class="line">                repeat = nums1[p1];</span><br><span class="line">                p1++;</span><br><span class="line">                p2++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    vector&lt;int&gt; nums1 = &#123;1, 2, 2, 1&#125;;</span><br><span class="line">    vector&lt;int&gt; nums2 = &#123;2, 2&#125;;</span><br><span class="line">    vector&lt;int&gt; ret = solu.intersection(nums1, nums2);</span><br><span class="line"></span><br><span class="line">    for (auto it=ret.begin(); it!=ret.end(); it++)</span><br><span class="line">        cout &lt;&lt; *it &lt;&lt; &quot; &quot;;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/04/21/LeetCode-349-Intersection-of-Two-Arrays/" data-id="clz5f5j54001o9uvhcqin4n2t" data-title="LeetCode 349 - Intersection of Two Arrays" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-LeetCode-696-Count-Binary-Substrings" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2018/04/21/LeetCode-696-Count-Binary-Substrings/" class="article-date">
@@ -118,7 +176,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/21/LeetCode-696-Count-Binary-Substrings/" data-id="clz2w7lbp0027yivheosbckxh" data-title="LeetCode 696 - Count Binary Substrings" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/21/LeetCode-696-Count-Binary-Substrings/" data-id="clz5f5j5c002a9uvh54jb7kwm" data-title="LeetCode 696 - Count Binary Substrings" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -174,7 +232,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/21/LeetCode-387-First-Unique-Character-in-a-String/" data-id="clz2w7lbm001tyivh6o8q1qtj" data-title="LeetCode 387 - First Unique Character in a String" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/21/LeetCode-387-First-Unique-Character-in-a-String/" data-id="clz5f5j57001w9uvh39ngf9jl" data-title="LeetCode 387 - First Unique Character in a String" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -253,7 +311,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/" data-id="clz2w7lbb000nyivhhomh9q2f" data-title="K-means参数K的选择" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/21/K-means%E5%8F%82%E6%95%B0K%E7%9A%84%E9%80%89%E6%8B%A9/" data-id="clz5f5j4r000q9uvh4l5a59on" data-title="K-means参数K的选择" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -314,7 +372,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/21/LeetCode-819-Most-Common-Word/" data-id="clz2w7lbq0029yivh8mz27z2d" data-title="LeetCode 819 - Most Common Word" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/21/LeetCode-819-Most-Common-Word/" data-id="clz5f5j5d002d9uvhg5ga3ezf" data-title="LeetCode 819 - Most Common Word" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -374,7 +432,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/21/LeetCode-657-Judge-Route-Circle/" data-id="clz2w7lbo0023yivhb6u2as0e" data-title="LeetCode 657 - Judge Route Circle" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/21/LeetCode-657-Judge-Route-Circle/" data-id="clz5f5j5a00269uvha04s4yii" data-title="LeetCode 657 - Judge Route Circle" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -445,7 +503,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/21/LeetCode-13-Roman-to-Integer/" data-id="clz2w7lbc000qyivha1yl52co" data-title="LeetCode 13 - Roman to Integer" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/21/LeetCode-13-Roman-to-Integer/" data-id="clz5f5j4t000u9uvhfxug3fa8" data-title="LeetCode 13 - Roman to Integer" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -496,7 +554,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/21/LeetCode-383-Ransom-Note/" data-id="clz2w7lbl001ryivh11fhct3j" data-title="LeetCode 383 - Ransom Note" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/21/LeetCode-383-Ransom-Note/" data-id="clz5f5j56001u9uvheok88zm7" data-title="LeetCode 383 - Ransom Note" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -558,7 +616,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/15/LeetCode-521-Longest-Uncommon-Subsequence-I/" data-id="clz2w7lbn001xyivhcihshwut" data-title="LeetCode 521 - Longest Uncommon Subsequence I" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/15/LeetCode-521-Longest-Uncommon-Subsequence-I/" data-id="clz5f5j5800209uvh8vszc3vx" data-title="LeetCode 521 - Longest Uncommon Subsequence I" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -607,99 +665,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/13/LeetCode-557-Reverse-Words-in-a-String-III/" data-id="clz2w7lbo0021yivh0mfjd7at" data-title="LeetCode 557 - Reverse Words in a String III" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/13/LeetCode-557-Reverse-Words-in-a-String-III/" data-id="clz5f5j5a00249uvh7dnzba1y" data-title="LeetCode 557 - Reverse Words in a String III" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-基于Docker的Caffe环境搭建" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/04/07/%E5%9F%BA%E4%BA%8EDocker%E7%9A%84Caffe%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
-  <time class="dt-published" datetime="2018-04-07T15:16:50.000Z" itemprop="datePublished">2018-04-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/04/07/%E5%9F%BA%E4%BA%8EDocker%E7%9A%84Caffe%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">基于Docker的Caffe环境搭建</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>本文主要介绍如何利用Docker搭建Caffe的开发环境，内容分两部分，第一部分是CPU模式环境搭建，第二部分是GPU模式环境搭建。</p>
-<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>由于本文需要用到Docker的，所以要先装好Docker，这个教程可以参考官方提供的最新教程 <a target="_blank" rel="noopener" href="https://docs.docker.com/install/">Install Docker</a>，这里就不详细介绍了。按照官方教程，装好Docker的社区版 (Community Edition)。</p>
-<h2 id="CPU模式"><a href="#CPU模式" class="headerlink" title="CPU模式"></a>CPU模式</h2><p>如果要想直接使用Caffe提供的Docker镜像 (<a target="_blank" rel="noopener" href="https://hub.docker.com/r/bvlc/caffe/">bvlc&#x2F;caffe</a>)，可以直接使用 <code>docker pull</code> 命令把镜像下下来，然后使用 <code>docker run</code> 运行一个容器。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull bvlc/caffe:cpu</span><br><span class="line">docker run -it bvlc/caffe:cpu bash</span><br></pre></td></tr></table></figure>
-
-<p>此时，CPU模式的环境就可以使用了。如果需要在这个镜像的基础上添加点东西，例如安装 Jupyter Notebook 从而方便地使用Caffe的Python接口，这就需要自己编写一个Dockerfile了，然后生成一个镜像。</p>
-<h3 id="编写Dockerfile"><a href="#编写Dockerfile" class="headerlink" title="编写Dockerfile"></a>编写Dockerfile</h3><p>我这里直接贴上一份Dockerfile，内容如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">FROM bvlc/caffe:cpu</span><br><span class="line"></span><br><span class="line">RUN pip install -U pip \</span><br><span class="line">    &amp;&amp; pip install -U scipy \</span><br><span class="line">    &amp;&amp; pip install -U scikit-learn \</span><br><span class="line">    &amp;&amp; pip install -U matplotlib \</span><br><span class="line">    &amp;&amp; pip install -U jupyter \</span><br><span class="line">    &amp;&amp; pip install -U lmdb \</span><br><span class="line">    &amp;&amp; pip install -U python-mnist</span><br><span class="line"></span><br><span class="line"># Set the working directory to /caffe</span><br><span class="line">WORKDIR /caffe</span><br><span class="line"></span><br><span class="line">VOLUME [&quot;/caffe/data&quot;, &quot;/caffe/notebooks&quot;]</span><br><span class="line"></span><br><span class="line"># Expose port 8888 (jupyter uses)</span><br><span class="line">EXPOSE 8888</span><br><span class="line"></span><br><span class="line">CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token=&#x27;science&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>关于Dockerfile的编写规则，可以参考<a target="_blank" rel="noopener" href="https://yeasy.gitbooks.io/docker_practice/content/">Docker - 从入门到实践</a>这个电子书，内容写的很不错。Dockerfile选择Caffe作为基础镜像，然后安装了一些Python 包。在这个Dockerfile中我使用 <code>VOLUME</code> 命令定义了两个匿名卷</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VOLUME [&quot;/caffe/data&quot;, &quot;/caffe/notebooks&quot;]</span><br></pre></td></tr></table></figure>
-
-<p>后面我会把主机的真实目录挂载为这两个匿名卷，这样你在容器里往这两个目录写入东西就会保存到主机的真实目录里面。Dockerfile还指定了容器启动命令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token=&#x27;science&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>每次使用 <code>Docker run</code> 启动容器都会运行这个命令，这里我选择启动 Jupyter Notebook，这样我就可以通过浏览器访问 Jupyter Notebook了。</p>
-<h3 id="制作镜像"><a href="#制作镜像" class="headerlink" title="制作镜像"></a>制作镜像</h3><p>在Dockerfile所在目录使用命令即可</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t mycaffe .</span><br></pre></td></tr></table></figure>
-
-<h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><p>创建两个目录，分别为 <code>data</code> 和 <code>notebooks</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir data</span><br><span class="line">mkdir notebooks</span><br></pre></td></tr></table></figure>
-
-<p>这两个目录就是所要挂载的目录，我要将这两个目录挂载到容器的匿名卷上。使用 <code>Docker run</code> 启动一个容器</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name DeepLearning -d --mount type=bind,source=`pwd`/data,target=/caffe/data --mount type=bind,source=`pwd`/LeNet,target=/caffe/notebooks -p 8887:8888 mycaffe</span><br></pre></td></tr></table></figure>
-
-<p>这里解析下命令，首先是挂载两个匿名卷，将目录 <code>data</code> 挂载到 <code>/caffe/data</code>，将目录 <code>notebooks</code> 挂载到 <code>/caffe/notebooks</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--mount type=bind,source=`pwd`/data,target=/caffe/data --mount type=bind,source=`pwd`/LeNet,target=/caffe/notebooks</span><br></pre></td></tr></table></figure>
-
-<p>然后是 <code>-p 8887:8888</code> 将容器8888端口映射到本机的8887端口上，<code>-d</code> 是让容器后台运行，<code>--name DeepLearning</code> 将这个容器命名为 DeepLearning。运行成功后，可以使用浏览器访问 Jupyter Notebook了，访问地址为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8887/</span><br></pre></td></tr></table></figure>
-
-<h2 id="GPU模式"><a href="#GPU模式" class="headerlink" title="GPU模式"></a>GPU模式</h2><p>GPU模式稍微复杂点，主要是GPU模式下需要CUDA以及显卡驱动，不过Caffe镜像已经集成了相应的CUDA，剩下就是安装显卡对应的驱动了。不同于CPU模式，这里启动容器需要使用 <code>nvidia-docker</code>，具体安装可以参考 <a target="_blank" rel="noopener" href="https://github.com/NVIDIA/nvidia-docker">GitHub Nvida Docker</a>，安装过程很简单，很快就可以安装好了。接下来就需要编写Dockerfile了，大体内容类似CPU模式的Dockerfile，不过基础镜像选择 <code>bvlc/caffe:gpu</code>。</p>
-<h3 id="编写Dockerfile-1"><a href="#编写Dockerfile-1" class="headerlink" title="编写Dockerfile"></a>编写Dockerfile</h3><p>选用 <code>bvlc/caffe:gpu</code> 作为基础镜像，编写Dockerfile如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">FROM bvlc/caffe:gpu</span><br><span class="line"></span><br><span class="line">RUN pip install -U pip \</span><br><span class="line">    &amp;&amp; pip install -U scipy \</span><br><span class="line">    &amp;&amp; pip install -U scikit-learn \</span><br><span class="line">    &amp;&amp; pip install -U matplotlib \</span><br><span class="line">    &amp;&amp; pip install -U jupyter \</span><br><span class="line">    &amp;&amp; pip install -U lmdb \</span><br><span class="line">    &amp;&amp; pip install -U python-mnist</span><br><span class="line"></span><br><span class="line"># Set the working directory to /caffe</span><br><span class="line">WORKDIR /caffe</span><br><span class="line"></span><br><span class="line">VOLUME [&quot;/caffe/data&quot;, &quot;/caffe/notebooks&quot;]</span><br><span class="line"></span><br><span class="line"># Expose port 8888 (jupyter uses)</span><br><span class="line">EXPOSE 8888</span><br><span class="line"></span><br><span class="line">CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token=&#x27;science&#x27;</span><br></pre></td></tr></table></figure>
-
-<h3 id="制作镜像-1"><a href="#制作镜像-1" class="headerlink" title="制作镜像"></a>制作镜像</h3><p>在Dockerfile所在目录执行命令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t mycaffe .</span><br></pre></td></tr></table></figure>
-
-<h3 id="启动容器-1"><a href="#启动容器-1" class="headerlink" title="启动容器"></a>启动容器</h3><p>同前面所述，先创建好两个目录</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir data</span><br><span class="line">mkdir notebooks</span><br></pre></td></tr></table></figure>
-
-<p>然后启动容器，启动容器使用的是 <code>nvidia-docker</code> 而不是 <code>docker</code>，启动命令如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-docker run --name DeepLearning -d --mount type=bind,source=`pwd`/data,target=/caffe/data --mount type=bind,source=`pwd`/LeNet,target=/caffe/notebooks -p 8887:8888 mycaffe</span><br></pre></td></tr></table></figure>
-
-<p>启动完后可以直接通过浏览器访问容器内部的 Jupyter Notebook 了。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://github.com/BVLC/caffe/tree/master/docker">Docker Setup Cafee</a></li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/07/%E5%9F%BA%E4%BA%8EDocker%E7%9A%84Caffe%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="clz2w7lc30045yivh5tmibdwk" data-title="基于Docker的Caffe环境搭建" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Caffe/" rel="tag">Caffe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
 
     </footer>
   </div>
@@ -759,6 +729,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/28/ICS-2023-PA1/">南京大学ICS2023 PA1记录</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/28/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BABlog/">Hexo搭建个人Blog</a>
           </li>
         
@@ -772,10 +746,6 @@
         
           <li>
             <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
           </li>
         
       </ul>

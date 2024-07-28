@@ -69,6 +69,125 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-终端快捷键" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/" class="article-date">
+  <time class="dt-published" datetime="2018-05-03T12:34:20.000Z" itemprop="datePublished">2018-05-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/">终端快捷键</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>OS: OS X 10.11.6</p>
+<p>Shell: bash and zsh</p>
+<p>Other: iTerm2</p>
+<h2 id="快捷键列表"><a href="#快捷键列表" class="headerlink" title="快捷键列表"></a>快捷键列表</h2><table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Option + Left or Right</td>
+<td>光标按单词前移或后移</td>
+</tr>
+<tr>
+<td>Control + F or B</td>
+<td>光标向前或向后移动一个字符</td>
+</tr>
+<tr>
+<td>Control + D</td>
+<td>删除当前光标的字符</td>
+</tr>
+<tr>
+<td>Control + H</td>
+<td>删除光标之前的字符</td>
+</tr>
+<tr>
+<td>Control + W</td>
+<td>删除光标之前的单词</td>
+</tr>
+<tr>
+<td>Command + A</td>
+<td>移动光标到行首</td>
+</tr>
+<tr>
+<td>Command + E</td>
+<td>移动光标到行尾巴</td>
+</tr>
+<tr>
+<td>Control + U</td>
+<td>清除整行内容</td>
+</tr>
+<tr>
+<td>Control + K</td>
+<td>删除光标之后的内容</td>
+</tr>
+<tr>
+<td>Control + C</td>
+<td>Kill掉当前运行的程序</td>
+</tr>
+<tr>
+<td>Control + Z</td>
+<td>暂停当前运行程序，要恢复运行使用 <code>fg process_name</code></td>
+</tr>
+</tbody></table>
+<h2 id="快捷键详细信息"><a href="#快捷键详细信息" class="headerlink" title="快捷键详细信息"></a>快捷键详细信息</h2><h3 id="Option-Left-or-Right"><a href="#Option-Left-or-Right" class="headerlink" title="Option + Left or Right"></a>Option + Left or Right</h3><p>如果使用iTerm2作为终端模拟器时，该快捷键不是所预想的功能，此时需要进行设置，这里贴出[4]提供的教程</p>
+<p>Step 1: 在 Profiles-Keys 下设置 <code> Left ⌥ key to act as Esc+</code></p>
+<img src="/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/1.png" class="" width="800">
+
+<p>Step 2: 添加一个快捷键 <code>⌥ ←</code>，快捷键设置内容为</p>
+<ul>
+<li>Keyboard Shortcut: <code>⌥ ←</code></li>
+<li>Action: Send Escape Sequence</li>
+<li>Esc+: b</li>
+</ul>
+<img src="/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/2.png" class="" width="800">
+
+<p>Step 3: 添加一个快捷键 <code>⌥ →</code>，快捷键设置内容为</p>
+<ul>
+<li>Keyboard Shortcut: <code>⌥ →</code></li>
+<li>Action: Send Escape Sequence</li>
+<li>Esc+: f</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://cnbin.github.io/blog/2015/06/20/iterm2-kuai-jie-jian-da-quan/">iTerm2 快捷键大全</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.howtogeek.com/howto/ubuntu/keyboard-shortcuts-for-bash-command-shell-for-ubuntu-debian-suse-redhat-linux-etc/">The Best Keyboard Shortcuts for Bash (aka the Linux and macOS Terminal)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.techrepublic.com/article/20-terminal-shortcuts-developers-need-to-know/">20 Terminal shortcuts developers need to know</a></li>
+<li><a target="_blank" rel="noopener" href="https://coderwall.com/p/h6yfda/use-and-to-jump-forwards-backwards-words-in-iterm-2-on-os-x">Use ⌥ ← and ⌥→ to jump forwards &#x2F; backwards words in iTerm 2, on OS X</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/" data-id="clz5f5j63004e9uvh00docd7k" data-title="终端快捷键" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Python-Snippets-Part-1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2018/05/02/Python-Snippets-Part-1/" class="article-date">
@@ -170,7 +289,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/05/02/Python-Snippets-Part-1/" data-id="clz2w7lbv002wyivh0lcng1ch" data-title="Python Snippets Part 1" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/05/02/Python-Snippets-Part-1/" data-id="clz5f5j5l002y9uvh2v8h8zbq" data-title="Python Snippets Part 1" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -321,7 +440,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/30/VGG%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0/" data-id="clz2w7lby003dyivh8xhr50yt" data-title="VGG网络实现" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/30/VGG%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0/" data-id="clz5f5j5s003f9uvhbzorbkzq" data-title="VGG网络实现" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -377,7 +496,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/28/H5py%E6%94%AF%E6%8C%81Parallel-HDF5/" data-id="clz2w7lb7000ayivh3n5m9dvl" data-title="H5py支持Parallel HDF5" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/28/H5py%E6%94%AF%E6%8C%81Parallel-HDF5/" data-id="clz5f5j4k000b9uvhaed0hs45" data-title="H5py支持Parallel HDF5" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -435,7 +554,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/28/%E5%9B%BE%E5%83%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E6%88%90LMDB%E6%96%87%E4%BB%B6/" data-id="clz2w7lc30042yivh9lkahy9t" data-title="图像数据转换成LMDB文件" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/28/%E5%9B%BE%E5%83%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E6%88%90LMDB%E6%96%87%E4%BB%B6/" data-id="clz5f5j6000429uvh2iy7fa8q" data-title="图像数据转换成LMDB文件" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -519,7 +638,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/27/H5py%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz2w7lb60008yivh3zakcel0" data-title="H5py备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/27/H5py%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz5f5j4j00099uvh33fedt60" data-title="H5py备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -582,7 +701,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/25/Non-Maximum-Suppression/" data-id="clz2w7lbs002jyivh0py059w8" data-title="Non-Maximum Suppression" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/25/Non-Maximum-Suppression/" data-id="clz5f5j5g002l9uvh0vzff9k1" data-title="Non-Maximum Suppression" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -649,7 +768,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/23/Shell-Snippets-Part-1/" data-id="clz2w7lbw0031yivhat1fduyn" data-title="Shell Snippets Part 1" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/23/Shell-Snippets-Part-1/" data-id="clz5f5j5o00339uvh6xy8cib5" data-title="Shell Snippets Part 1" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -720,7 +839,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/23/ROC%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6/" data-id="clz2w7lbv002yyivhgt3l70vg" data-title="ROC曲线绘制" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/23/ROC%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6/" data-id="clz5f5j5m00309uvh2b5ncjkw" data-title="ROC曲线绘制" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -763,69 +882,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/22/CPP-Snippets-Part-1/" data-id="clz2w7lb20001yivh3ygbbuv1" data-title="C++ Snippets Part 1" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/04/22/CPP-Snippets-Part-1/" data-id="clz5f5j4d00019uvhb9rgee75" data-title="C++ Snippets Part 1" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-LeetCode-349-Intersection-of-Two-Arrays" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/04/21/LeetCode-349-Intersection-of-Two-Arrays/" class="article-date">
-  <time class="dt-published" datetime="2018-04-21T14:57:41.000Z" itemprop="datePublished">2018-04-21</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/04/21/LeetCode-349-Intersection-of-Two-Arrays/">LeetCode 349 - Intersection of Two Arrays</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>Given two arrays, write a function to compute their intersection.</p>
-<p><strong>Example:</strong></p>
-<p>Given nums1 &#x3D; <code>[1, 2, 2, 1]</code>, nums2 &#x3D; <code>[2, 2]</code>, return <code>[2]</code>.</p>
-<p><strong>Note:</strong></p>
-<ul>
-<li><p>Each element in the result must be unique.</p>
-</li>
-<li><p>The result can be in any order.</p>
-</li>
-</ul>
-<p><strong>Related Topics:</strong> Hash Table, Two Pointers, Binary Search, Sort</p>
-<p>原问题: <a target="_blank" rel="noopener" href="https://leetcode.com/problems/intersection-of-two-arrays/description/">349. Intersection of Two Arrays</a></p>
-<p>中文翻译版: <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/intersection-of-two-arrays/description/">349. 两个数组的交集</a></p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h3><p>可以创建两个哈希表，首先遍历数组 nums1，将数组元素添加到第一个哈希表中，然后遍历数组 nums2，如果数组元素在第一个哈希表中不存在，则将该数组元素添加到第二个哈希表中，遍历完数组 nums2 后，将第二个哈希表的中元素作为结果输出。实现代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    vector&lt;int&gt; intersection(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2)</span><br><span class="line">    &#123;</span><br><span class="line">        unordered_set&lt;int&gt; unique_nums1;</span><br><span class="line">        for (auto it=nums1.begin(); it!=nums1.end(); it++)</span><br><span class="line">            unique_nums1.insert(*it);</span><br><span class="line"></span><br><span class="line">        unordered_set&lt;int&gt; unique_nums;</span><br><span class="line">        for (auto it=nums2.begin(); it!=nums2.end(); it++) &#123;</span><br><span class="line">            if (unique_nums1.find(*it) != unique_nums1.end())</span><br><span class="line">                unique_nums.insert(*it);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        vector&lt;int&gt; ret;</span><br><span class="line">        for (auto it=unique_nums.begin(); it!=unique_nums.end(); it++)</span><br><span class="line">            ret.push_back(*it);</span><br><span class="line"></span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    vector&lt;int&gt; nums1 = &#123;1, 2, 2, 1&#125;;</span><br><span class="line">    vector&lt;int&gt; nums2 = &#123;2, 2&#125;;</span><br><span class="line">    vector&lt;int&gt; ret = solu.intersection(nums1, nums2);</span><br><span class="line"></span><br><span class="line">    for (auto it=ret.begin(); it!=ret.end(); it++)</span><br><span class="line">        cout &lt;&lt; *it &lt;&lt; &quot; &quot;;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h3><p>将数组 nums1 和数组 nums2 进行从小到大排序，设置两个指针 p1 和 p2 分别指向数组 nums1 和数组 nums2 的第一个元素。开始遍历数组时，如果指针 p1 和指针 p2 指向的元素不相等，则移动指向元素中较小值的指针，如果指针 p1 和指针 p2 指向的元素相等，则同时移动指针 p1 和 p2，并记录该相等的元素 (找到相等元素时先判断该元素是否和这个记录值相等，如果相等则说明交集已经存在该元素，不需要添加到交集中，否则添加到交集中)，依次操作，直到其中一个集合没有元素可比较为止。实现代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    vector&lt;int&gt; intersection(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2)</span><br><span class="line">    &#123;</span><br><span class="line">        vector&lt;int&gt; ret;</span><br><span class="line">        if (nums1.size() == 0)</span><br><span class="line">            return ret;</span><br><span class="line">        else if (nums2.size() == 0)</span><br><span class="line">            return ret;</span><br><span class="line"></span><br><span class="line">        sort(nums1.begin(), nums1.end());</span><br><span class="line">        sort(nums2.begin(), nums2.end());</span><br><span class="line"></span><br><span class="line">        int p1, p2, repeat;</span><br><span class="line">        p1 = p2 = 0;</span><br><span class="line">        repeat = nums1[0] &lt; nums2[0] ? nums1[0] - 1 : nums2[0] - 1;</span><br><span class="line">        while (p1 &lt; nums1.size() &amp;&amp; p2 &lt; nums2.size()) &#123;</span><br><span class="line">            if (nums1[p1] &lt; nums2[p2]) &#123;</span><br><span class="line">                p1++;</span><br><span class="line">            &#125; else if (nums1[p1] &gt; nums2[p2]) &#123;</span><br><span class="line">                p2++;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (repeat != nums1[p1])</span><br><span class="line">                    ret.push_back(nums1[p1]);</span><br><span class="line">                repeat = nums1[p1];</span><br><span class="line">                p1++;</span><br><span class="line">                p2++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line">    vector&lt;int&gt; nums1 = &#123;1, 2, 2, 1&#125;;</span><br><span class="line">    vector&lt;int&gt; nums2 = &#123;2, 2&#125;;</span><br><span class="line">    vector&lt;int&gt; ret = solu.intersection(nums1, nums2);</span><br><span class="line"></span><br><span class="line">    for (auto it=ret.begin(); it!=ret.end(); it++)</span><br><span class="line">        cout &lt;&lt; *it &lt;&lt; &quot; &quot;;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/04/21/LeetCode-349-Intersection-of-Two-Arrays/" data-id="clz2w7lbk001lyivh81qeaov2" data-title="LeetCode 349 - Intersection of Two Arrays" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
 
     </footer>
   </div>
@@ -885,6 +946,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/28/ICS-2023-PA1/">南京大学ICS2023 PA1记录</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/28/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BABlog/">Hexo搭建个人Blog</a>
           </li>
         
@@ -898,10 +963,6 @@
         
           <li>
             <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
           </li>
         
       </ul>

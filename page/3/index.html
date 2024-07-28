@@ -69,6 +69,79 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-保存和恢复Tmux会话" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/" class="article-date">
+  <time class="dt-published" datetime="2018-09-09T14:14:38.000Z" itemprop="datePublished">2018-09-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/">保存和恢复Tmux会话</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>使用Tmux时经常会遇到的一个问题，那就是系统重启时，Session会被清除，每次打开电脑都要重启建一个Session，然后创建一堆Window以及Pane，这极大地降低了Tmux使用效率，因此需要想一个办法能够保存Tmux的Session。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>该问题的解决方案是安装一个叫<code>Tmux Resurrect</code>的插件。Tmux要安装插件，可以通过<code>Tmux Plugin Manager</code>这个插件进行安装，该插件相当于一个插件管理系统，可以快速地安装、更新以及删除插件。</p>
+<h3 id="Tmux-Plugin-Manager"><a href="#Tmux-Plugin-Manager" class="headerlink" title="Tmux Plugin Manager"></a>Tmux Plugin Manager</h3><p>安装<code>Tmux Plugin Manager</code>插件可以参考该插件的GitHub：<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tpm">tmux-plugins&#x2F;tpm</a>。安装很简单，首先clone插件到本地</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">clone</span> https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm</span></span><br></pre></td></tr></table></figure>
+
+<p>然后修改<code>.tmux.conf</code>，在文件最底部添加以下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># List of plugins</span><br><span class="line">set -g @plugin &#x27;tmux-plugins/tpm&#x27;</span><br><span class="line">set -g @plugin &#x27;tmux-plugins/tmux-sensible&#x27;</span><br><span class="line"></span><br><span class="line"># Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)</span><br><span class="line">run &#x27;~/.tmux/plugins/tpm/tpm&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>重新加载配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">type</span> this <span class="keyword">in</span> terminal <span class="keyword">if</span> tmux is already running</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">tmux <span class="built_in">source</span> ~/.tmux.conf</span></span><br></pre></td></tr></table></figure>
+
+<p>然后就可以在Tmux中使用快捷<code>prefix + I</code>(注意这里的<code>I</code>是大写)安装配置文件<code>.tmux.conf</code>中定义的插件了。</p>
+<p><strong>补充：</strong></p>
+<p>如果Tmux安装了<a target="_blank" rel="noopener" href="https://github.com/gpakosz/.tmux">gpakosz&#x2F;.tmux</a>，在文件<code>.tmux.conf.local</code>中配置好<code>Tmux Plugin Manager</code>后，在Tmux中使用<code>prefix + I</code>安装插件会没有效果，相关的讨论见<a target="_blank" rel="noopener" href="https://github.com/gpakosz/.tmux/issues/61">“run ‘~&#x2F;.tmux&#x2F;plugins&#x2F;tpm&#x2F;tpm’” has no effect in .tmux.conf.local #61</a>，具体的解决方案是用另一种写法写<code>set -g @plugin</code>，即将</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set -g @plugin &#x27;tmux-plugins/tpm&#x27;</span><br><span class="line">set -g @plugin &#x27;tmux-plugins/tmux-sensible&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>改写为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set -g @tpm_plugins &#x27;          \</span><br><span class="line">  tmux-plugins/tpm             \</span><br><span class="line">  tmux-plugins/tmux-sensible</span><br><span class="line">&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>解决方案来源于：<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tpm/blob/master/docs/tpm_not_working.md">Help, tpm not working!</a></p>
+<h2 id="Tmux-Resurrect"><a href="#Tmux-Resurrect" class="headerlink" title="Tmux Resurrect"></a>Tmux Resurrect</h2><p>安装好<code>Tmux Plugin Manager</code>后，就可以安装<code>Tmux Resurrect</code>插件(<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tmux-resurrect">tmux-plugins&#x2F;tmux-resurrect</a>)了。在Tmux配置文件<code>.tmux.conf</code>中添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set -g @plugin &#x27;tmux-plugins/tmux-resurrect&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>然后使用快捷键<code>prefix + I</code>就可以安装插件了。</p>
+<h2 id="保存和恢复"><a href="#保存和恢复" class="headerlink" title="保存和恢复"></a>保存和恢复</h2><p>安装完<code>Tmux Plugin Manager</code>，就可以使用下面快捷键保存和恢复Session了。</p>
+<ul>
+<li><code>prefix + Ctrl-s</code> - save</li>
+<li><code>prefix + Ctrl-r</code> - restore</li>
+</ul>
+<p>平常重启电脑后，首先在终端打开Tmux，然后使用<code>prefix + Ctrl-r</code>就可以恢复保存的Session了，如果有多个Session可以使用<code>prefix + s</code>来选择Session。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://liam0205.me/2016/09/10/tmux-plugin-resurrect/">保存和恢复 Tmux 会话</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/" data-id="clz5f5j5x003s9uvh19zdb0b7" data-title="保存和恢复Tmux会话" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tmux/" rel="tag">Tmux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Cython调用BLAS" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/" class="article-date">
@@ -126,7 +199,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/" data-id="clz2w7lb50005yivh5nnl1bsk" data-title="Cython调用BLAS" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/" data-id="clz5f5j4j00089uvhcp4d3wmk" data-title="Cython调用BLAS" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -181,7 +254,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/09/03/Pandas%E5%A4%87%E5%BF%98%E5%BD%952/" data-id="clz2w7lbu002ryivh5wb36dmn" data-title="Pandas备忘录2" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/09/03/Pandas%E5%A4%87%E5%BF%98%E5%BD%952/" data-id="clz5f5j5j002t9uvh7nbp16gh" data-title="Pandas备忘录2" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -249,7 +322,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/" data-id="clz2w7lbz003gyivh30suhwly" data-title="Weighted Random Sampling With Replacement" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/" data-id="clz5f5j5t003i9uvh57a9efbv" data-title="Weighted Random Sampling With Replacement" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -299,7 +372,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/07/18/%E4%BB%A5Column-major-Order%E8%AF%BB%E5%8F%96HDF5%E6%95%B0%E6%8D%AE/" data-id="clz2w7lc1003qyivh26yp5e73" data-title="以Column-major Order读取HDF5数据" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/07/18/%E4%BB%A5Column-major-Order%E8%AF%BB%E5%8F%96HDF5%E6%95%B0%E6%8D%AE/" data-id="clz5f5j5w003p9uvhabgo7juy" data-title="以Column-major Order读取HDF5数据" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -356,7 +429,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/07/15/LeetCode-7-Reverse-Integer/" data-id="clz2w7lbp0028yivhhi082ms2" data-title="LeetCode 7 - Reverse Integer" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/07/15/LeetCode-7-Reverse-Integer/" data-id="clz5f5j5c002c9uvh3j329fuw" data-title="LeetCode 7 - Reverse Integer" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -471,7 +544,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/07/14/Stirling-s-approximation/" data-id="clz2w7lbx0036yivhb0ahdbn3" data-title="Stirling&#39;s approximation" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/07/14/Stirling-s-approximation/" data-id="clz5f5j5q00389uvhh11y2i1a" data-title="Stirling&#39;s approximation" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -532,7 +605,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/05/09/Matplotlib%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz2w7lbr002hyivhh0z8257f" data-title="Matplotlib备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/05/09/Matplotlib%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz5f5j5f002j9uvh37qec3mm" data-title="Matplotlib备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -753,7 +826,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/05/06/Pandas%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz2w7lbt002oyivh8ple523h" data-title="Pandas备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/05/06/Pandas%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz5f5j5i002q9uvh6yuk776v" data-title="Pandas备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -819,130 +892,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/05/03/Numpy%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz2w7lbs002myivh15okafcd" data-title="Numpy备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/05/03/Numpy%E5%A4%87%E5%BF%98%E5%BD%95/" data-id="clz5f5j5h002o9uvhe0yh83vg" data-title="Numpy备忘录" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-终端快捷键" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/" class="article-date">
-  <time class="dt-published" datetime="2018-05-03T12:34:20.000Z" itemprop="datePublished">2018-05-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/">终端快捷键</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>OS: OS X 10.11.6</p>
-<p>Shell: bash and zsh</p>
-<p>Other: iTerm2</p>
-<h2 id="快捷键列表"><a href="#快捷键列表" class="headerlink" title="快捷键列表"></a>快捷键列表</h2><table>
-<thead>
-<tr>
-<th>快捷键</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Option + Left or Right</td>
-<td>光标按单词前移或后移</td>
-</tr>
-<tr>
-<td>Control + F or B</td>
-<td>光标向前或向后移动一个字符</td>
-</tr>
-<tr>
-<td>Control + D</td>
-<td>删除当前光标的字符</td>
-</tr>
-<tr>
-<td>Control + H</td>
-<td>删除光标之前的字符</td>
-</tr>
-<tr>
-<td>Control + W</td>
-<td>删除光标之前的单词</td>
-</tr>
-<tr>
-<td>Command + A</td>
-<td>移动光标到行首</td>
-</tr>
-<tr>
-<td>Command + E</td>
-<td>移动光标到行尾巴</td>
-</tr>
-<tr>
-<td>Control + U</td>
-<td>清除整行内容</td>
-</tr>
-<tr>
-<td>Control + K</td>
-<td>删除光标之后的内容</td>
-</tr>
-<tr>
-<td>Control + C</td>
-<td>Kill掉当前运行的程序</td>
-</tr>
-<tr>
-<td>Control + Z</td>
-<td>暂停当前运行程序，要恢复运行使用 <code>fg process_name</code></td>
-</tr>
-</tbody></table>
-<h2 id="快捷键详细信息"><a href="#快捷键详细信息" class="headerlink" title="快捷键详细信息"></a>快捷键详细信息</h2><h3 id="Option-Left-or-Right"><a href="#Option-Left-or-Right" class="headerlink" title="Option + Left or Right"></a>Option + Left or Right</h3><p>如果使用iTerm2作为终端模拟器时，该快捷键不是所预想的功能，此时需要进行设置，这里贴出[4]提供的教程</p>
-<p>Step 1: 在 Profiles-Keys 下设置 <code> Left ⌥ key to act as Esc+</code></p>
-<img src="/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/1.png" class="" width="800">
-
-<p>Step 2: 添加一个快捷键 <code>⌥ ←</code>，快捷键设置内容为</p>
-<ul>
-<li>Keyboard Shortcut: <code>⌥ ←</code></li>
-<li>Action: Send Escape Sequence</li>
-<li>Esc+: b</li>
-</ul>
-<img src="/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/2.png" class="" width="800">
-
-<p>Step 3: 添加一个快捷键 <code>⌥ →</code>，快捷键设置内容为</p>
-<ul>
-<li>Keyboard Shortcut: <code>⌥ →</code></li>
-<li>Action: Send Escape Sequence</li>
-<li>Esc+: f</li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://cnbin.github.io/blog/2015/06/20/iterm2-kuai-jie-jian-da-quan/">iTerm2 快捷键大全</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.howtogeek.com/howto/ubuntu/keyboard-shortcuts-for-bash-command-shell-for-ubuntu-debian-suse-redhat-linux-etc/">The Best Keyboard Shortcuts for Bash (aka the Linux and macOS Terminal)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.techrepublic.com/article/20-terminal-shortcuts-developers-need-to-know/">20 Terminal shortcuts developers need to know</a></li>
-<li><a target="_blank" rel="noopener" href="https://coderwall.com/p/h6yfda/use-and-to-jump-forwards-backwards-words-in-iterm-2-on-os-x">Use ⌥ ← and ⌥→ to jump forwards &#x2F; backwards words in iTerm 2, on OS X</a></li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/" data-id="clz2w7lc6004fyivh9osk45th" data-title="终端快捷键" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shell/" rel="tag">Shell</a></li></ul>
 
     </footer>
   </div>
@@ -1002,6 +956,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/28/ICS-2023-PA1/">南京大学ICS2023 PA1记录</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/28/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BABlog/">Hexo搭建个人Blog</a>
           </li>
         
@@ -1015,10 +973,6 @@
         
           <li>
             <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
           </li>
         
       </ul>

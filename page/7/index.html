@@ -69,6 +69,178 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-今日头条2018春季校园招聘编程题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/03/24/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A12018%E6%98%A5%E5%AD%A3%E6%A0%A1%E5%9B%AD%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2018-03-24T14:54:56.000Z" itemprop="datePublished">2018-03-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/03/24/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A12018%E6%98%A5%E5%AD%A3%E6%A0%A1%E5%9B%AD%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/">今日头条2018春季校园招聘编程题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="题目一-找到差值为k的数字对的个数"><a href="#题目一-找到差值为k的数字对的个数" class="headerlink" title="题目一 找到差值为k的数字对的个数"></a>题目一 找到差值为k的数字对的个数</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>在n个元素的数组中，找到差值为k的数字对去重后的个数</p>
+<p><strong>输入描述：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">第一行，n和k，n表示数字个数，k表示差值</span><br><span class="line">第二行，n个正整数</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出描述：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">差值为k的数字对去重后的个数</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 1</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">5 2</span><br><span class="line">1 5 3 4 2</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<p>说明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其中数字对分别为 (1, 3), (5, 3), (4, 2)</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">6 2</span><br><span class="line">1 5 3 3 4 2</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<p>说明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其中数字对分别为 (1, 3), (5, 3), (4, 2)</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">4 0</span><br><span class="line">1 1 1 1</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>说明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其中数字对分别为 (1, 1)</span><br></pre></td></tr></table></figure>
+
+<p><strong>备注：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">数据范围：</span><br><span class="line">对于 100% 的数据，0 &lt;= k &lt; 100</span><br><span class="line">对于 100% 的数据，数组内数值范围在 [0, 100000000]</span><br><span class="line">对于 30% 的数据，0 &lt; n &lt; 1000</span><br><span class="line">对于 80% 的数据，0 &lt; n &lt; 100000</span><br><span class="line">对于 100% 的数据，0 &lt; n &lt; 1000000</span><br></pre></td></tr></table></figure>
+
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>这道题目在 LeetCode 有相应的题目，题目为 <a target="_blank" rel="noopener" href="https://leetcode.com/problems/k-diff-pairs-in-an-array/description/">532. K-diff Pairs in an Array</a>，这道题目我在另一篇博文做了解答，可以参考 <a href="/2018/03/24/LeetCode-532-K-diff-Pairs-in-an-Array/" title="LeetCode 532 - K-diff Pairs in an Array">LeetCode 532 - K-diff Pairs in an Array</a></p>
+<h2 id="题目二-求函数调用次数"><a href="#题目二-求函数调用次数" class="headerlink" title="题目二 求函数调用次数"></a>题目二 求函数调用次数</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>定义两个字符串变量：s 和 m，再定义两种操作。</p>
+<p>第一种操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">m = s;</span><br><span class="line">s = s + s;</span><br></pre></td></tr></table></figure>
+
+<p>第二种操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s = s + m;</span><br></pre></td></tr></table></figure>
+
+<p>假设 s, m 初始化如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;a&quot;;</span><br><span class="line">m = s;</span><br></pre></td></tr></table></figure>
+
+<p>求最小的操作步骤数，可以将 s 拼接到长度等 n</p>
+<p><strong>输入描述：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">一个整数n，表明我们需要得到s字符串长度</span><br><span class="line">对于100%的数据，0 &lt; n &lt; 10000</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出描述：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个整数，表明总共操作次数</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 1</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<p>说明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输入是6，表明我们需要得到s字符串长度为6，也就是s最终为&quot;aaaaaa&quot;，那么依次使用2次&quot;第一次操作“和1次&quot;第二种操作&quot;就能达到目的，总共操作次数是3。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例2</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
+
+<p>说明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设n=5，表明我们需要得到s字符串长度为5，也就是s最终为&quot;aaaaa&quot;，那么直接使用4次&quot;第二种操作“就能达到目的，总共操作次数是4。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例3</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<p>说明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设n=4，表明我们需要得到s字符串长度为4，也就是s最终为&quot;aaaa&quot;，那么直接使用2次&quot;第一种操作&quot;就能达到目的，总共操作次数是2。</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="题目三"><a href="#题目三" class="headerlink" title="题目三"></a>题目三</h2><p>没记录到。。。</p>
+<h2 id="题目四-Magic"><a href="#题目四-Magic" class="headerlink" title="题目四 Magic"></a>题目四 Magic</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>给一个包含n个整数元素的集合a，一个包含m个整数元素的集合b。定义magic操作为，从一个集合中取出一个元素，放到另一个集合里，且操作过后每个集合的平均值大于操作前。注意以下两点：</p>
+<ol>
+<li>不可以把一个集合的元素取空，这样就没有平均值了</li>
+<li>值为x的元素从集合b取出放入集合a，但集合a中已有值为x的元素，则a的平均值不变 (因为集合元素不会重复)，b的平均值可能会改变 (因为x被取出了)</li>
+</ol>
+<p>问最多可以进行多少次magic操作？</p>
+<p><strong>输入描述：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">第一行为两个整数n，m</span><br><span class="line">第二行n个整数，表示集合a中的元素</span><br><span class="line">第三行m个整数，表示集合b中的元素</span><br><span class="line">对于30%的数据，最终结果 &lt;= 1</span><br><span class="line">对于70%的数据，输入中的a，b集合元素完全没有重复，即 |a| + |b| = |a 并 b|</span><br><span class="line">对于100%的数据，1 &lt; n, m &lt; 100,000，0 &lt; a[i], b[i] &lt; 100,000,000，集合a中元素互不相同，集合b中元素互不相同</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出描述：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输出一个整数，表示最多可以进行的操作次数。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 1</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3 5</span><br><span class="line">1 2 5</span><br><span class="line">2 3 4 5 6</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<p>说明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">依次从b集合取出3，4元素放入a集合</span><br></pre></td></tr></table></figure>
+
+<h2 id="题目五-跳板小游戏"><a href="#题目五-跳板小游戏" class="headerlink" title="题目五 跳板小游戏"></a>题目五 跳板小游戏</h2><h3 id="问题描述-3"><a href="#问题描述-3" class="headerlink" title="问题描述"></a>问题描述</h3><p>小T最近迷上了一款跳板小游戏。已知空中有N个高度互不相同的跳板，小T刚开始在高度为0的地方，每次跳跃可以选择与自己当前高度绝对值差小于等于H的跳板，跳跃过后到达以跳板为轴的镜像位置，问小T在最多跳K次的情况下最高能跳多高？ (任意时刻，高度不能为负)</p>
+<p><strong>输入描述：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">第一行三个整数N，K，H</span><br><span class="line">以下N行，每行一个整数Ti，表示第i个跳板的离地高度</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出描述：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个整数，表示最高能跳到的高度</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 1</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">3 3 2</span><br><span class="line">1</span><br><span class="line">3</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">8</span><br></pre></td></tr></table></figure>
+
+<p>说明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">小T初始在高度为0的地方</span><br><span class="line">第一次跳跃只能选择高度为1的跳板，结束后到达高度为2的地方，计算方式：高度1 = 初始高度 + (跳板1高度 - 初始高度)*2 = 0 + (1-0)*2 = 2</span><br><span class="line">第二次跳跃选择高度为3的跳板，结束后到达高度为4的地方，计算方式：高度2 = 高度1 + (跳板2高度 - 高度1)*2 = 2 + (3-2)*2 = 4</span><br><span class="line">第三次跳跃选择高度为6的跳板，结束后到达高度为8的地方，计算方式：高度3 = 高度2 + (跳板3高度 - 高度2)*2 = 4 + (6-4)*2 = 8</span><br></pre></td></tr></table></figure>
+
+<p><strong>备注：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">对于40%的数据，1 &lt;= N, K, H, Ti &lt;= 20</span><br><span class="line">对于100%的数据，1 &lt;= N, K, Ti &lt;= 100,000, 1 &lt;= H &lt;= 100</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/03/24/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A12018%E6%98%A5%E5%AD%A3%E6%A0%A1%E5%9B%AD%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/" data-id="clz5f5j5v003n9uvh7ifhdb48" data-title="今日头条2018春季校园招聘编程题" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AC%94%E8%AF%95/" rel="tag">笔试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-LeetCode-532-K-diff-Pairs-in-an-Array" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2018/03/24/LeetCode-532-K-diff-Pairs-in-an-Array/" class="article-date">
@@ -129,7 +301,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/24/LeetCode-532-K-diff-Pairs-in-an-Array/" data-id="clz2w7lbn001zyivhdxms1t7x" data-title="LeetCode 532 - K-diff Pairs in an Array" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/24/LeetCode-532-K-diff-Pairs-in-an-Array/" data-id="clz5f5j5900229uvhe2ur95k5" data-title="LeetCode 532 - K-diff Pairs in an Array" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -236,7 +408,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/23/%E5%8D%8E%E4%B8%BA2018%E6%A0%A1%E5%9B%AD%E5%AE%9E%E4%B9%A0%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/" data-id="clz2w7lc30040yivh53u6agga" data-title="华为2018校园实习招聘编程题" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/23/%E5%8D%8E%E4%B8%BA2018%E6%A0%A1%E5%9B%AD%E5%AE%9E%E4%B9%A0%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/" data-id="clz5f5j5z003z9uvhd9e59fj0" data-title="华为2018校园实习招聘编程题" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -283,7 +455,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/23/LeetCode-237-Delete-Node-in-a-Linked-List/" data-id="clz2w7lbj001hyivh877e6cwn" data-title="LeetCode 237 - Delete Node in a Linked List" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/23/LeetCode-237-Delete-Node-in-a-Linked-List/" data-id="clz5f5j53001j9uvh08nsgf3u" data-title="LeetCode 237 - Delete Node in a Linked List" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -332,7 +504,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/14/%E5%B8%B8%E7%94%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" data-id="clz2w7lc5004ayivhcdylbo9x" data-title="常用排序算法总结" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/14/%E5%B8%B8%E7%94%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" data-id="clz5f5j6200499uvh6x4n7tl5" data-title="常用排序算法总结" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -382,7 +554,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/12/LeetCode-1-Two-Sum/" data-id="clz2w7lbc000pyivhfz8zcuuc" data-title="LeetCode 1 - Two Sum" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/12/LeetCode-1-Two-Sum/" data-id="clz5f5j4s000s9uvhhcj5g7ta" data-title="LeetCode 1 - Two Sum" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -437,7 +609,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/12/LeetCode-136-Single-Number/" data-id="clz2w7lbd000tyivhfjro51uw" data-title="LeetCode 136 - Single Number" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/12/LeetCode-136-Single-Number/" data-id="clz5f5j4u000w9uvheqcv5uuo" data-title="LeetCode 136 - Single Number" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -496,7 +668,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/10/LeetCode-88-Merge-Sorted-Array/" data-id="clz2w7lbq002cyivhebhk9wfv" data-title="LeetCode 88 - Merge Sorted Array" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/10/LeetCode-88-Merge-Sorted-Array/" data-id="clz5f5j5d002f9uvhdi9886mx" data-title="LeetCode 88 - Merge Sorted Array" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -548,7 +720,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/09/LeetCode-215-Kth-Largest-Element-in-an-Array/" data-id="clz2w7lbi001fyivh7j2v2c6f" data-title="LeetCode 215 - Kth Largest Element in an Array" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/09/LeetCode-215-Kth-Largest-Element-in-an-Array/" data-id="clz5f5j52001i9uvh9h306dv1" data-title="LeetCode 215 - Kth Largest Element in an Array" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -595,59 +767,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/03/08/%E5%89%91%E6%8C%87offer-%E5%8F%98%E6%80%81%E8%B7%B3%E5%8F%B0%E9%98%B6/" data-id="clz2w7lc2003xyivhao570a5k" data-title="剑指offer - 变态跳台阶" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2018/03/08/%E5%89%91%E6%8C%87offer-%E5%8F%98%E6%80%81%E8%B7%B3%E5%8F%B0%E9%98%B6/" data-id="clz5f5j5z003x9uvhhyj2ce5a" data-title="剑指offer - 变态跳台阶" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-大量图片文件生成SequenceFile" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/" class="article-date">
-  <time class="dt-published" datetime="2017-03-12T01:38:34.000Z" itemprop="datePublished">2017-03-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/">大量图片文件生成SequenceFile</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>本文主要介绍如何将大量图片数据集合起来，然后生成一个SequenceFile，这么做的原因是避免Hadoop处理大量小文件导致性能下降。SequenceFile的key-value内容以及数据类型为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">key : 储存图片文件名，数据类型为Text</span><br><span class="line">value : 储存图片数据，数据类型为ArrayPrimitiveWritable</span><br></pre></td></tr></table></figure>
-
-<p>为什么要用<code>ArrayPrimitiveWritable</code>来存储图片数据，主要是我想将图片数据用一个<code>int</code>数组来存储，数组元素就是图像的像素，数据范围在<code>[0, 255]</code>，当然，你可以使用<code>byte</code>数组来存储图片数据。</p>
-        
-          <p class="article-more-link">
-            <a href="/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/" data-id="clz2w7lc40047yivhc8pagrgr" data-title="大量图片文件生成SequenceFile" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li></ul>
 
     </footer>
   </div>
@@ -707,6 +831,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/28/ICS-2023-PA1/">南京大学ICS2023 PA1记录</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/28/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BABlog/">Hexo搭建个人Blog</a>
           </li>
         
@@ -720,10 +848,6 @@
         
           <li>
             <a href="/2020/05/16/LeetCode-206-Reverse-Linked-List/">LeetCode 206 - Reverse Linked List</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/10/LeetCode-328-Odd-Even-Linked-List/">LeetCode 328 - Odd Even Linked List</a>
           </li>
         
       </ul>
