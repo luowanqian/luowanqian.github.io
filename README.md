@@ -27,7 +27,9 @@ npm -v # layouts.download.codeBox.shouldPrint
 
 1、Git Clone代码
 
-> $ git clone git@github.com:luowanqian/luowanqian.github.io.git blog
+```
+$ git clone git@github.com:luowanqian/luowanqian.github.io.git blog
+```
 
 2、安装Hexo
 
@@ -55,7 +57,7 @@ $ npx hexo server
 部署前确认Github的Pages配置是Deploy from a branch。设置方法：
 
 1. 前往 `Settings > Pages > Source`，将 `source` 更改为 `Deploy from a branch`
-2. `branch` 选择_config.yml中配置的分支，这里是gh-pages
+2. `branch` 选择[_config.yml](./_config.yml)中配置的分支，这里是gh-pages
 
 部署命令
 
