@@ -40,7 +40,16 @@ $ cd blog
 $ npm install 
 ```
 
-3、生成Pages
+3、安装Theme
+
+博客采用的是 [Next](https://github.com/theme-next/hexo-theme-next) 主题，需要下载主题文件
+
+```shell
+$ mkdir -p themes/next
+$ curl -s https://api.github.com/repos/theme-next/hexo-theme-next/releases/latest | grep tarball_url | cut -d '"' -f 4 | wget -i - -O- | tar -zx -C themes/next --strip-components=1
+```
+
+4、生成Pages
 
 ```
 $ npx hexo generate
@@ -52,7 +61,7 @@ $ npx hexo generate
 $ npx hexo server
 ```
 
-4、部署
+5、部署
 
 部署前确认Github的Pages配置是Deploy from a branch。设置方法：
 

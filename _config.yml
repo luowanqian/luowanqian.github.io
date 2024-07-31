@@ -4,10 +4,10 @@
 
 # Site
 title: 袋熊的树洞
-subtitle: ''
+subtitle: '日拱一卒，功不唐捐'
 description: ''
 keywords:
-author: John Doe
+author: Luo Wanqian
 language: en
 timezone: ''
 
@@ -96,7 +96,8 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+#theme: landscape
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
