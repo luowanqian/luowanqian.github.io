@@ -146,6 +146,135 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/04/19/%E5%BF%AB%E9%80%9F%E7%94%9F%E6%88%90Kernel-Matrix/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/04/19/%E5%BF%AB%E9%80%9F%E7%94%9F%E6%88%90Kernel-Matrix/" class="post-title-link" itemprop="url">快速生成Kernel Matrix</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-04-19 19:55:46" itemprop="dateCreated datePublished" datetime="2019-04-19T19:55:46+08:00">2019-04-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-07-26 22:18:33" itemprop="dateModified" datetime="2024-07-26T22:18:33+08:00">2024-07-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>有些机器学习算法，比如最小二乘支持向量机 (Least Squares Support Vector Machine, LSSVM)，需要计算核矩阵 (Kernel Matrix)。核矩阵的定义如下</p>
+<p>$$<br>\Omega &#x3D; K(X, Y) &#x3D; \begin{bmatrix}<br>K(x_1, y_1) &amp; K(x_1, y_2) &amp; \cdots &amp; K(x_1, y_n) \<br>K(x_2, y_1) &amp; K(x_2, y_2) &amp; \cdots &amp; K(x_2, y_n) \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>K(x_m, y_1) &amp; K(x_n, y_2) &amp; \cdots &amp; K(x_m, y_n)<br>\end{bmatrix}<br>$$</p>
+<p>其中$K(\cdot, \cdot)$为核函数，常见的有线性核以及RBF核，矩阵$X \in R^{m \times d}$和$Y \in R^{n \times d}$为数据矩阵，每一行代表一个样本，定义为</p>
+<p>$$<br>\begin{aligned}<br>X &amp; &#x3D; [x_1 , x_2 , \cdots , x_m]^T \<br>Y &amp; &#x3D; [y_1 , y_2 , \cdots , y_n]^T<br>\end{aligned}<br>$$</p>
+<p>核矩阵的规模为$m \times n$，可以看出核矩阵的规模是由数据个数决定的，如果按照定义一个个生成核矩阵每一个元素，可想而知生成效率会极其低下，因此考虑用其他方式快速生成核矩阵。</p>
+<h2 id="快速生成核矩阵"><a href="#快速生成核矩阵" class="headerlink" title="快速生成核矩阵"></a>快速生成核矩阵</h2><p>本文只考虑核函数为RBF核的情况，其他情况有相类似的推导。RBF核又称高斯核，其定义为</p>
+<p>$$<br>K(x, y) &#x3D; e^{-\frac{\Vert x - y \Vert^2}{2\sigma^2}}<br>$$</p>
+<p>其中$\sigma &gt; 0$为高斯核带宽，$\Vert\cdot\Vert$为$L_2$范数。此时核矩阵$\Omega$为</p>
+<p>$$<br>\Omega&#x3D;K(X, Y) &#x3D; \begin{bmatrix}<br>e^{-\frac{\Vert x_1 - y_1\Vert^2}{2\sigma^2}} &amp; e^{-\frac{\Vert x_1 - y_2 \Vert^2}{2\sigma^2}} &amp; \cdots &amp; e^{-\frac{\Vert x_1 - y_n \Vert^2}{2\sigma^2}} \<br>e^{-\frac{\Vert x_2 - y_1 \Vert^2}{2\sigma^2}} &amp; e^{-\frac{\Vert x_2 - y_2 \Vert^2}{2\sigma^2}} &amp; \cdots &amp; e^{-\frac{\Vert x_2 - y_n \Vert^2}{2\sigma^2}} \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>e^{-\frac{\Vert x_m - y_1 \Vert^2}{2\sigma^2}} &amp; e^{-\frac{\Vert x_m - y_2 \Vert^2}{2\sigma^2}} &amp; \cdots &amp; e^{-\frac{\Vert x_m - y_n \Vert^2}{2\sigma^2}}<br>\end{bmatrix}<br>$$</p>
+<p>将自然指数运算提取到矩阵外面，则核矩阵$\Omega$表示为$\Omega&#x3D;e^{-\frac{D}{2\sigma^2}}$，这里矩阵$D$为</p>
+<p>$$<br>D &#x3D; \begin{bmatrix}<br>\Vert x_1 - y_1 \Vert^2 &amp; \Vert x_1 - y_2 \Vert^2 &amp; \cdots &amp; \Vert x_1 - y_n \Vert^2 \<br>\Vert x_2 - y_1 \Vert^2 &amp; \Vert x_2 - y_2 \Vert^2 &amp; \cdots &amp; \Vert x_2 - y_n \Vert^2 \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>\Vert x_m - y_1 \Vert^2 &amp; \Vert x_m - y_2 \Vert^2 &amp; \cdots &amp; \Vert x_m - y_n \Vert^2<br>\end{bmatrix}<br>$$</p>
+<p>将矩阵$D$中每一个元素展开，则可得</p>
+<p>$$<br>\begin{aligned}<br>\Vert x_i - y_j \Vert^2 &amp; &#x3D; (x_i - y_j)^T(x_i - y_j) \<br>&amp; &#x3D; x_i^T x_i - 2 x_i^T y_j + y_j^T y_j \<br>&amp; &#x3D; \Vert x_i \Vert^2 - 2 x_i^T y_j + \Vert y_j \Vert^2<br>\end{aligned}<br>$$</p>
+<p>从而矩阵$D$可以分解为三个矩阵之和</p>
+<p>$$<br>D &#x3D; A - 2B + C<br>$$</p>
+<p>其中矩阵$A$定义为</p>
+<p>$$<br>A &#x3D; \begin{bmatrix}<br>\Vert x_1 \Vert^2 &amp; \Vert x_1 \Vert^2 &amp; \cdots &amp; \Vert x_1 \Vert^2 \<br>\Vert x_2 \Vert^2 &amp; \Vert x_2 \Vert^2 &amp; \cdots &amp; \Vert x_2 \Vert^2 \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>\Vert x_m \Vert^2 &amp; \Vert x_m \Vert^2 &amp; \cdots &amp; \Vert x_m \Vert^2<br>\end{bmatrix}_{m \times n}<br>$$</p>
+<p>这里定义一个向量$\alpha$，其第$i$个元素为数据矩阵$X$第$i$行所有元素平方和，即</p>
+<p>$$<br>\alpha &#x3D; \begin{bmatrix}<br>\Vert x_1 \Vert^2 &amp; \Vert x_2 \Vert^2 &amp; \cdots &amp; \Vert x_m \Vert^2<br>\end{bmatrix}^T<br>$$</p>
+<p>则矩阵$A$可以表示为</p>
+<p>$$<br>\begin{aligned}<br>A &amp; &#x3D; \alpha 1^T \<br>&amp; &#x3D; \begin{bmatrix}<br>\Vert x_1 \Vert^2 \<br>\Vert x_2 \Vert^2 \<br>\vdots \<br>\Vert x_m \Vert^2<br>\end{bmatrix} \begin{bmatrix}<br>1 &amp; 1 &amp; \cdots &amp; 1<br>\end{bmatrix}<br>\end{aligned}<br>$$</p>
+<p>矩阵$B$定义为</p>
+<p>$$<br>B &#x3D; \begin{bmatrix}<br>x_1^T y_1 &amp; x_1^T y_2 &amp; \cdots &amp; x_1^T y_n \<br>x_2^T y_1 &amp; x_2^T y_2 &amp; \cdots &amp; x_2^T y_n \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>x_m^T y_1 &amp; x_m^T y_2 &amp; \cdots &amp; x_m^T y_n<br>\end{bmatrix}_{m \times n}<br>$$</p>
+<p>很容易可以知道矩阵$B$由数据矩阵$X$和$Y$相乘而得</p>
+<p>$$<br>B &#x3D; XY^T<br>$$</p>
+<p>矩阵$C$定义为</p>
+<p>$$<br>C &#x3D; \begin{bmatrix}<br>\Vert y_1 \Vert^2 &amp; \Vert y_2 \Vert^2 &amp; \cdots &amp; \Vert y_n \Vert^2 \<br>\Vert y_1 \Vert^2 &amp; \Vert y_2 \Vert^2 &amp; \cdots &amp; \Vert y_n \Vert^2 \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>\Vert y_1 \Vert^2 &amp; \Vert y_2 \Vert^2 &amp; \cdots &amp; \Vert y_n \Vert^2<br>\end{bmatrix}_{m \times n}<br>$$</p>
+<p>类似地，这里定义一个向量$\beta$，其第$i$个元素为数据矩阵$Y$第$i$行所有元素平方和，即</p>
+<p>$$<br>\beta &#x3D; \begin{bmatrix}<br>\Vert y_1 \Vert^2 &amp; \Vert y_2 \Vert &amp; \cdots &amp; \Vert y_n \Vert^2<br>\end{bmatrix}^T<br>$$</p>
+<p>则矩阵$C$可以表示为</p>
+<p>$$<br>\begin{aligned}<br>C &amp; &#x3D; 1 \beta^T \<br>&amp; &#x3D; \begin{bmatrix}<br>1 \<br>1 \<br>\vdots \<br>1<br>\end{bmatrix} \begin{bmatrix}<br>\Vert y_1 \Vert^2 &amp; \Vert y_2 \Vert &amp; \cdots &amp; \Vert y_n \Vert^2<br>\end{bmatrix}<br>\end{aligned}<br>$$</p>
+<p>综上可以得到</p>
+<p>$$<br>D &#x3D; \alpha 1^T - 2 XY^T + 1 \beta^T<br>$$</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="原始生成方法"><a href="#原始生成方法" class="headerlink" title="原始生成方法"></a>原始生成方法</h3><p>按照核矩阵定义，一个个生成矩阵每一个元素，实现代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def method1(X1, X2, sigma=1.0):</span><br><span class="line">    num_samples1, dims = X1.shape</span><br><span class="line">    num_samples2, dims = X2.shape</span><br><span class="line">    mat = np.empty((num_samples1, num_samples2))</span><br><span class="line">    </span><br><span class="line">    for i in range(num_samples1):</span><br><span class="line">        for j in range(num_samples2):</span><br><span class="line">            vec = X1[i, :] - X2[j, :]</span><br><span class="line">            mat[i, j] = np.exp(-0.5 / sigma**2 * np.dot(vec, vec))</span><br><span class="line">    </span><br><span class="line">    return mat</span><br></pre></td></tr></table></figure>
+
+<h3 id="快速生成方法1"><a href="#快速生成方法1" class="headerlink" title="快速生成方法1"></a>快速生成方法1</h3><p>根据前面讨论，将核矩阵分解为一系列矩阵向量乘积，实现代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def method2(X1, X2, sigma=1.0):</span><br><span class="line">    X1_sum = np.sum(X1**2, axis=1)</span><br><span class="line">    X2_sum = np.sum(X2**2, axis=1)</span><br><span class="line">    mat1 = np.dot(np.reshape(X1_sum, (X1_sum.shape[0], 1)),</span><br><span class="line">                  np.ones((1, X2_sum.shape[0])))</span><br><span class="line">    mat2 = np.dot(np.ones((X1_sum.shape[0], 1)),</span><br><span class="line">                  np.reshape(X2_sum, (1, X2_sum.shape[0])))</span><br><span class="line">    mat = mat1 + mat2 - 2 * np.dot(X1, X2.T)</span><br><span class="line">    mat = np.exp(-0.5 / sigma**2 * mat)</span><br><span class="line">    </span><br><span class="line">    return mat</span><br></pre></td></tr></table></figure>
+
+<h3 id="快速生成方法2"><a href="#快速生成方法2" class="headerlink" title="快速生成方法2"></a>快速生成方法2</h3><p>利用Numpy的广播机制，进一步提升核矩阵生成速度，实现代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def method3(X1, X2, sigma=1.0):</span><br><span class="line">    mat = np.sum(X1**2, 1).reshape(-1, 1) + np.sum(X2**2, 1) - 2 * np.dot(X1, X2.T)</span><br><span class="line">    mat = np.exp(-0.5 / sigma**2 * mat)</span><br><span class="line">    </span><br><span class="line">    return mat</span><br></pre></td></tr></table></figure>
+
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>实验代码在：<a target="_blank" rel="noopener" href="https://gist.github.com/luowanqian/d2f655a95f77dfe088fd626f72d78966">https://gist.github.com/luowanqian/d2f655a95f77dfe088fd626f72d78966</a></p>
+<p>这里做一个简单的实验，比对各种方法的效率。实验的数据矩阵$X$大小为$1000 \times 100$，数据矩阵$Y$大小为$5000 \times 100$，实验结果如下</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>生成时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原始生成</td>
+<td>25.1 s</td>
+</tr>
+<tr>
+<td>快速生成1</td>
+<td>132 ms</td>
+</tr>
+<tr>
+<td>快速生成2</td>
+<td>106 ms</td>
+</tr>
+</tbody></table>
+<p>由结果可以看出，快速生成方法速度提升是极大的。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1129,96 +1258,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2018/05/03/Numpy%E5%A4%87%E5%BF%98%E5%BD%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Luo Wanqian">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="袋熊的树洞">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/05/03/Numpy%E5%A4%87%E5%BF%98%E5%BD%95/" class="post-title-link" itemprop="url">Numpy备忘录</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2018-05-03 23:10:53" itemprop="dateCreated datePublished" datetime="2018-05-03T23:10:53+08:00">2018-05-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-07-26 22:18:33" itemprop="dateModified" datetime="2024-07-26T22:18:33+08:00">2024-07-26</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>本文主要是记录一些Numpy的使用方法以及注意事项。</p>
-<p><strong>Note:</strong> 如果没有特别说明，<code>np</code> 指的是 <code>numpy</code>，代表导入的 numpy</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br></pre></td></tr></table></figure>
-
-<p>PS: 网上找到一份Numpy的CheatSheet，内容不错，感兴趣的可以去下载：<a target="_blank" rel="noopener" href="https://www.dataquest.io/blog/numpy-cheat-sheet/">Numpy CheatSheet</a></p>
-<h2 id="转换ndarray数据类型"><a href="#转换ndarray数据类型" class="headerlink" title="转换ndarray数据类型"></a>转换ndarray数据类型</h2><p>如果想转换ndarray的数据类型，可以使用ndarray的 <code>astype</code> 方法</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>arr = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>arr.dtype</span><br><span class="line">dtype(<span class="string">&#x27;int64&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>float_arr = arr.astype(np.float64)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>float_arr.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<p><strong>Note:</strong> 调用 <code>astype</code> 方法会生成新的数组，因此需要赋值到一个变量上。</p>
-<h2 id="切片不会生成新的数组"><a href="#切片不会生成新的数组" class="headerlink" title="切片不会生成新的数组"></a>切片不会生成新的数组</h2><p>对数组进行切片后，返回的数组并不是原始数组的拷贝，只是一个对原始数组的引用，如果对切片后的数组进行数据修改，原始数组相应的位置数据会被修改。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; arr = np.arange(10)</span><br><span class="line">&gt;&gt;&gt; arr</span><br><span class="line">array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])</span><br><span class="line">&gt;&gt;&gt; new_arr = arr[5:8]</span><br><span class="line">&gt;&gt;&gt; new_arr</span><br><span class="line">array([5, 6, 7])</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; new_arr[:] = 12</span><br><span class="line">&gt;&gt;&gt; new_arr</span><br><span class="line">array([12, 12, 12])</span><br><span class="line">&gt;&gt;&gt; arr</span><br><span class="line">array([ 0,  1,  2,  3,  4, 12, 12, 12,  8,  9])</span><br></pre></td></tr></table></figure>
-
-<p>如果想要切片后的数组是原始数组的拷贝，需要调用 <code>copy()</code> 方法。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; new_arr = arr[5:8].copy()</span><br></pre></td></tr></table></figure>
-
-<h2 id="Axis编号"><a href="#Axis编号" class="headerlink" title="Axis编号"></a>Axis编号</h2><p>调用一些Numpy函数时会遇到设置 <code>axis</code> 参数，该参数可以设为 <code>0</code> 或 <code>1</code> ，对于这两个值表示的意义，可以参考下图</p>
-<img src="/2018/05/03/Numpy%E5%A4%87%E5%BF%98%E5%BD%95/1.png" class="">
-
-<p>也就是说<code>axis 0</code> 代表行方向，<code>axis 1</code> 代表列方向。例如，我们使用 <code>mean()</code> 计算矩阵的平均值时，<code>A.mean(axis=0)</code> 代表每个平均值是沿着行方向计算可得，<code>A.mean(axis=1)</code> 代表每个平均值是沿着列方向计算可得。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; A = np.random.randn(2, 3)</span><br><span class="line">&gt;&gt;&gt; A</span><br><span class="line">array([[-0.40797393,  0.24059956, -1.57582642],</span><br><span class="line">       [ 0.31626161, -0.07033558,  0.58346107]])</span><br><span class="line">&gt;&gt;&gt; A.mean(axis=0)</span><br><span class="line">array([-0.04585616,  0.08513199, -0.49618267])</span><br><span class="line">&gt;&gt;&gt; A.mean(axis=1)</span><br><span class="line">array([-0.58106693,  0.27646237])</span><br></pre></td></tr></table></figure>
-
-<p><code>A.mean(axis=0)</code> 大小为矩阵A列的个数，<code>A.mean(axis=1)</code>大小为矩阵A行的个数。</p>
-<h2 id="统计Boolean数组中True的个数"><a href="#统计Boolean数组中True的个数" class="headerlink" title="统计Boolean数组中True的个数"></a>统计Boolean数组中True的个数</h2><p>Boolean值通常可以转换成 0 (False) 或 1 (True)，因此可以使用 <code>sum()</code> 函数统计Boolean数组中 True 的个数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; bools = np.array([False, True, True, False, False])</span><br><span class="line">&gt;&gt;&gt; bools.sum()</span><br><span class="line">2</span><br><span class="line">&gt;&gt;&gt; np.sum(bools)</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
-
-<p>既然可以知道数组中 True 的个数，自然也可以知道 True 所占的比例，此时可以用 <code>mean()</code> 函数进行计算</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; bools.mean()</span><br><span class="line">0.4</span><br><span class="line">&gt;&gt;&gt; np.mean(bools)</span><br><span class="line">0.4</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1288,12 +1327,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-count">78</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

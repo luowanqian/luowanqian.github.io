@@ -146,6 +146,77 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/03/08/%E5%89%91%E6%8C%87offer-%E5%8F%98%E6%80%81%E8%B7%B3%E5%8F%B0%E9%98%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/03/08/%E5%89%91%E6%8C%87offer-%E5%8F%98%E6%80%81%E8%B7%B3%E5%8F%B0%E9%98%B6/" class="post-title-link" itemprop="url">剑指offer - 变态跳台阶</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-03-08 10:52:52" itemprop="dateCreated datePublished" datetime="2018-03-08T10:52:52+08:00">2018-03-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-07-26 22:18:33" itemprop="dateModified" datetime="2024-07-26T22:18:33+08:00">2024-07-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>题目描述：一只青蛙一次可以跳上1级台阶，也可以跳上2级 …… 它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。</p>
+</blockquote>
+<p>先从最简单的情况说起。如果只有1级台阶，跳法只有一种。如果有2级台阶，那就有两种跳法：一种是分两次跳，每次跳1级；另一种就是一次跳2级。如果有3级台阶，那就有四种跳法：一种是分三次跳，每次跳1级；一种是先跳2级，再跳1级；一种是先跳1级，再跳2级；还有一种是一次跳3级。</p>
+<p>接下来讨论一般情况。我们把n级台阶时的跳法看成n的函数，记为$f(n)$。根据前面分析，可以得到<br>$$<br>\begin{aligned}<br>f(1) &amp; &#x3D; 1 &#x3D; 2^0 \<br>f(2) &amp; &#x3D; 2 &#x3D; 2^{2-1} \<br>f(3) &amp; &#x3D; 4 &#x3D; 2^{3-1}<br>\end{aligned}<br>$$</p>
+<p>可以看出一个规律，那就是$f(n) &#x3D; 2^{n-1}$，那么怎么证明呢？先分析下n级台阶怎么跳，青蛙第一次跳有n中选择，可以第一次跳1级，此时后面台阶的跳法数目等于$f(n-1)$，如果第一次跳2级，此时后面台阶的跳法数目等于$f(n-2)$，一直到第一次直接跳$n$级，此时剩余台阶数为0，则跳法数目为$f(0)$，这里约定$f(0)&#x3D;1$，为了后面分析方便。综上可以得到一个递推公式：<br>$$<br>f(n) &#x3D; f(n-1) + f(n-2) + \cdots + f(2) + f(1) + f(0)<br>$$<br>接下来用数学归纳法证明$f(n)&#x3D;2^{n-1}$。如果前$n$项满足公式$f(n)&#x3D;2^{n-1}$，那么对于$f(n+1)$，可以得到<br>$$<br>\begin{align}<br>f(n+1) &amp;&#x3D; f(n) + f(n-1) + \cdots + f(1) + f(0) \<br>&amp; &#x3D; 2^{n-1} + 2^{n-2} + \cdots + 2^0 + 1 \<br>&amp; &#x3D; \frac{1 - 2^n}{1 - 2} + 1 \<br>&amp; &#x3D; 2^n<br>\end{align}<br>$$<br>可看出$f(n+1)$仍然满足公式。知道通向公式后，剩下的实现就很简单了，贴上C++代码。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">jumpFloorII</span><span class="params">(<span class="type">int</span> number)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (number == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> f = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">1</span>; i&lt;number; i++)</span><br><span class="line">            f *= <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> f;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Solution solu;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;f(0)= &quot;</span> &lt;&lt; solu.<span class="built_in">jumpFloorII</span>(<span class="number">0</span>) &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;f(1)= &quot;</span> &lt;&lt; solu.<span class="built_in">jumpFloorII</span>(<span class="number">1</span>) &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;f(2)= &quot;</span> &lt;&lt; solu.<span class="built_in">jumpFloorII</span>(<span class="number">2</span>) &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;f(5)= &quot;</span> &lt;&lt; solu.<span class="built_in">jumpFloorII</span>(<span class="number">5</span>) &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2017/03/12/%E5%A4%A7%E9%87%8F%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90SequenceFile/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -770,12 +841,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-count">78</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

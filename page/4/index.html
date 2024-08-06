@@ -146,6 +146,96 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/05/03/Numpy%E5%A4%87%E5%BF%98%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/05/03/Numpy%E5%A4%87%E5%BF%98%E5%BD%95/" class="post-title-link" itemprop="url">Numpy备忘录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-05-03 23:10:53" itemprop="dateCreated datePublished" datetime="2018-05-03T23:10:53+08:00">2018-05-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-07-26 22:18:33" itemprop="dateModified" datetime="2024-07-26T22:18:33+08:00">2024-07-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>本文主要是记录一些Numpy的使用方法以及注意事项。</p>
+<p><strong>Note:</strong> 如果没有特别说明，<code>np</code> 指的是 <code>numpy</code>，代表导入的 numpy</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br></pre></td></tr></table></figure>
+
+<p>PS: 网上找到一份Numpy的CheatSheet，内容不错，感兴趣的可以去下载：<a target="_blank" rel="noopener" href="https://www.dataquest.io/blog/numpy-cheat-sheet/">Numpy CheatSheet</a></p>
+<h2 id="转换ndarray数据类型"><a href="#转换ndarray数据类型" class="headerlink" title="转换ndarray数据类型"></a>转换ndarray数据类型</h2><p>如果想转换ndarray的数据类型，可以使用ndarray的 <code>astype</code> 方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>arr = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>arr.dtype</span><br><span class="line">dtype(<span class="string">&#x27;int64&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>float_arr = arr.astype(np.float64)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>float_arr.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong> 调用 <code>astype</code> 方法会生成新的数组，因此需要赋值到一个变量上。</p>
+<h2 id="切片不会生成新的数组"><a href="#切片不会生成新的数组" class="headerlink" title="切片不会生成新的数组"></a>切片不会生成新的数组</h2><p>对数组进行切片后，返回的数组并不是原始数组的拷贝，只是一个对原始数组的引用，如果对切片后的数组进行数据修改，原始数组相应的位置数据会被修改。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; arr = np.arange(10)</span><br><span class="line">&gt;&gt;&gt; arr</span><br><span class="line">array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])</span><br><span class="line">&gt;&gt;&gt; new_arr = arr[5:8]</span><br><span class="line">&gt;&gt;&gt; new_arr</span><br><span class="line">array([5, 6, 7])</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; new_arr[:] = 12</span><br><span class="line">&gt;&gt;&gt; new_arr</span><br><span class="line">array([12, 12, 12])</span><br><span class="line">&gt;&gt;&gt; arr</span><br><span class="line">array([ 0,  1,  2,  3,  4, 12, 12, 12,  8,  9])</span><br></pre></td></tr></table></figure>
+
+<p>如果想要切片后的数组是原始数组的拷贝，需要调用 <code>copy()</code> 方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; new_arr = arr[5:8].copy()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Axis编号"><a href="#Axis编号" class="headerlink" title="Axis编号"></a>Axis编号</h2><p>调用一些Numpy函数时会遇到设置 <code>axis</code> 参数，该参数可以设为 <code>0</code> 或 <code>1</code> ，对于这两个值表示的意义，可以参考下图</p>
+<img src="/2018/05/03/Numpy%E5%A4%87%E5%BF%98%E5%BD%95/1.png" class="">
+
+<p>也就是说<code>axis 0</code> 代表行方向，<code>axis 1</code> 代表列方向。例如，我们使用 <code>mean()</code> 计算矩阵的平均值时，<code>A.mean(axis=0)</code> 代表每个平均值是沿着行方向计算可得，<code>A.mean(axis=1)</code> 代表每个平均值是沿着列方向计算可得。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; A = np.random.randn(2, 3)</span><br><span class="line">&gt;&gt;&gt; A</span><br><span class="line">array([[-0.40797393,  0.24059956, -1.57582642],</span><br><span class="line">       [ 0.31626161, -0.07033558,  0.58346107]])</span><br><span class="line">&gt;&gt;&gt; A.mean(axis=0)</span><br><span class="line">array([-0.04585616,  0.08513199, -0.49618267])</span><br><span class="line">&gt;&gt;&gt; A.mean(axis=1)</span><br><span class="line">array([-0.58106693,  0.27646237])</span><br></pre></td></tr></table></figure>
+
+<p><code>A.mean(axis=0)</code> 大小为矩阵A列的个数，<code>A.mean(axis=1)</code>大小为矩阵A行的个数。</p>
+<h2 id="统计Boolean数组中True的个数"><a href="#统计Boolean数组中True的个数" class="headerlink" title="统计Boolean数组中True的个数"></a>统计Boolean数组中True的个数</h2><p>Boolean值通常可以转换成 0 (False) 或 1 (True)，因此可以使用 <code>sum()</code> 函数统计Boolean数组中 True 的个数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; bools = np.array([False, True, True, False, False])</span><br><span class="line">&gt;&gt;&gt; bools.sum()</span><br><span class="line">2</span><br><span class="line">&gt;&gt;&gt; np.sum(bools)</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<p>既然可以知道数组中 True 的个数，自然也可以知道 True 所占的比例，此时可以用 <code>mean()</code> 函数进行计算</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; bools.mean()</span><br><span class="line">0.4</span><br><span class="line">&gt;&gt;&gt; np.mean(bools)</span><br><span class="line">0.4</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1142,73 +1232,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2018/04/22/CPP-Snippets-Part-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Luo Wanqian">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="袋熊的树洞">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/04/22/CPP-Snippets-Part-1/" class="post-title-link" itemprop="url">C++ Snippets Part 1</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2018-04-22 23:27:19" itemprop="dateCreated datePublished" datetime="2018-04-22T23:27:19+08:00">2018-04-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-07-26 22:18:33" itemprop="dateModified" datetime="2024-07-26T22:18:33+08:00">2024-07-26</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>C++ Snippets</p>
-<h2 id="A-string-tokenizer"><a href="#A-string-tokenizer" class="headerlink" title="A string tokenizer"></a>A string tokenizer</h2><p>字符串分隔</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">void tokenize(const string &amp;str, vector&lt;string&gt; &amp;tokens, const string &amp;delimiters = &quot; &quot;)</span><br><span class="line">&#123;</span><br><span class="line">    // Skip delimiters at beginning.</span><br><span class="line">    string::size_type lastPos = str.find_first_not_of(delimiters, 0);</span><br><span class="line">    // Find first &quot;non-delimiter&quot;.</span><br><span class="line">    string::size_type pos = str.find_first_of(delimiters, lastPos);</span><br><span class="line"></span><br><span class="line">    while (string::npos != pos || string::npos != lastPos) &#123;</span><br><span class="line">        // Found a token, add it to the vector.</span><br><span class="line">        tokens.push_back(str.substr(lastPos, pos - lastPos));</span><br><span class="line">        // Skip delimiters.  Note the &quot;not_of&quot;</span><br><span class="line">        lastPos = str.find_first_not_of(delimiters, pos);</span><br><span class="line">        // Find next &quot;non-delimiter&quot;</span><br><span class="line">        pos = str.find_first_of(delimiters, lastPos);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    vector&lt;string&gt; tokens;</span><br><span class="line">    string str(&quot;Split me up! Word1 Word2 Word3.&quot;);</span><br><span class="line"></span><br><span class="line">    tokenize(str, tokens);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; &quot;String: &quot; &lt;&lt; str &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; &quot;Tokens: &quot; &lt;&lt; endl;</span><br><span class="line">    for (auto it = tokens.begin(); it != tokens.end(); it++)</span><br><span class="line">        cout &lt;&lt; *it &lt;&lt; endl;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1278,12 +1301,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-count">78</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
