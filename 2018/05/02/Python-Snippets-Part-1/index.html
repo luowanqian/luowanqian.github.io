@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. 判断文件或目录是否存在 2. ParameterGrid 3. 批量下载图片 4. 遍历文件夹中所有文件 5. 计算函数运行时间 6. 判断对象是否可迭代 7. 判断操作系统类型  1. 判断文件或目录是否存在创建一个目录和一个文件 12345$ mkdir dir1 &amp;&amp; touch file1.txt$ ls -ltotal 0drwxr-xr-x  2 luowanq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python Snippets Part 1">
+<meta property="og:url" content="http://example.com/2018/05/02/Python-Snippets-Part-1/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="1. 判断文件或目录是否存在 2. ParameterGrid 3. 批量下载图片 4. 遍历文件夹中所有文件 5. 计算函数运行时间 6. 判断对象是否可迭代 7. 判断操作系统类型  1. 判断文件或目录是否存在创建一个目录和一个文件 12345$ mkdir dir1 &amp;&amp; touch file1.txt$ ls -ltotal 0drwxr-xr-x  2 luowanq">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-05-02T14:57:40.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.180Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="编程语言">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2018/05/02/Python-Snippets-Part-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Python Snippets Part 1 | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/05/02/Python-Snippets-Part-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python Snippets Part 1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-05-02 22:57:40" itemprop="dateCreated datePublished" datetime="2018-05-02T22:57:40+08:00">2018-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#1-%E5%88%A4%E6%96%AD%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8">1. 判断文件或目录是否存在</a></li>
+<li><a href="#2-parametergrid">2. ParameterGrid</a></li>
+<li><a href="#3-%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87">3. 批量下载图片</a></li>
+<li><a href="#4-%E9%81%8D%E5%8E%86%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%AD%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6">4. 遍历文件夹中所有文件</a></li>
+<li><a href="#5-%E8%AE%A1%E7%AE%97%E5%87%BD%E6%95%B0%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4">5. 计算函数运行时间</a></li>
+<li><a href="#6-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%8F%AF%E8%BF%AD%E4%BB%A3">6. 判断对象是否可迭代</a></li>
+<li><a href="#7-%E5%88%A4%E6%96%AD%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%B1%BB%E5%9E%8B">7. 判断操作系统类型</a></li>
+</ul>
+<h2 id="1-判断文件或目录是否存在"><a href="#1-判断文件或目录是否存在" class="headerlink" title="1. 判断文件或目录是否存在"></a>1. 判断文件或目录是否存在</h2><p>创建一个目录和一个文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">mkdir</span> dir1 &amp;&amp; <span class="built_in">touch</span> file1.txt</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span> -l</span></span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x  2 luowanqian  wheel  68  5  2 23:21 dir1</span><br><span class="line">-rw-r--r--  1 luowanqian  wheel   0  5  2 23:21 file1.txt</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>os.path.exists()</code> 可以判断文件或目录是否存在，但是不能判断是该路径是一个文件还是目录，要进一步判断，需要使用 <code>os.path.isfile()</code>，如果该路径是一个文件，则返回 True，否则返回 False，当然，也可以直接使用 <code>os.path.isfile()</code> 判断文件是否存在。测试代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> os</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.exists(<span class="string">&#x27;dir1&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.exists(<span class="string">&#x27;file1.txt&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(<span class="string">&#x27;dir1&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(<span class="string">&#x27;file1.txt&#x27;</span>)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.exists(<span class="string">&#x27;dir2&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.exists(<span class="string">&#x27;file2.txt&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(<span class="string">&#x27;dir2&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(<span class="string">&#x27;file2.txt&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>目录 <code>dir2</code> 和文件 <code>file2.txt</code> 均不存在，所以函数 <code>os.path.exists()</code> 和 <code>os.path.isfile()</code> 均返回 False。</p>
+<h2 id="2-ParameterGrid"><a href="#2-ParameterGrid" class="headerlink" title="2. ParameterGrid"></a>2. ParameterGrid</h2><p>机器学习算法最常见的调参方法是网格搜索，需要将多组参数进行组合，Scikit-learn提供了一个类 <code>ParametGrid</code> 可以生成所有的参数组合，这里提取其关键代码单独写成一个生成器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> product</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parameters_grid</span>(<span class="params">parameter_map</span>):</span><br><span class="line">    items = <span class="built_in">sorted</span>(parameter_map.items())</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> items:</span><br><span class="line">        <span class="keyword">yield</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        keys, values = <span class="built_in">zip</span>(*items)</span><br><span class="line">        <span class="keyword">for</span> v <span class="keyword">in</span> product(*values):</span><br><span class="line">            params = <span class="built_in">dict</span>(<span class="built_in">zip</span>(keys, v))</span><br><span class="line">            <span class="keyword">yield</span> params</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    parameter_map = &#123;<span class="string">&#x27;a&#x27;</span>: [<span class="number">1</span>, <span class="number">2</span>], <span class="string">&#x27;b&#x27;</span>: [<span class="literal">True</span>, <span class="literal">False</span>]&#125;</span><br><span class="line">    <span class="keyword">for</span> params <span class="keyword">in</span> parameters_grid(parameter_map):</span><br><span class="line">        <span class="built_in">print</span>(params)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>代码运行结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;a&#x27;: 1, &#x27;b&#x27;: True&#125;</span><br><span class="line">&#123;&#x27;a&#x27;: 1, &#x27;b&#x27;: False&#125;</span><br><span class="line">&#123;&#x27;a&#x27;: 2, &#x27;b&#x27;: True&#125;</span><br><span class="line">&#123;&#x27;a&#x27;: 2, &#x27;b&#x27;: False&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-批量下载图片"><a href="#3-批量下载图片" class="headerlink" title="3. 批量下载图片"></a>3. 批量下载图片</h2><p>这里使用<code>requests</code>库批量下载图片，为了加快下载速度，还实现了多线程下载，同时为了避免一次下载失败，脚本支持自动重试下载。没有处理具体的异常，只是捕获异常后输出异常信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> retrying <span class="keyword">import</span> retry</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> progressbar</span><br><span class="line"><span class="keyword">import</span> concurrent.futures <span class="keyword">as</span> concurrent</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@retry(<span class="params">stop_max_attempt_number=<span class="number">10</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">download</span>(<span class="params">image_url, image_path</span>):</span><br><span class="line">    response = requests.get(image_url)</span><br><span class="line">    img = Image.<span class="built_in">open</span>(BytesIO(response.content))</span><br><span class="line">    img.save(image_path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    base_url = <span class="string">&#x27;http://www.baidu.com&#x27;</span></span><br><span class="line">    num_images = <span class="number">3</span></span><br><span class="line">    suffix = <span class="string">&#x27;.jpg&#x27;</span></span><br><span class="line">    image_dir = <span class="string">&#x27;images&#x27;</span></span><br><span class="line"></span><br><span class="line">    num_workers = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.isdir(image_dir):</span><br><span class="line">        os.mkdir(image_dir)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> concurrent.ThreadPoolExecutor(max_workers=num_workers) <span class="keyword">as</span> executor:</span><br><span class="line">        image_urls = []</span><br><span class="line">        image_paths = []</span><br><span class="line">        <span class="keyword">for</span> image_id <span class="keyword">in</span> <span class="built_in">range</span>(num_images):</span><br><span class="line">            url = base_url + <span class="string">&#x27;/&#x27;</span> + <span class="built_in">str</span>(image_id + <span class="number">1</span>) + suffix</span><br><span class="line">            file_path = os.path.join(image_dir, <span class="built_in">str</span>(image_id + <span class="number">1</span>) + suffix)</span><br><span class="line">            image_urls.append(url)</span><br><span class="line">            image_paths.append(file_path)</span><br><span class="line"></span><br><span class="line">        tasks = &#123;</span><br><span class="line">            executor.submit(download, url, file_path):</span><br><span class="line">                           (url, file_path) <span class="keyword">for</span> url, file_path <span class="keyword">in</span> <span class="built_in">zip</span>(image_urls, image_paths)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        total = <span class="built_in">len</span>(image_urls)</span><br><span class="line">        pbar = progressbar.ProgressBar(max_value=total).start()</span><br><span class="line">        <span class="keyword">for</span> task <span class="keyword">in</span> concurrent.as_completed(tasks):</span><br><span class="line">            url, file_path = tasks[task]</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                task.result()</span><br><span class="line">                i = i + <span class="number">1</span></span><br><span class="line">                pbar.update(i)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> exc:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;&#123;&#125; generated an exception: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(url, exc))</span><br><span class="line">        pbar.finish()</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-遍历文件夹中所有文件"><a href="#4-遍历文件夹中所有文件" class="headerlink" title="4. 遍历文件夹中所有文件"></a>4. 遍历文件夹中所有文件</h2><p>首先目录结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ tree test</span><br><span class="line">test</span><br><span class="line">├── 1.txt</span><br><span class="line">├── 2.txt</span><br><span class="line">└── test2</span><br><span class="line">    ├── 3.txt</span><br><span class="line">    └── 4.txt</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>os.walk()</code>遍历<code>test</code>目录，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root_dir = <span class="string">&#x27;/tmp/test&#x27;</span></span><br><span class="line"><span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(root_dir, topdown=<span class="literal">True</span>):</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> files:</span><br><span class="line">        <span class="built_in">print</span>(os.path.join(root, name))</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> dirs:</span><br><span class="line">        <span class="built_in">print</span>(os.path.join(root, name))</span><br></pre></td></tr></table></figure>
+
+<p>得到结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/tmp/test/1.txt</span><br><span class="line">/tmp/test/2.txt</span><br><span class="line">/tmp/test/test2</span><br><span class="line">/tmp/test/test2/3.txt</span><br><span class="line">/tmp/test/test2/4.txt</span><br></pre></td></tr></table></figure>
+
+<p>如果设置<code>topdown=False</code>，得到结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/tmp/test/test2/3.txt</span><br><span class="line">/tmp/test/test2/4.txt</span><br><span class="line">/tmp/test/1.txt</span><br><span class="line">/tmp/test/2.txt</span><br><span class="line">/tmp/test/test2</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-计算函数运行时间"><a href="#5-计算函数运行时间" class="headerlink" title="5. 计算函数运行时间"></a>5. 计算函数运行时间</h2><p>这里使用装饰器来计算函数运行时间</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timethis</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Decorator that reports the execution time</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"><span class="meta">    @wraps(<span class="params">func</span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapper</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        start = time.time()</span><br><span class="line">        result = func(*args, **kwargs)</span><br><span class="line">        end = time.time()</span><br><span class="line">        <span class="built_in">print</span>(func.__name__, end-start)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timethis</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">countdown</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">while</span> n &gt; <span class="number">0</span>:</span><br><span class="line">        n -= <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-判断对象是否可迭代"><a href="#6-判断对象是否可迭代" class="headerlink" title="6. 判断对象是否可迭代"></a>6. 判断对象是否可迭代</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">isiterable</span>(<span class="params">obj</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        obj = <span class="built_in">iter</span>(obj)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    a = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">    b = <span class="number">3</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;&#x27;a&#x27; is <span class="subst">&#123;<span class="string">&#x27;iterable&#x27;</span> <span class="keyword">if</span> isiterable(a) <span class="keyword">else</span> <span class="string">&#x27;not iterable&#x27;</span>&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;&#x27;b&#x27; is <span class="subst">&#123;<span class="string">&#x27;iterable&#x27;</span> <span class="keyword">if</span> isiterable(b) <span class="keyword">else</span> <span class="string">&#x27;not iterable&#x27;</span>&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>执行结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x27;a&#x27; is iterable</span><br><span class="line">&#x27;b&#x27; is not iterable</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-判断操作系统类型"><a href="#7-判断操作系统类型" class="headerlink" title="7. 判断操作系统类型"></a>7. 判断操作系统类型</h2><p>可以使用 <code>sys.platform</code> 判断当前是什么操作系统。常见的操作系统，其返回值如下</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>platform value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AIX</td>
+<td><code>&#39;aix&#39;</code></td>
+</tr>
+<tr>
+<td>Linux</td>
+<td><code>&#39;linux&#39;</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>&#39;win32&#39;</code></td>
+</tr>
+<tr>
+<td>Windows&#x2F;Cygwin</td>
+<td><code>&#39;cygwin&#39;</code></td>
+</tr>
+<tr>
+<td>macOS</td>
+<td><code>&#39;darwin&#39;</code></td>
+</tr>
+</tbody></table>
+<p>官方推荐使用 <code>startswith()</code> 判断系统类型 (见 <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/sys.html#sys.platform">sys.platform</a>)，这里贴一段测试代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">identify_platform</span>():</span><br><span class="line">    platform = sys.platform</span><br><span class="line">    <span class="keyword">if</span> platform.startswith(<span class="string">&quot;freebsd&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;freebsd&quot;</span></span><br><span class="line">    <span class="keyword">elif</span> platform.startswith(<span class="string">&quot;linux&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;linux&quot;</span></span><br><span class="line">    <span class="keyword">elif</span> platform.startswith(<span class="string">&quot;aix&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;aix&quot;</span></span><br><span class="line">    <span class="keyword">elif</span> platform.startswith(<span class="string">&quot;win&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;windows&quot;</span></span><br><span class="line">    <span class="keyword">elif</span> platform.startswith(<span class="string">&quot;darwin&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;macos&quot;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;unknown&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Platform: <span class="subst">&#123;identify_platform()&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag"># 编程语言</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/04/30/VGG%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0/" rel="prev" title="VGG网络实现">
+      <i class="fa fa-chevron-left"></i> VGG网络实现
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/05/03/%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE/" rel="next" title="终端快捷键">
+      终端快捷键 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%88%A4%E6%96%AD%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8"><span class="nav-number">1.</span> <span class="nav-text">1. 判断文件或目录是否存在</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-ParameterGrid"><span class="nav-number">2.</span> <span class="nav-text">2. ParameterGrid</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87"><span class="nav-number">3.</span> <span class="nav-text">3. 批量下载图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%81%8D%E5%8E%86%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%AD%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">4. 遍历文件夹中所有文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E8%AE%A1%E7%AE%97%E5%87%BD%E6%95%B0%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4"><span class="nav-number">5.</span> <span class="nav-text">5. 计算函数运行时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%8F%AF%E8%BF%AD%E4%BB%A3"><span class="nav-number">6.</span> <span class="nav-text">6. 判断对象是否可迭代</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%88%A4%E6%96%AD%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%B1%BB%E5%9E%8B"><span class="nav-number">7.</span> <span class="nav-text">7. 判断操作系统类型</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

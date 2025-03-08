@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Coordinate Descent在机器学习算法中，我们经常需要解一些优化问题，优化算法有很多，其中坐标下降法 (Coordinate Descent) 是一个很经典的算法，坐标下降法主要思想是每次迭代，只对一个坐标轴方向进行优化，其他坐标轴的值固定不变，使得多变量优化问题变成单变量优化问题。例如需要解决以下优化问题 $$\min_{x} f(x_1, x_2, \cdots,  x_d)$$">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Coordinate Descent Algorithm for Lasso Problem">
+<meta property="og:url" content="http://example.com/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="Coordinate Descent在机器学习算法中，我们经常需要解一些优化问题，优化算法有很多，其中坐标下降法 (Coordinate Descent) 是一个很经典的算法，坐标下降法主要思想是每次迭代，只对一个坐标轴方向进行优化，其他坐标轴的值固定不变，使得多变量优化问题变成单变量优化问题。例如需要解决以下优化问题 $$\min_{x} f(x_1, x_2, \cdots,  x_d)$$">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/cd.png">
+<meta property="og:image" content="http://example.com/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/flow.png">
+<meta property="article:published_time" content="2018-03-27T08:20:47.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.161Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/cd.png">
+
+<link rel="canonical" href="http://example.com/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Coordinate Descent Algorithm for Lasso Problem | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Coordinate Descent Algorithm for Lasso Problem
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-03-27 16:20:47" itemprop="dateCreated datePublished" datetime="2018-03-27T16:20:47+08:00">2018-03-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Coordinate-Descent"><a href="#Coordinate-Descent" class="headerlink" title="Coordinate Descent"></a>Coordinate Descent</h2><p>在机器学习算法中，我们经常需要解一些优化问题，优化算法有很多，其中坐标下降法 (Coordinate Descent) 是一个很经典的算法，坐标下降法主要思想是每次迭代，只对一个坐标轴方向进行优化，其他坐标轴的值固定不变，使得多变量优化问题变成单变量优化问题。例如需要解决以下优化问题</p>
+<p>$$<br>\min_{x} f(x_1, x_2, \cdots,  x_d)<br>$$</p>
+<p>其中 $x &#x3D; (x_1, x_2, \cdots, x_d)^T \in R^d$。用坐标下降法解决该问题时，大概流程如下：</p>
+<img src="/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/cd.png" class="" title="coordiante descent flow">
+
+<p>固定其他变量 $x_i (i\ne j)$ 不变，选择一个变量 $x_j$ 进行优化，然后更新该变量的值，接着选择下一个坐标轴方向进行优化，直到算法收敛。在算法中，选择坐标轴 $j$ 的方法有很多，可以随机选取，也可以对所有坐标轴循环一遍。</p>
+<h2 id="Lasso问题求解"><a href="#Lasso问题求解" class="headerlink" title="Lasso问题求解"></a>Lasso问题求解</h2><p>Lasso优化问题通常如下表示：</p>
+<p>$$<br>\min_{\beta} \frac{1}{2} \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$</p>
+<p>其中 $y \in R^{n}$，$X \in R^{n \times p}$，$\beta \in R^p$。令损失函数表示为 $f(\beta) &#x3D; f(\beta_1, \cdots, \beta_p)$，即</p>
+<p>$$<br>\begin{align}<br>f(\beta) &amp;&#x3D; \frac{1}{2} \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1 \<br>&amp; &#x3D; \frac{1}{2} \sum_{i&#x3D;1}^n (y_i - \sum_{j&#x3D;1}^p x_{ij} \beta_j)^2 + \lambda \sum_{j&#x3D;1}^p \vert \beta_j \vert<br>\end{align}<br>$$</p>
+<p>根据前面描述的坐标下降算法，要求第 $k$ 坐标轴方向的最优值，即求<br>$$<br>\min_{\beta_k} f(\beta_1, \cdots, \beta_{k-1}, \beta_k, \beta_{k+1}, \cdots, \beta_p)<br>$$<br>其中 $\beta_{j} {(j\ne k)}$ 已知且值固定不变。要求解该问题，可以通过梯度等于0来求解。对 $f(\beta)$ 求偏导可以得到：<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} &amp; &#x3D; -\sum_{i&#x3D;1}^n (y_i - \sum_{j&#x3D;1}^p x_{ij} \beta_j) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; &#x3D;- \sum_{i&#x3D;1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik} + \sum_{i&#x3D;1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; &#x3D; - r_k + z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}<br>\end{align}<br>$$<br>其中 $r_k &#x3D;\sum_{i&#x3D;1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik}$，$z_k &#x3D; \sum_{i&#x3D;1}^n x_{ik}^2$，对于 $\frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}$，这里需要引入 subgradient 概念，具体内容可以参考<a target="_blank" rel="noopener" href="http://jocelynchi.com/soft-thresholding-operator-and-the-lasso-solution">这篇文章</a>。</p>
+<p>$$<br>\frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} &#x3D; \begin{cases}<br>\lambda &amp; \beta_k \gt 0 \<br>[-\lambda, \lambda] &amp; \beta_k &#x3D; 0 \<br>-\lambda &amp; \beta_k \lt 0<br>\end{cases}<br>$$</p>
+<p>则可以得到 $f(\beta)$ 的偏导为：</p>
+<p>$$<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} &#x3D; \begin{cases}<br>-r_k + z_k \beta_k + \lambda &amp; \beta_k \gt 0 \<br>[-r_k - \lambda, -r_k + \lambda] &amp; \beta_k &#x3D; 0 \<br>-r_k + z_k \beta_k - \lambda &amp; \beta_k \lt 0<br>\end{cases}<br>$$</p>
+<p>令 $\frac{\partial{f(\beta)}}{\partial{\beta_k}} &#x3D; 0$，可以得到极小值点 $\beta_k^*$ ，由于 $\frac{\partial{f(\beta)}}{\partial{\beta_k}}$ 是个分段函数，需要分类讨论：</p>
+<ul>
+<li><p>当 $\beta_k \gt 0$ 时<br>$$<br>\begin{align}<br>&amp; -r_k + z_k \beta_k^* + \lambda &#x3D; 0 \<br>\Rightarrow \quad &amp; \beta_k^* &#x3D; \frac{r_k - \lambda}{z_k}<br>\end{align}<br>$$<br>由于 $\beta_k \gt 0$，则 $\beta_k^* &#x3D; \frac{r_k - \lambda}{z_k} \gt 0$，即 $r_k \gt \lambda$</p>
+</li>
+<li><p>当 $\beta_k \lt 0$ 时<br>$$<br>\begin{align}<br>&amp; -r_k + z_k \beta_k^* - \lambda &#x3D; 0 \<br>\Rightarrow \quad &amp; \beta_k^* &#x3D;\frac{ r_k + \lambda}{z_k}<br>\end{align}<br>$$<br>由于 $\beta_k \lt 0$，则 $\beta_k^* &#x3D; r_k + \lambda \lt 0$，即 $r_k \lt -\lambda$</p>
+</li>
+<li><p>当 $\beta_k &#x3D; 0$ 时，可以得到 $0 \in [-r_k - \lambda, -r_k + \lambda]$，则可以得到<br>$$<br>\begin{cases}<br>-r_k - \lambda \le 0 \<br>-r_k + \lambda \ge 0<br>\end{cases} \Rightarrow -\lambda \le r_k \le \lambda<br>$$</p>
+</li>
+</ul>
+<p>综上所有内容，我们可以得到第 $k$ 个坐标轴方向的最优值为：<br>$$<br>\beta_k^* &#x3D; \begin{cases}<br>\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \<br>0 &amp; -\lambda \le r_k \le \lambda \<br>\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda<br>\end{cases}<br>$$</p>
+<p>定义一个函数 $S(a, \lambda)$，这个函数也称为 <strong>soft thresholding function</strong><br>$$<br>S(a, \lambda) &#x3D; \begin{cases}<br>a - \lambda &amp; a \gt \lambda \<br>0 &amp; -\lambda \le a \le \lambda \<br>a + \lambda &amp; a \lt -\lambda<br>\end{cases}<br>$$<br>所以 $\beta_k^* &#x3D; \frac{1}{z_k}S(r_k, \lambda)$，$k &#x3D; 1, 2, \ldots, n$。这个函数也可以写成另一种形式<br>$$<br>S(a, \lambda) &#x3D; (a-\lambda)<em>{+} - (-a - \lambda)</em>{+}<br>$$<br>这里 $(x)_{+} &#x3D; \max(x, 0)$。</p>
+<h2 id="变种问题"><a href="#变种问题" class="headerlink" title="变种问题"></a>变种问题</h2><p>由于Lasso优化问题的表示有很好几种，不同表示的优化问题，对应解的表示也会有所不同，虽然没什么大变化，但是还是罗列一下。</p>
+<h3 id="变种一"><a href="#变种一" class="headerlink" title="变种一"></a>变种一</h3><p>Lasso优化问题表示如下：<br>$$<br>\min_{\beta}  \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$<br>令 $f(\beta) &#x3D; \Vert y - X \beta \Vert_2^2 + \lambda \Vert \beta \Vert_1$，则 $\frac{\partial{f(\beta)}}{\partial{\beta_k}}$ 为：<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} &amp; &#x3D; -2 \sum_{i&#x3D;1}^n (y_i - \sum_{j&#x3D;1}^p x_{ij} \beta_j) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; &#x3D;- 2 \sum_{i&#x3D;1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik} + 2 \sum_{i&#x3D;1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; &#x3D; - 2 r_k + 2z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}<br>\end{align}<br>$$<br>其中 $r_k &#x3D;  \sum_{i&#x3D;1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik}$。使用 subgradient 可以进一步得到<br>$$<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} &#x3D; \begin{cases}</p>
+<ul>
+<li>2r_k + 2 z_k \beta_k + \lambda &amp; \beta_k \gt 0 \<br>[-2r_k - \lambda, - 2 r_k + \lambda] &amp; \beta_k &#x3D; 0 \</li>
+<li>2r_k + 2 z_k \beta_k - \lambda &amp; \beta_k \lt 0<br>\end{cases}<br>$$</li>
+</ul>
+<p>根据前面讨论，令偏导为0，求得极值点 $\beta_k^*$ 为</p>
+<p>$$<br>\beta_k^* &#x3D; \begin{cases}<br>\frac{2r_k - \lambda}{2z_k} &amp; 2r_k \gt \lambda \<br>0 &amp; -\lambda \le 2r_k \le \lambda \<br>\frac{2r_k + \lambda}{2z_k} &amp; 2r_k \lt -\lambda<br>\end{cases}<br>$$</p>
+<p>用 soft thresholding function 表示为 $\beta_k^* &#x3D; \frac{1}{2z_k} S(2r_k, \lambda)$</p>
+<h3 id="变种二"><a href="#变种二" class="headerlink" title="变种二"></a>变种二</h3><p>Lasso优化问题表示如下：<br>$$<br>\min_{\beta} \Vert X\beta - y\Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$</p>
+<p>令 $f(\beta) &#x3D; \Vert X \beta - y \Vert^2_2 + \lambda \Vert \beta \Vert_1$，则 $\frac{\partial{f(\beta)}}{\partial{\beta_k}}$ 为：<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} &amp; &#x3D; 2 \sum_{i&#x3D;1}^n (\sum_{j&#x3D;1}^p x_{ij} \beta_j - y_i) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; &#x3D; 2 \sum_{i&#x3D;1}^n (\sum_{j \ne k} x_{ij} \beta_j  - y_i)x_{ik} + 2 \sum_{i&#x3D;1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; &#x3D; 2 r_k + 2z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}<br>\end{align}<br>$$<br>其中 $r_k &#x3D; \sum_{i&#x3D;1}^n (\sum_{j \ne k} x_{ij} \beta_j  - y_i)x_{ik}$。使用 subgradient 可以进一步得到<br>$$<br>\frac{\partial{f(\beta)}}{\partial{\beta_k}} &#x3D; \begin{cases}<br>2r_k + 2 z_k \beta_k + \lambda &amp; \beta_k \gt 0 \<br>[2r_k - \lambda, 2 r_k + \lambda] &amp; \beta_k &#x3D; 0 \<br>2r_k + 2 z_k \beta_k - \lambda &amp; \beta_k \lt 0<br>\end{cases}<br>$$<br>根据前面讨论，令偏导为0，求得极值点 $\beta_k^*$ 为<br>$$<br>\beta_k^* &#x3D; \begin{cases}<br>\frac{-2r_k - \lambda}{2z_k} &amp; -2r_k \gt \lambda \<br>0 &amp; -\lambda \le -2r_k \le \lambda \<br>\frac{-2r_k + \lambda}{2z_k} &amp; -2r_k \lt -\lambda<br>\end{cases}<br>$$</p>
+<p>用 soft thresholding function 表示为 $\beta_k^* &#x3D; \frac{1}{2z_k} S(-2r_k, \lambda)$</p>
+<h3 id="变种三"><a href="#变种三" class="headerlink" title="变种三"></a>变种三</h3><p>Lasso优化问题表示如下：<br>$$<br>\min_{\beta} \frac{1}{2 n} \Vert y - X\beta \Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$<br>同前面的推导，这里直接给出结果<br>$$<br>\beta_k^* &#x3D; \begin{cases}<br>\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \<br>0 &amp; -\lambda \le r_k \le \lambda \<br>\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda<br>\end{cases}<br>$$<br>其中 $r_k &#x3D;\frac{1}{n} \sum_{i&#x3D;1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j)x_{ik}$，$z_k &#x3D; \frac{1}{n} \sum_{i&#x3D;1}^n x_{ik}^2$</p>
+<h2 id="偏置-bias-求解"><a href="#偏置-bias-求解" class="headerlink" title="偏置 bias 求解"></a>偏置 bias 求解</h2><p>前面讨论的模型不包括偏置，如果模型包括偏置 $b$，则优化问题写为<br>$$<br>\min_{\beta, b} \frac{1}{2} \Vert y - X\beta - 1b \Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$<br>这里的 $1$ 代表元素全为 1 的向量，大小为 $R^n$，损失函数 $f(\beta, b)$ 为<br>$$<br>\begin{align}<br>f(\beta, b) &amp;&#x3D; \frac{1}{2} \Vert y - X\beta - 1 b\Vert^2_2 + \lambda \Vert \beta \Vert_1 \<br>&amp; &#x3D; \frac{1}{2} \sum_{i&#x3D;1}^n (y_i - \sum_{j&#x3D;1}^p x_{ij} \beta_j - b)^2 + \lambda \sum_{j&#x3D;1}^p \vert \beta_j \vert<br>\end{align}<br>$$<br>则对 $f(\beta, b)$ 求偏导 $\beta_k$ 可以得到<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta, b)}}{\partial{\beta_k}} &amp; &#x3D; -\sum_{i&#x3D;1}^n (y_i - \sum_{j&#x3D;1}^p x_{ij} \beta_j - b) x_{ik} + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; &#x3D;- \sum_{i&#x3D;1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j - b)x_{ik} + \sum_{i&#x3D;1}^n x_{ik}^2 \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}} \<br>&amp; &#x3D; - r_k + z_k \beta_k + \frac{\partial{(\lambda \vert \beta_k \vert)}}{\partial{\beta_k}}<br>\end{align}<br>$$<br>其中 $r_k &#x3D;\sum_{i&#x3D;1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j -b)x_{ik}$，$z_k &#x3D; \sum_{i&#x3D;1}^n x_{ik}^2$，令 $\frac{\partial{f(\beta, b)}}{\partial{\beta_k}} &#x3D; 0$，可以得到<br>$$<br>\beta_k^* &#x3D; \begin{cases}<br>\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \<br>0 &amp; -\lambda \le r_k \le \lambda \<br>\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda<br>\end{cases}<br>$$<br>对 $f(\beta, b)$ 求偏导 $b$ 可以得到<br>$$<br>\begin{align}<br>\frac{\partial{f(\beta, b)}}{\partial{b}} &amp; &#x3D; -\sum_{i&#x3D;1}^n (y_i - \sum_{j&#x3D;1}^p x_{ij} \beta_j - b) \<br>&amp; &#x3D; n b - \sum_{i&#x3D;1}^n (y_i - \sum_{j&#x3D;1}^p x_{ij} \beta_j)<br>\end{align}<br>$$<br>令 $\frac{\partial{f(\beta, b)}}{\partial{b}} &#x3D; 0$，可以得到<br>$$<br>b^* &#x3D; \frac{1}{n} \sum_{i&#x3D;1}^n (y_i - \sum_{j&#x3D;1}^p x_{ij} \beta_j)<br>$$</p>
+<h2 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h2><p>在本节，要解决的优化问题如下表示</p>
+<p>$$<br>\min_{\beta, b} \frac{1}{2 n} \Vert y - X\beta - 1b\Vert^2_2 + \lambda \Vert \beta \Vert_1<br>$$<br>根据前面的讨论，在选定第 $k$ 坐标轴方向，解 $\beta^*_k$的表达式为<br>$$<br>\beta_k^* &#x3D; \begin{cases}<br>\frac{r_k - \lambda}{z_k} &amp; r_k \gt \lambda \<br>0 &amp; -\lambda \le r_k \le \lambda \<br>\frac{r_k + \lambda}{z_k} &amp; r_k \lt -\lambda<br>\end{cases}<br>$$</p>
+<p>其中 $r_k &#x3D;\frac{1}{n} \sum_{i&#x3D;1}^n (y_i - \sum_{j \ne k} x_{ij} \beta_j - b)x_{ik}$，$z_k &#x3D; \frac{1}{n} \sum_{i&#x3D;1}^n x_{ik}^2$，解 $b^*$ 的表达式为<br>$$<br>b^* &#x3D; \frac{1}{n} \sum_{i&#x3D;1}^n (y_i - \sum_{j&#x3D;1}^p x_{ij} \beta_j)<br>$$</p>
+<p>这里可以将 $r_k$ 写成向量化形式，由于算法每次只更新一个坐标轴方向的值，即</p>
+<p>$$<br>\begin{align}<br>&amp; [\beta_1, \ldots, \beta_{k-1}, \beta_{k}, \beta_{k+1}, \ldots, \beta_p] \<br>\Rightarrow ; &amp; [\beta_1, \ldots, \beta_{k-1}, \beta_{k}^*, \beta_{k+1}, \ldots, \beta_p]<br>\end{align}<br>$$<br>因此 $r_k$ 可以写为<br>$$<br>\begin{align}<br>r_k &amp; &#x3D;\frac{1}{n} \sum_{i&#x3D;1}^n (y_i - \sum_{j &#x3D;1}^p x_{ij} \beta_j - b + x_{ik} \beta_k)x_{ik}<br>\end{align}<br>$$<br>这里的 $\beta_k$ 是未更新之前的值，更新后的值为 $\beta_k^*$，注意区别。用向量表示 $r_k$ 为<br>$$<br>r_k &#x3D; \frac{1}{n} (X[:, k])^T (y - X\beta - 1 b + \beta_k X[:, k])<br>$$</p>
+<p>其中 $X[:, k]$ 代表矩阵 $X$ 第 $k$ 列。$b^*$ 的表达式写成向量形式可以写为<br>$$<br>b^* &#x3D; \frac{1}{n} 1^T (y - X\beta)<br>$$<br>算法整体流程如下表示</p>
+<img src="/2018/03/27/Coordinate-Descent-Algorithm-for-Lasso-Problem/flow.png" class="" title="coordiante descent flow">
+
+<p>核心代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line">class Lasso:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    The optimization objective of Lasso is</span><br><span class="line">        1/(2 * n) * ||y - Xw||^2_2 + alpha * ||w||_1</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self, alpha=1.0, fit_intercept=True, normalize=False,</span><br><span class="line">                 copy_X=True, max_iter=1000, tol=0.0001, selection=&#x27;cyclic&#x27;):</span><br><span class="line">        self._alpha = alpha</span><br><span class="line">        self._fit_intercept = fit_intercept</span><br><span class="line">        self._normalize = normalize</span><br><span class="line">        self._copy_X = copy_X</span><br><span class="line">        self._max_iter = max_iter</span><br><span class="line">        self._tol = tol</span><br><span class="line">        self._selection = selection</span><br><span class="line"></span><br><span class="line">        if normalize:</span><br><span class="line">            self._scaler = preprocessing.StandardScaler()</span><br><span class="line"></span><br><span class="line">    def compute_step(self, k, X, y, coef, intercept, alpha):</span><br><span class="line">        n, p = X.shape</span><br><span class="line">        y_predict = np.dot(X, coef) + intercept</span><br><span class="line">        rk = np.dot(X[:, k], y - y_predict + X[:, k] * coef[k])</span><br><span class="line">        rk = rk / (1.0 * n)</span><br><span class="line">        zk = np.linalg.norm(X[:, k], ord=2) ** 2</span><br><span class="line">        zk = zk / (1.0 * n)</span><br><span class="line">        coef_k = (np.amax([rk-alpha, 0]) - np.amax([-rk-alpha, 0]))</span><br><span class="line">        coef_k = coef_k / (1.0 * zk)</span><br><span class="line"></span><br><span class="line">        return coef_k</span><br><span class="line"></span><br><span class="line">    def objective(self, X, y, coef, intercept, alpha):</span><br><span class="line">        n, p = X.shape</span><br><span class="line">        total = 0</span><br><span class="line"></span><br><span class="line">        y_predict = np.dot(X, coef) + intercept</span><br><span class="line">        total += \</span><br><span class="line">            1/(2.0*n) * np.linalg.norm(y-y_predict, ord=2) ** 2</span><br><span class="line">        total += alpha * np.linalg.norm(coef, ord=1)</span><br><span class="line"></span><br><span class="line">        return total</span><br><span class="line"></span><br><span class="line">    def fit(self, X, y):</span><br><span class="line">        if self._copy_X:</span><br><span class="line">            X = X.copy()</span><br><span class="line">        if self._normalize:</span><br><span class="line">            X = self._scaler.fit_transform(X)</span><br><span class="line">        self._objectives = []</span><br><span class="line"></span><br><span class="line">        # initialize data</span><br><span class="line">        num_samples, num_features = X.shape</span><br><span class="line">        coef = np.zeros(num_features)</span><br><span class="line">        old_coef = np.zeros(num_features)</span><br><span class="line">        intercept = 0</span><br><span class="line">        if self._fit_intercept:</span><br><span class="line">            tmp = y - np.dot(X, coef)</span><br><span class="line">            intercept = np.sum(tmp) / (1.0 * num_samples)</span><br><span class="line">        num_iters = 0</span><br><span class="line">        for iter in range(self._max_iter):</span><br><span class="line">            num_iters = num_iters + 1</span><br><span class="line">            if (self._selection == &#x27;cyclic&#x27;):</span><br><span class="line">                for k in range(num_features):</span><br><span class="line">                    old_coef[k] = coef[k]</span><br><span class="line">                    coef[k] = self.compute_step(k, X, y, coef,</span><br><span class="line">                                                intercept, self._alpha)</span><br><span class="line">                if self._fit_intercept:</span><br><span class="line">                    tmp = y - np.dot(X, coef)</span><br><span class="line">                    intercept = np.sum(tmp) / (1.0 * num_samples)</span><br><span class="line"></span><br><span class="line">                # check condition of convergence</span><br><span class="line">                coef_updates = np.abs(coef - old_coef)</span><br><span class="line">                if np.amax(coef_updates) &lt; self._tol:</span><br><span class="line">                    break</span><br><span class="line">            self._objectives.append(self.objective(X, y, coef,</span><br><span class="line">                                                   intercept, self._alpha))</span><br><span class="line"></span><br><span class="line">        self._coef = coef</span><br><span class="line">        self._intercept = intercept</span><br><span class="line">        self._num_iters = num_iters</span><br><span class="line"></span><br><span class="line">        return self</span><br><span class="line"></span><br><span class="line">    def predict(self, X):</span><br><span class="line">        if self._copy_X:</span><br><span class="line">            X = X.copy()</span><br><span class="line">        if self._normalize:</span><br><span class="line">            X = self._scaler.transform(X)</span><br><span class="line"></span><br><span class="line">        y_predict = np.dot(X, self._coef) + self._intercept</span><br><span class="line"></span><br><span class="line">        return y_predict</span><br><span class="line"></span><br><span class="line">    def score(self, X, y):</span><br><span class="line">        y_predict = self.predict(X)</span><br><span class="line"></span><br><span class="line">        return r2_score(y, y_predict)</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def coef_(self):</span><br><span class="line">        return self._coef</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def intercept_(self):</span><br><span class="line">        return self._intercept</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def n_iter_(self):</span><br><span class="line">        return self._num_iters</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def objectives_(self):</span><br><span class="line">        return self._objectives</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return (&#x27;Lasso(alpha=&#123;&#125;, copy_X=&#123;&#125;, &#x27;</span><br><span class="line">                &#x27;fit_intercept=&#123;&#125;, max_iter=&#123;&#125;, &#x27;</span><br><span class="line">                &#x27;normalize=&#123;&#125;, selection=\&#x27;&#123;&#125;\&#x27;, &#x27;</span><br><span class="line">                &#x27;tol=&#123;&#125;)&#x27;).format(self._alpha, self._copy_X,</span><br><span class="line">                                  self._fit_intercept, self._max_iter,</span><br><span class="line">                                  self._normalize, self._selection,</span><br><span class="line">                                  self._tol)</span><br></pre></td></tr></table></figure>
+
+<p>相关代码在：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/CoordinateDescent/Lasso">GitHub</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="http://jocelynchi.com/a-coordinate-descent-algorithm-for-the-lasso-problem">A COORDINATE DESCENT ALGORITHM FOR THE LASSO PROBLEM</a></li>
+<li><a target="_blank" rel="noopener" href="http://jocelynchi.com/soft-thresholding-operator-and-the-lasso-solution">SOFT-THRESHOLDING OPERATOR AND THE LASSO SOLUTION</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/03/24/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A12018%E6%98%A5%E5%AD%A3%E6%A0%A1%E5%9B%AD%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/" rel="prev" title="今日头条2018春季校园招聘编程题">
+      <i class="fa fa-chevron-left"></i> 今日头条2018春季校园招聘编程题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/03/29/Logistic-Regression/" rel="next" title="Logistic Regression">
+      Logistic Regression <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Coordinate-Descent"><span class="nav-number">1.</span> <span class="nav-text">Coordinate Descent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lasso%E9%97%AE%E9%A2%98%E6%B1%82%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">Lasso问题求解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E7%A7%8D%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">变种问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E7%A7%8D%E4%B8%80"><span class="nav-number">3.1.</span> <span class="nav-text">变种一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E7%A7%8D%E4%BA%8C"><span class="nav-number">3.2.</span> <span class="nav-text">变种二</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E7%A7%8D%E4%B8%89"><span class="nav-number">3.3.</span> <span class="nav-text">变种三</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E7%BD%AE-bias-%E6%B1%82%E8%A7%A3"><span class="nav-number">4.</span> <span class="nav-text">偏置 bias 求解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">5.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

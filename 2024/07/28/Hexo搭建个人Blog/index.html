@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="想在Github上搭建一个简易的个人Blog，Hexo是一个不错的选择。Hexo是一个快速、简洁的博客框架，使用Markdown解析文章，在几秒内就可以生成静态网页，然后就可以部署在Github上生成个人网站。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo搭建个人Blog">
+<meta property="og:url" content="http://example.com/2024/07/28/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BABlog/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="想在Github上搭建一个简易的个人Blog，Hexo是一个不错的选择。Hexo是一个快速、简洁的博客框架，使用Markdown解析文章，在几秒内就可以生成静态网页，然后就可以部署在Github上生成个人网站。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-28T04:47:05.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.169Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2024/07/28/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BABlog/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Hexo搭建个人Blog | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/28/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BABlog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hexo搭建个人Blog
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-07-28 12:47:05" itemprop="dateCreated datePublished" datetime="2024-07-28T12:47:05+08:00">2024-07-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>想在Github上搭建一个简易的个人Blog，Hexo是一个不错的选择。Hexo是一个快速、简洁的博客框架，使用Markdown解析文章，在几秒内就可以生成静态网页，然后就可以部署在Github上生成个人网站。</p>
+<span id="more"></span>
+
+<h2 id="1-环境"><a href="#1-环境" class="headerlink" title="1. 环境"></a>1. 环境</h2><p>本次部署Hexo的环境为：</p>
+<ul>
+<li>Linux环境：基于WSL2部署的Linux</li>
+<li>Linux版本：Ubuntu 20.04</li>
+</ul>
+<h2 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h2><p>Hexo的安装需要git和node.js</p>
+<h3 id="2-1-Node-js"><a href="#2-1-Node-js" class="headerlink" title="2.1 Node.js"></a>2.1 Node.js</h3><p>去Node.js官网下载Node.js安装包（见 <a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn/download/package-manager">下载Node.js</a>），这里选择20.16.0版本进行安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># layouts.download.codeBox.installsFnm</span><br><span class="line">curl -fsSL https://fnm.vercel.app/install | bash</span><br><span class="line"></span><br><span class="line"># layouts.download.codeBox.activateFNM</span><br><span class="line">source ~/.bashrc</span><br><span class="line"></span><br><span class="line"># layouts.download.codeBox.downloadAndInstallNodejs</span><br><span class="line">fnm use --install-if-missing 20</span><br><span class="line"></span><br><span class="line"># layouts.download.codeBox.verifiesRightNodejsVersion</span><br><span class="line">node -v # layouts.download.codeBox.shouldPrint</span><br><span class="line"></span><br><span class="line"># layouts.download.codeBox.verifiesRightNpmVersion</span><br><span class="line">npm -v # layouts.download.codeBox.shouldPrint</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-Git"><a href="#2-2-Git" class="headerlink" title="2.2 Git"></a>2.2 Git</h3><p>使用以下apt命令安装git</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git-core</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-Hexo"><a href="#2-3-Hexo" class="headerlink" title="2.3 Hexo"></a>2.3 Hexo</h3><p>必备的git和node.js安装完毕后，即可使用npm安装Hexo</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Github仓"><a href="#3-Github仓" class="headerlink" title="3. Github仓"></a>3. Github仓</h2><p>Hexo生成的静态网页需要托管到Github上，因此需要创建一个Github仓库。在Github创建一个名为 <code>username.github.io</code> 的仓库，其中 <code>username</code> 是Github的个人账号名</p>
+<p>博主自己的仓为 <code>luowanqian.github.io</code>，博文后面Github地址都为该仓地址，实操时替换成自己代码仓名即可</p>
+<h2 id="4-建站"><a href="#4-建站" class="headerlink" title="4. 建站"></a>4. 建站</h2><h3 id="4-1-Hexo初始化"><a href="#4-1-Hexo初始化" class="headerlink" title="4.1 Hexo初始化"></a>4.1 Hexo初始化</h3><p>安装完Hexo后，需要用Hexo命令在指定文件夹中新建所需要的文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p luowanqian.github.io</span><br><span class="line">$ hexo init luowanqian.github.io</span><br><span class="line">$ cd luowanqian.github.io</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+
+<p>初始化后，项目文件夹中大概有以下文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">├── _config.landscape.yml</span><br><span class="line">├── _config.yml</span><br><span class="line">├── node_modules</span><br><span class="line">├── package-lock.json</span><br><span class="line">├── package.json</span><br><span class="line">├── scaffolds</span><br><span class="line">│   ├── draft.md</span><br><span class="line">│   ├── page.md</span><br><span class="line">│   └── post.md</span><br><span class="line">├── source</span><br><span class="line">│   └── _posts</span><br><span class="line">└── themes</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-关联Github仓"><a href="#4-2-关联Github仓" class="headerlink" title="4.2 关联Github仓"></a>4.2 关联Github仓</h3><p>在项目文件夹中关联Github仓</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git init</span><br><span class="line">$ git remote add origin git@github.com:luowanqian/luowanqian.github.io.git</span><br></pre></td></tr></table></figure>
+
+<p>配置<code>.gitignore</code>（如果没有该文件，创建一个），设置以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br><span class="line">_multiconfig.yml</span><br><span class="line">package-lock.json</span><br></pre></td></tr></table></figure>
+
+<p>这里排除了<code>package-lock.json</code>，因为这是npm安装包时生成的文件</p>
+<h3 id="4-3-部署"><a href="#4-3-部署" class="headerlink" title="4.3 部署"></a>4.3 部署</h3><p>Hexo初始化生成的文件，已经可以部署到Github上生成个人网站了。Hexo支持多种方式部署（见 <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/one-command-deployment">一键部署</a>），这里选择使用Git方式部署。</p>
+<p>1、Git方式部署需要安装 <code>hexo-deployer-git</code> 插件，在Hexo项目文件夹中使用npm命令安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>命令参数<code>--save</code>作用是将插件信息写入到项目文件夹中<code>package.json</code>，下次可以使用<code>npm install</code>安装这些插件（类似python的<code>requirements.txt</code>）</p>
+<p>2、部署前需要修改<code>_config.yml</code>配置文件，配置git仓信息，找到<code>deploy</code>项，修改成以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:luowanqian/luowanqian.github.io.git</span><br><span class="line">  branch: gh-pages</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>repo</code>为前面创建的Github仓地址，<code>branch</code>为Github Pages分支，存放的是Hexo生成的静态网页</p>
+<p>3、在Github仓页面将Pages配置成Deploy from a branch。设置方法：</p>
+<ul>
+<li>前往 <code>Settings &gt; Pages &gt; Source</code>，将 <code>source</code> 更改为 <code>Deploy from a branch</code></li>
+<li><code>branch</code> 选择_config.yml中配置的分支，这里是gh-pages</li>
+</ul>
+<p>4、最后使用以下命令进行部署</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy -g</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Web/" rel="tag"># Web</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/18/LeetCode-142-Linked-List-Cycle-II/" rel="prev" title="LeetCode 142 - Linked List Cycle II">
+      <i class="fa fa-chevron-left"></i> LeetCode 142 - Linked List Cycle II
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/07/28/ICS-2023-PA1/" rel="next" title="南京大学ICS2023 PA1记录">
+      南京大学ICS2023 PA1记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">1. 环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">2. 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Node-js"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Node.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Git"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Hexo"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Hexo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Github%E4%BB%93"><span class="nav-number">3.</span> <span class="nav-text">3. Github仓</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%BB%BA%E7%AB%99"><span class="nav-number">4.</span> <span class="nav-text">4. 建站</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Hexo%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 Hexo初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%85%B3%E8%81%94Github%E4%BB%93"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 关联Github仓</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E9%83%A8%E7%BD%B2"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 部署</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

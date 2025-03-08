@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="源码 源码以及相对应的使用在：GitHub  利用Matplotlib可视化决策树，代码来源于《机器学习实战》，原始的Python代码使用了一些函数属性来实现属性全局共享，这里用全局变量替换了函数属性，并且支持中文标注，修改后的代码如下： 12345678910111213141516171819202122232425262728293031323334353637383940414243444">
+<meta property="og:type" content="article">
+<meta property="og:title" content="决策树可视化">
+<meta property="og:url" content="http://example.com/2018/04/07/%E5%86%B3%E7%AD%96%E6%A0%91%E5%8F%AF%E8%A7%86%E5%8C%96/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="源码 源码以及相对应的使用在：GitHub  利用Matplotlib可视化决策树，代码来源于《机器学习实战》，原始的Python代码使用了一些函数属性来实现属性全局共享，这里用全局变量替换了函数属性，并且支持中文标注，修改后的代码如下： 12345678910111213141516171819202122232425262728293031323334353637383940414243444">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-04-07T06:54:06.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.195Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2018/04/07/%E5%86%B3%E7%AD%96%E6%A0%91%E5%8F%AF%E8%A7%86%E5%8C%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>决策树可视化 | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/04/07/%E5%86%B3%E7%AD%96%E6%A0%91%E5%8F%AF%E8%A7%86%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          决策树可视化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-04-07 14:54:06" itemprop="dateCreated datePublished" datetime="2018-04-07T14:54:06+08:00">2018-04-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><blockquote>
+<p>源码以及相对应的使用在：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/MachineLearning/tree/master/DecisionTree">GitHub</a></p>
+</blockquote>
+<p>利用Matplotlib可视化决策树，代码来源于《机器学习实战》，原始的Python代码使用了一些函数属性来实现属性全局共享，这里用全局变量替换了函数属性，并且支持中文标注，修改后的代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line">&quot;&quot;&quot;</span><br><span class="line">Decision Tree Plotter</span><br><span class="line">Reference:</span><br><span class="line">    1. http://www.cnblogs.com/fantasy01/p/4595902.html</span><br><span class="line">    2. http://whatbeg.com/2016/04/23/matplotlib-desiciontree.html</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">import matplotlib.font_manager as font_manager</span><br><span class="line">import os</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Chinese font setting</span><br><span class="line">font_path = os.path.abspath(&#x27;../resources/font/msyh.ttf&#x27;)</span><br><span class="line">prop = font_manager.FontProperties(fname=font_path)</span><br><span class="line"></span><br><span class="line">gAxis = None</span><br><span class="line">gDecison_node = dict(boxstyle=&#x27;sawtooth&#x27;, fc=&#x27;0.8&#x27;)</span><br><span class="line">gLeaf_node = dict(boxstyle=&#x27;round4&#x27;, fc=&quot;0.8&quot;)</span><br><span class="line">gArrow_args = dict(arrowstyle=&#x27;&lt;-&#x27;)</span><br><span class="line">gNum_leaves = 0</span><br><span class="line">gTree_depth = 0</span><br><span class="line">gX_offset = 0</span><br><span class="line">gY_offset = 0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def get_num_leafs(tree):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Identify the number of leaves in a tree</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    num_leafs = 0</span><br><span class="line">    first_str = list(tree.keys())[0]</span><br><span class="line">    second_dict = tree[first_str]</span><br><span class="line">    for key in second_dict.keys():</span><br><span class="line">        if isinstance(second_dict[key], dict):</span><br><span class="line">            num_leafs += get_num_leafs(second_dict[key])</span><br><span class="line">        else:</span><br><span class="line">            num_leafs += 1</span><br><span class="line"></span><br><span class="line">    return num_leafs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def get_tree_depth(tree):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Identiy the depth of a tree</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    max_depth = 0</span><br><span class="line">    first_str = list(tree.keys())[0]</span><br><span class="line">    second_dict = tree[first_str]</span><br><span class="line">    for key in second_dict.keys():</span><br><span class="line">        if isinstance(second_dict[key], dict):</span><br><span class="line">            subtree_depth = 1 + get_tree_depth(second_dict[key])</span><br><span class="line">        else:</span><br><span class="line">            subtree_depth = 1</span><br><span class="line"></span><br><span class="line">        if subtree_depth &gt; max_depth:</span><br><span class="line">            max_depth = subtree_depth</span><br><span class="line"></span><br><span class="line">    return max_depth</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def plot_node(node_text, center_point, parent_point, node_type):</span><br><span class="line">    global gAxis</span><br><span class="line"></span><br><span class="line">    gAxis.annotate(node_text, xy=parent_point,</span><br><span class="line">                   xycoords=&#x27;axes fraction&#x27;,</span><br><span class="line">                   xytext=center_point,</span><br><span class="line">                   textcoords=&#x27;axes fraction&#x27;,</span><br><span class="line">                   va=&#x27;center&#x27;, ha=&#x27;center&#x27;,</span><br><span class="line">                   bbox=node_type, arrowprops=gArrow_args,</span><br><span class="line">                   fontproperties=prop)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def plot_mid_text(current_point, parent_point, text_str):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Plot text between child and parent</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    global gAxis</span><br><span class="line"></span><br><span class="line">    x_mid = (parent_point[0] - current_point[0])/2.0 + current_point[0]</span><br><span class="line">    y_mid = (parent_point[1] - current_point[1])/2.0 + current_point[1]</span><br><span class="line">    gAxis.text(x_mid, y_mid, text_str, fontproperties=prop)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def plot_tree(tree, parent_point, node_text):</span><br><span class="line">    global gAxis, gDecison_node</span><br><span class="line">    global gNum_leaves, gTree_depth, gX_offset, gY_offset</span><br><span class="line"></span><br><span class="line">    num_leaves = get_num_leafs(tree)</span><br><span class="line">    first_str = list(tree.keys())[0]</span><br><span class="line">    current_point = (gX_offset+(1.0+float(num_leaves))/(2.0*gNum_leaves),</span><br><span class="line">                     gY_offset)</span><br><span class="line">    plot_mid_text(current_point, parent_point, node_text)</span><br><span class="line">    plot_node(first_str, current_point, parent_point, gDecison_node)</span><br><span class="line">    second_dict = tree[first_str]</span><br><span class="line">    gY_offset = gY_offset - 1.0/gTree_depth</span><br><span class="line">    for key in second_dict.keys():</span><br><span class="line">        if isinstance(second_dict[key], dict):</span><br><span class="line">            plot_tree(second_dict[key], current_point, str(key))</span><br><span class="line">        else:</span><br><span class="line">            gX_offset = gX_offset + 1.0/gNum_leaves</span><br><span class="line">            plot_node(second_dict[key], (gX_offset, gY_offset),</span><br><span class="line">                      current_point, gLeaf_node)</span><br><span class="line">            plot_mid_text((gX_offset, gY_offset), current_point, str(key))</span><br><span class="line">    gY_offset = gY_offset + 1.0/gTree_depth</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def create_plot(tree):</span><br><span class="line">    global gAxis, gNum_leaves, gTree_depth, gX_offset, gY_offset</span><br><span class="line"></span><br><span class="line">    fig = plt.figure(1, facecolor=&#x27;white&#x27;)</span><br><span class="line">    fig.clf()</span><br><span class="line">    axprops = dict(xticks=[], yticks=[])</span><br><span class="line">    gAxis = plt.subplot(111, frameon=False, **axprops)</span><br><span class="line">    gNum_leaves = float(get_num_leafs(tree))</span><br><span class="line">    gTree_depth = float(get_tree_depth(tree))</span><br><span class="line">    gX_offset = -1/(2.0 * gNum_leaves)</span><br><span class="line">    gY_offset = 1.0</span><br><span class="line">    plot_tree(tree, (0.5, 1.0), &#x27;&#x27;)</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/fantasy01/p/4595902.html">机器学习实战决策树plotTree函数完全解析</a></li>
+<li><a target="_blank" rel="noopener" href="http://whatbeg.com/2016/04/23/matplotlib-desiciontree.html">利用matplotlib画决策树</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/04/05/%E8%85%BE%E8%AE%AF2018%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B2%97%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98/" rel="prev" title="腾讯2018数据分析岗实习笔试题">
+      <i class="fa fa-chevron-left"></i> 腾讯2018数据分析岗实习笔试题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/04/07/%E5%9F%BA%E4%BA%8EDocker%E7%9A%84Caffe%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="next" title="基于Docker的Caffe环境搭建">
+      基于Docker的Caffe环境搭建 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

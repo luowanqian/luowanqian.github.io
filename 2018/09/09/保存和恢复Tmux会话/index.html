@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="问题使用Tmux时经常会遇到的一个问题，那就是系统重启时，Session会被清除，每次打开电脑都要重启建一个Session，然后创建一堆Window以及Pane，这极大地降低了Tmux使用效率，因此需要想一个办法能够保存Tmux的Session。 解决方案该问题的解决方案是安装一个叫Tmux Resurrect的插件。Tmux要安装插件，可以通过Tmux Plugin Manager这个插件进行安">
+<meta property="og:type" content="article">
+<meta property="og:title" content="保存和恢复Tmux会话">
+<meta property="og:url" content="http://example.com/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="问题使用Tmux时经常会遇到的一个问题，那就是系统重启时，Session会被清除，每次打开电脑都要重启建一个Session，然后创建一堆Window以及Pane，这极大地降低了Tmux使用效率，因此需要想一个办法能够保存Tmux的Session。 解决方案该问题的解决方案是安装一个叫Tmux Resurrect的插件。Tmux要安装插件，可以通过Tmux Plugin Manager这个插件进行安">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-09-09T14:14:38.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.195Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="Tmux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>保存和恢复Tmux会话 | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          保存和恢复Tmux会话
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-09-09 22:14:38" itemprop="dateCreated datePublished" datetime="2018-09-09T22:14:38+08:00">2018-09-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>使用Tmux时经常会遇到的一个问题，那就是系统重启时，Session会被清除，每次打开电脑都要重启建一个Session，然后创建一堆Window以及Pane，这极大地降低了Tmux使用效率，因此需要想一个办法能够保存Tmux的Session。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>该问题的解决方案是安装一个叫<code>Tmux Resurrect</code>的插件。Tmux要安装插件，可以通过<code>Tmux Plugin Manager</code>这个插件进行安装，该插件相当于一个插件管理系统，可以快速地安装、更新以及删除插件。</p>
+<h3 id="Tmux-Plugin-Manager"><a href="#Tmux-Plugin-Manager" class="headerlink" title="Tmux Plugin Manager"></a>Tmux Plugin Manager</h3><p>安装<code>Tmux Plugin Manager</code>插件可以参考该插件的GitHub：<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tpm">tmux-plugins&#x2F;tpm</a>。安装很简单，首先clone插件到本地</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">clone</span> https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm</span></span><br></pre></td></tr></table></figure>
+
+<p>然后修改<code>.tmux.conf</code>，在文件最底部添加以下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># List of plugins</span><br><span class="line">set -g @plugin &#x27;tmux-plugins/tpm&#x27;</span><br><span class="line">set -g @plugin &#x27;tmux-plugins/tmux-sensible&#x27;</span><br><span class="line"></span><br><span class="line"># Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)</span><br><span class="line">run &#x27;~/.tmux/plugins/tpm/tpm&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>重新加载配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">type</span> this <span class="keyword">in</span> terminal <span class="keyword">if</span> tmux is already running</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">tmux <span class="built_in">source</span> ~/.tmux.conf</span></span><br></pre></td></tr></table></figure>
+
+<p>然后就可以在Tmux中使用快捷<code>prefix + I</code>(注意这里的<code>I</code>是大写)安装配置文件<code>.tmux.conf</code>中定义的插件了。</p>
+<p><strong>补充：</strong></p>
+<p>如果Tmux安装了<a target="_blank" rel="noopener" href="https://github.com/gpakosz/.tmux">gpakosz&#x2F;.tmux</a>，在文件<code>.tmux.conf.local</code>中配置好<code>Tmux Plugin Manager</code>后，在Tmux中使用<code>prefix + I</code>安装插件会没有效果，相关的讨论见<a target="_blank" rel="noopener" href="https://github.com/gpakosz/.tmux/issues/61">“run ‘~&#x2F;.tmux&#x2F;plugins&#x2F;tpm&#x2F;tpm’” has no effect in .tmux.conf.local #61</a>，具体的解决方案是用另一种写法写<code>set -g @plugin</code>，即将</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set -g @plugin &#x27;tmux-plugins/tpm&#x27;</span><br><span class="line">set -g @plugin &#x27;tmux-plugins/tmux-sensible&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>改写为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set -g @tpm_plugins &#x27;          \</span><br><span class="line">  tmux-plugins/tpm             \</span><br><span class="line">  tmux-plugins/tmux-sensible</span><br><span class="line">&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>解决方案来源于：<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tpm/blob/master/docs/tpm_not_working.md">Help, tpm not working!</a></p>
+<h2 id="Tmux-Resurrect"><a href="#Tmux-Resurrect" class="headerlink" title="Tmux Resurrect"></a>Tmux Resurrect</h2><p>安装好<code>Tmux Plugin Manager</code>后，就可以安装<code>Tmux Resurrect</code>插件(<a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tmux-resurrect">tmux-plugins&#x2F;tmux-resurrect</a>)了。在Tmux配置文件<code>.tmux.conf</code>中添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set -g @plugin &#x27;tmux-plugins/tmux-resurrect&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>然后使用快捷键<code>prefix + I</code>就可以安装插件了。</p>
+<h2 id="保存和恢复"><a href="#保存和恢复" class="headerlink" title="保存和恢复"></a>保存和恢复</h2><p>安装完<code>Tmux Plugin Manager</code>，就可以使用下面快捷键保存和恢复Session了。</p>
+<ul>
+<li><code>prefix + Ctrl-s</code> - save</li>
+<li><code>prefix + Ctrl-r</code> - restore</li>
+</ul>
+<p>平常重启电脑后，首先在终端打开Tmux，然后使用<code>prefix + Ctrl-r</code>就可以恢复保存的Session了，如果有多个Session可以使用<code>prefix + s</code>来选择Session。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://liam0205.me/2016/09/10/tmux-plugin-resurrect/">保存和恢复 Tmux 会话</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Tmux/" rel="tag"># Tmux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/" rel="prev" title="Cython调用BLAS">
+      <i class="fa fa-chevron-left"></i> Cython调用BLAS
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/04/19/%E5%BF%AB%E9%80%9F%E7%94%9F%E6%88%90Kernel-Matrix/" rel="next" title="快速生成Kernel Matrix">
+      快速生成Kernel Matrix <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Tmux-Plugin-Manager"><span class="nav-number">2.1.</span> <span class="nav-text">Tmux Plugin Manager</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tmux-Resurrect"><span class="nav-number">3.</span> <span class="nav-text">Tmux Resurrect</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D"><span class="nav-number">4.</span> <span class="nav-text">保存和恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

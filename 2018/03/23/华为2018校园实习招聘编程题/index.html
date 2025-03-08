@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="题目一 在字符串中找出连续最长的数字串问题描述 给定一个字符串，输出字符串中最长的数字串，并把这个数字串的长度输出。 请在一个字符串中找出连续最长的数字串，并把这个串的长度返回；如果存在长度相同的连续数字串，返回最后一个连续数字串。 __注意__：数字串只需要是数字组成的就可以，并不要求顺序，比如数字串”1234”的长度就小于数字串”1359055”，如果没有数字，就返回空字符串 (“”) 而不是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="华为2018校园实习招聘编程题">
+<meta property="og:url" content="http://example.com/2018/03/23/%E5%8D%8E%E4%B8%BA2018%E6%A0%A1%E5%9B%AD%E5%AE%9E%E4%B9%A0%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="题目一 在字符串中找出连续最长的数字串问题描述 给定一个字符串，输出字符串中最长的数字串，并把这个数字串的长度输出。 请在一个字符串中找出连续最长的数字串，并把这个串的长度返回；如果存在长度相同的连续数字串，返回最后一个连续数字串。 __注意__：数字串只需要是数字组成的就可以，并不要求顺序，比如数字串”1234”的长度就小于数字串”1359055”，如果没有数字，就返回空字符串 (“”) 而不是">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-03-23T08:20:11.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.197Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="笔试">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2018/03/23/%E5%8D%8E%E4%B8%BA2018%E6%A0%A1%E5%9B%AD%E5%AE%9E%E4%B9%A0%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>华为2018校园实习招聘编程题 | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/03/23/%E5%8D%8E%E4%B8%BA2018%E6%A0%A1%E5%9B%AD%E5%AE%9E%E4%B9%A0%E6%8B%9B%E8%81%98%E7%BC%96%E7%A8%8B%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          华为2018校园实习招聘编程题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-03-23 16:20:11" itemprop="dateCreated datePublished" datetime="2018-03-23T16:20:11+08:00">2018-03-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="题目一-在字符串中找出连续最长的数字串"><a href="#题目一-在字符串中找出连续最长的数字串" class="headerlink" title="题目一 在字符串中找出连续最长的数字串"></a>题目一 在字符串中找出连续最长的数字串</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><blockquote>
+<p>给定一个字符串，输出字符串中最长的数字串，并把这个数字串的长度输出。</p>
+<p>请在一个字符串中找出连续最长的数字串，并把这个串的长度返回；如果存在长度相同的连续数字串，返回最后一个连续数字串。</p>
+<p>__注意__：数字串只需要是数字组成的就可以，并不要求顺序，比如数字串”1234”的长度就小于数字串”1359055”，如果没有数字，就返回空字符串 (“”) 而不是NULL。</p>
+</blockquote>
+<p><strong>输入描述</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个字符串</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出描述</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输出最长的数字串，输出最长数字串中数字个数</span><br><span class="line">中间以逗号 (,) 隔开</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 1</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">abcd12345ed125ss123058789</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">123058789,9</span><br></pre></td></tr></table></figure>
+
+<p><strong>备注</strong></p>
+<blockquote>
+<ol>
+<li>如果存在长度相同的连续数字串，则输出最后一个连续数字串。</li>
+<li>数字串只需要是数字组成的就可以，并不要求顺序，比如数字串”1234”的长度就小于数字串”1359055”。</li>
+<li>如果没有数字，就返回空字符串 (“”) 而不是NULL。</li>
+</ol>
+</blockquote>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>可以设定两对指针，每对指针包含字符串的起始位置和结束位置的后一个位置，第一对指针保存着最长的数字串，第二对指针保存当前找到的数字串，通过指针相减可以得到字符串长度，通过比对长度大小不断更新指针的位置。实现代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    string str;</span><br><span class="line">    while (cin &gt;&gt; str) &#123;</span><br><span class="line">        bool numeric;</span><br><span class="line">        int long_start, long_end, long_len;</span><br><span class="line">        int tmp_start, tmp_end;</span><br><span class="line"></span><br><span class="line">        long_start = long_end = -1;</span><br><span class="line">        long_len = 0;</span><br><span class="line">        tmp_start = tmp_end = 0;</span><br><span class="line"></span><br><span class="line">        numeric = false;</span><br><span class="line">        int i;</span><br><span class="line">        for (i=0; i&lt;str.size(); i++) &#123;</span><br><span class="line">            if (str[i] &gt;= &#x27;0&#x27; &amp;&amp; str[i] &lt;= &#x27;9&#x27;) &#123;</span><br><span class="line">                if (numeric == false)</span><br><span class="line">                    tmp_start = i;</span><br><span class="line">                numeric = true;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (numeric == true) &#123;</span><br><span class="line">                    tmp_end = i;</span><br><span class="line">                    if ((tmp_end - tmp_start) &gt;= long_len) &#123;</span><br><span class="line">                        long_start = tmp_start;</span><br><span class="line">                        long_end = tmp_end;</span><br><span class="line">                        long_len = tmp_end - tmp_start;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                numeric = false;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (i == str.size() &amp;&amp; numeric == true) &#123;</span><br><span class="line">            tmp_end = i;</span><br><span class="line">            if ((tmp_end - tmp_start) &gt;= long_len) &#123;</span><br><span class="line">                long_start = tmp_start;</span><br><span class="line">                long_end = tmp_end;</span><br><span class="line">                long_len = tmp_end - tmp_start;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (long_len &gt; 0) &#123;</span><br><span class="line">            for (i=long_start; i&lt;long_end; i++)</span><br><span class="line">                cout &lt;&lt; str[i];</span><br><span class="line">            cout &lt;&lt; &quot;,&quot; &lt;&lt; long_len &lt;&lt; endl;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            cout &lt;&lt; &quot;,0&quot; &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="题目二-字节流解析"><a href="#题目二-字节流解析" class="headerlink" title="题目二 字节流解析"></a>题目二 字节流解析</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>根据数值占用BIT数，按顺序从输入字节流中解析出对应数值，解析顺序按输入数组<code>astElement</code>索引升序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void Decode(unsigned int uiInputLen, unsigned char aInputByte[],</span><br><span class="line">          unsigned int uiElementNum, ELEMENT_STRU astElement[]);</span><br></pre></td></tr></table></figure>
+
+<p>其中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">unsigned int uiInputLen : 字节数组 (流) 长度</span><br><span class="line">unsigned char aInputByte : 字节数组 (流)</span><br><span class="line">unsigned int uiElementNum : 解析数值个数</span><br><span class="line">ELEMENT_STRU astElement[] : 数值的结构数组指针，含义如下</span><br><span class="line">Struct</span><br><span class="line">&#123;</span><br><span class="line">    unsigned int uiElementLength; //表示uiElementValue占用BIT数，范围1~32</span><br><span class="line">    unsigned int uiElementValue; //从字节流中按顺序解析的数值，用于输出</span><br><span class="line">&#125; ELEMENT_STRU;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输入描述</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">字节数组长度uiInputLen为3;</span><br><span class="line">字节数组aInputByte[3]为&#123;0x62, 0x80, 0x00&#125;，对应二进制为 &quot;0110 0010, 1000 0000, 0000 0000&quot;;</span><br><span class="line">解析数值个数uiElementNum为2;</span><br><span class="line">数值[0]的值占4个bit，即 astElement[0].uiElementLength = 4;</span><br><span class="line">数值[1]的值占5个bit，即 astElement[1].uiElementLength = 5;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出描述</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">数值[0]的值为6，二进制为 &quot;0110&quot;，即 astElement[0].uiElementValue = 6;</span><br><span class="line">数值[1]的值为5，二进制为 &quot;0010 1&quot;，即 astElement[1].uiElementValue = 5;</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 1</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">0x62 0x80 0x00</span><br><span class="line">2</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">6</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+
+<h3 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h3><p>这道题目主要是对数字进行进制转换，输入为一个十六进制字符串，然后需要转换成对应的二进制字符串，我的做法是将字符串转换成十进制整数 (使用<code>stoi</code>函数)，然后将这个十进制整数转化成二进制字符串，将转换后的二进制字符串保持到数组<code>aInputByte</code>，这里我不固定数组<code>aInputByte</code>大小，根据输入的参数<code>uiInputLen</code>动态设定数组大小，数据转换完毕后，调用<code>Decode</code>函数进行解析。</p>
+<p><strong>PS:</strong> 十六进制字符串转二进制字符串应该可以直接用映射关系来转换，因为每个十六进制字符对应的二进制是固定的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">struct ELEMENT_STRU &#123;</span><br><span class="line">    unsigned int uiElementLength;</span><br><span class="line">    unsigned int uiElementValue;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">void Decode(unsigned int uiInputLen, unsigned char aInputByte[],</span><br><span class="line">            unsigned int uiElementNum, ELEMENT_STRU astElement[])</span><br><span class="line">&#123;</span><br><span class="line">    unsigned int uiElementValue, uiElementLength, pow2;</span><br><span class="line">    int start, end;</span><br><span class="line">    start = 0;</span><br><span class="line">    for (int i=0; i&lt;uiElementNum; i++) &#123;</span><br><span class="line">        uiElementLength = astElement[i].uiElementLength;</span><br><span class="line">        uiElementValue = 0;</span><br><span class="line">        pow2 = 1;</span><br><span class="line">        end = start + uiElementLength;</span><br><span class="line">        for (int j=end-1; j&gt;=start; j--) &#123;</span><br><span class="line">            if (aInputByte[j] == &#x27;1&#x27;)</span><br><span class="line">                uiElementValue = uiElementValue + pow2;</span><br><span class="line">            pow2 = 2 * pow2;</span><br><span class="line">        &#125;</span><br><span class="line">        astElement[i].uiElementValue = uiElementValue;</span><br><span class="line">        start = end;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    string str;</span><br><span class="line">    unsigned int uiInputLen, num, uiElementNum,flag;</span><br><span class="line">    unsigned int numberBytes;</span><br><span class="line">    int start, end;</span><br><span class="line">    unsigned char *aInputByte = NULL;</span><br><span class="line">    ELEMENT_STRU *astElement = NULL;</span><br><span class="line">    while (cin &gt;&gt; uiInputLen) &#123;</span><br><span class="line">        aInputByte = (unsigned char *)malloc(sizeof(unsigned char) * 32 * uiInputLen);</span><br><span class="line">        start = 0;</span><br><span class="line">        end = 0;</span><br><span class="line">        for (int i=1; i&lt;=uiInputLen; i++) &#123;</span><br><span class="line">            cin &gt;&gt; str;</span><br><span class="line">            if (str.size() == 3)        // 0xX</span><br><span class="line">                numberBytes = 4;</span><br><span class="line">            else if (str.size() == 4)   // 0xXX</span><br><span class="line">                numberBytes = 8;</span><br><span class="line">            else if (str.size() == 5)   // 0xXXX</span><br><span class="line">                numberBytes = 12;</span><br><span class="line">            else if (str.size() == 6)   // 0xXXXX</span><br><span class="line">                numberBytes = 16;</span><br><span class="line"></span><br><span class="line">            end = start + numberBytes;</span><br><span class="line"></span><br><span class="line">            flag = 1;</span><br><span class="line">            num = stoi(str, 0, 16);</span><br><span class="line">            for (int j=end-1; j&gt;=start; j--) &#123;</span><br><span class="line">                if (flag &amp; num)</span><br><span class="line">                    aInputByte[j] = &#x27;1&#x27;;</span><br><span class="line">                else</span><br><span class="line">                    aInputByte[j] = &#x27;0&#x27;;</span><br><span class="line">                flag = flag &lt;&lt; 1;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            start = end;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        cin &gt;&gt; uiElementNum;</span><br><span class="line">        astElement = (ELEMENT_STRU*)malloc(sizeof(ELEMENT_STRU)*uiElementNum);</span><br><span class="line">        for (int i=0; i&lt;uiElementNum; i++) &#123;</span><br><span class="line">            cin &gt;&gt; num;</span><br><span class="line">            astElement[i].uiElementLength = num;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Decode(uiInputLen, aInputByte, uiElementNum, astElement);</span><br><span class="line"></span><br><span class="line">        for (int i=0; i&lt;uiElementNum; i++)</span><br><span class="line">            cout &lt;&lt; astElement[i].uiElementValue &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">        free(aInputByte);</span><br><span class="line">        free(astElement);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="题目三-长整数相乘"><a href="#题目三-长整数相乘" class="headerlink" title="题目三 长整数相乘"></a>题目三 长整数相乘</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>长整数相乘</p>
+<p><strong>输入描述</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输入两个长整数，以空格隔开</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出描述</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输出相乘后的结果</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 1</strong></p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-12341234</span><br><span class="line">43214321</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-533318047612114</span><br></pre></td></tr></table></figure>
+
+<h3 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a>解决方案</h3><p>LeetCode有类似大整数相乘题目 <a target="_blank" rel="noopener" href="https://leetcode.com/problems/multiply-strings/">43. Multiply Strings</a>，和本题区别在于，LeetCode那题假设两个整数都是非负的，这题的整数可以是负数，在LeetCode 43题解题基础上加个符号判断即可解出该题。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AC%94%E8%AF%95/" rel="tag"># 笔试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/03/23/LeetCode-237-Delete-Node-in-a-Linked-List/" rel="prev" title="LeetCode 237 - Delete Node in a Linked List">
+      <i class="fa fa-chevron-left"></i> LeetCode 237 - Delete Node in a Linked List
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/03/24/LeetCode-532-K-diff-Pairs-in-an-Array/" rel="next" title="LeetCode 532 - K-diff Pairs in an Array">
+      LeetCode 532 - K-diff Pairs in an Array <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%80-%E5%9C%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%89%BE%E5%87%BA%E8%BF%9E%E7%BB%AD%E6%9C%80%E9%95%BF%E7%9A%84%E6%95%B0%E5%AD%97%E4%B8%B2"><span class="nav-number">1.</span> <span class="nav-text">题目一 在字符串中找出连续最长的数字串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%8C-%E5%AD%97%E8%8A%82%E6%B5%81%E8%A7%A3%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">题目二 字节流解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">2.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-1"><span class="nav-number">2.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%89-%E9%95%BF%E6%95%B4%E6%95%B0%E7%9B%B8%E4%B9%98"><span class="nav-number">3.</span> <span class="nav-text">题目三 长整数相乘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">3.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-2"><span class="nav-number">3.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

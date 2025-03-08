@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. Pandas备忘录系列文章 Pandas备忘录2  2. 介绍本文主要是记录一些Pandas的使用方法以及注意事项 Note: 如果没有特别说明，pd 指的是 pandas，np 指的是 numpy。 12import pandas as pdimport numpy as np  3. 构建DataFrame构建一个DataFrame方法有很多，这里介绍一部分常用的方法，即  From d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pandas备忘录">
+<meta property="og:url" content="http://example.com/2018/05/06/Pandas%E5%A4%87%E5%BF%98%E5%BD%95/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="1. Pandas备忘录系列文章 Pandas备忘录2  2. 介绍本文主要是记录一些Pandas的使用方法以及注意事项 Note: 如果没有特别说明，pd 指的是 pandas，np 指的是 numpy。 12import pandas as pdimport numpy as np  3. 构建DataFrame构建一个DataFrame方法有很多，这里介绍一部分常用的方法，即  From d">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-05-06T14:29:26.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.179Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Pandas">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2018/05/06/Pandas%E5%A4%87%E5%BF%98%E5%BD%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Pandas备忘录 | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/05/06/Pandas%E5%A4%87%E5%BF%98%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Pandas备忘录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-05-06 22:29:26" itemprop="dateCreated datePublished" datetime="2018-05-06T22:29:26+08:00">2018-05-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1-Pandas备忘录系列文章"><a href="#1-Pandas备忘录系列文章" class="headerlink" title="1. Pandas备忘录系列文章"></a>1. Pandas备忘录系列文章</h2><ol>
+<li><a href="/2018/09/03/Pandas%E5%A4%87%E5%BF%98%E5%BD%952/" title="Pandas备忘录2">Pandas备忘录2</a></li>
+</ol>
+<h2 id="2-介绍"><a href="#2-介绍" class="headerlink" title="2. 介绍"></a>2. 介绍</h2><p>本文主要是记录一些Pandas的使用方法以及注意事项</p>
+<p><strong>Note:</strong> 如果没有特别说明，<code>pd</code> 指的是 <code>pandas</code>，<code>np</code> 指的是 <code>numpy</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-构建DataFrame"><a href="#3-构建DataFrame" class="headerlink" title="3. 构建DataFrame"></a>3. 构建DataFrame</h2><p>构建一个DataFrame方法有很多，这里介绍一部分常用的方法，即</p>
+<ul>
+<li>From dict of ndarrays &#x2F; lists</li>
+<li>From a list of dicts</li>
+</ul>
+<h3 id="3-1-From-dict-of-ndarrays-lists"><a href="#3-1-From-dict-of-ndarrays-lists" class="headerlink" title="3.1. From dict of ndarrays &#x2F; lists"></a>3.1. From dict of ndarrays &#x2F; lists</h3><p>输入数据为一个字典，字典的key为列名，字典的value为一个Numpy的数组或者一个list，存储DataFrame一列的值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data = &#123;&#x27;one&#x27;: [1, 2, 3],</span><br><span class="line">...         &#x27;two&#x27;: [3, 2, 1]&#125;</span><br><span class="line">&gt;&gt;&gt; pd.DataFrame(data)</span><br><span class="line">   one  two</span><br><span class="line">0    1    3</span><br><span class="line">1    2    2</span><br><span class="line">2    3    1</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-From-a-list-of-dicts"><a href="#3-2-From-a-list-of-dicts" class="headerlink" title="3.2. From a list of dicts"></a>3.2. From a list of dicts</h3><p>输入数据为一个list，每个元素为一个字典，存储DataFrame一行的值，字典的key为列名，value为一个DataFrame中一个元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data = [&#123;&#x27;one&#x27;: 1, &#x27;two&#x27;: 3&#125;,</span><br><span class="line">...         &#123;&#x27;one&#x27;: 2, &#x27;two&#x27;: 2&#125;,</span><br><span class="line">...         &#123;&#x27;one&#x27;: 3, &#x27;two&#x27;: 1&#125;]</span><br><span class="line">&gt;&gt;&gt; pd.DataFrame(data)</span><br><span class="line">   one  two</span><br><span class="line">0    1    3</span><br><span class="line">1    2    2</span><br><span class="line">2    3    1</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Series索引"><a href="#4-Series索引" class="headerlink" title="4. Series索引"></a>4. Series索引</h2><p>Series索引类似Numpy的数组索引，除了可以使用 integer 作为索引值，还可以使用 index 作为索引值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; obj = pd.Series(np.arange(4.), index=[&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;, &#x27;d&#x27;])</span><br><span class="line">&gt;&gt;&gt; obj</span><br><span class="line">a    0.0</span><br><span class="line">b    1.0</span><br><span class="line">c    2.0</span><br><span class="line">d    3.0</span><br><span class="line">dtype: float64</span><br><span class="line">&gt;&gt;&gt; obj[&#x27;b&#x27;]</span><br><span class="line">1.0</span><br><span class="line">&gt;&gt;&gt; obj[1]</span><br><span class="line">1.0</span><br><span class="line">&gt;&gt;&gt; obj[:2]</span><br><span class="line">a    0.0</span><br><span class="line">b    1.0</span><br><span class="line">dtype: float64</span><br><span class="line">&gt;&gt;&gt; obj[obj &lt; 2]</span><br><span class="line">a    0.0</span><br><span class="line">b    1.0</span><br><span class="line">dtype: float64</span><br><span class="line"></span><br><span class="line"># 如果使用 label 索引，则索引区间为闭区间</span><br><span class="line">&gt;&gt;&gt; obj[&#x27;b&#x27;:&#x27;c&#x27;]</span><br><span class="line">b    1.0</span><br><span class="line">c    2.0</span><br><span class="line">dtype: float64</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-DataFrame索引"><a href="#5-DataFrame索引" class="headerlink" title="5. DataFrame索引"></a>5. DataFrame索引</h2><p>先贴张DataFrame索引方法的表格，摘录自《Python for Data Analysis》。</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>df[val]</td>
+<td>Select single column or sequence of  columns from the DataFrame; special case conveniences: boolean array (filter rows), slice (slice rows), or boolean DataFrame (set values bases on some criterion)</td>
+</tr>
+<tr>
+<td>df.loc[val]</td>
+<td>Selects single row or subset of rows from the DataFrame by label</td>
+</tr>
+<tr>
+<td>df.loc[:, val]</td>
+<td>Selects single column or subset of columns by label</td>
+</tr>
+<tr>
+<td>df.loc[val1, val2]</td>
+<td>Select both rows and columns by label</td>
+</tr>
+<tr>
+<td>df.iloc[where]</td>
+<td>Selects single row of subsets of rows from the DataFrame by integer position</td>
+</tr>
+<tr>
+<td>df.iloc[:, where]</td>
+<td>Selects single column or subset of columns by integer position</td>
+</tr>
+<tr>
+<td>df.iloc[where_i,  where_j]</td>
+<td>Select both rows and columns by integer position</td>
+</tr>
+<tr>
+<td>df.at[label_i, label_j]</td>
+<td>Select a single scalar value by row and column label</td>
+</tr>
+<tr>
+<td>df.iat[i, j]</td>
+<td>Select a single scalar value by row and column position (integers)</td>
+</tr>
+</tbody></table>
+<p>先创建一个数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data = pd.DataFrame(np.arange(16).reshape((4, 4)),</span><br><span class="line">...                     index=[&#x27;Ohio&#x27;, &#x27;Colorado&#x27;, &#x27;Utah&#x27;, &#x27;New York&#x27;],</span><br><span class="line">...                     columns=[&#x27;one&#x27;, &#x27;two&#x27;, &#x27;three&#x27;, &#x27;four&#x27;])</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">          one  two  three  four</span><br><span class="line">Ohio        0    1      2     3</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line">Utah        8    9     10    11</span><br><span class="line">New York   12   13     14    15</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-1-df-语法"><a href="#5-1-df-语法" class="headerlink" title="5.1. df[]语法"></a>5.1. df[]语法</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"># 利用单个label选择单列</span><br><span class="line">&gt;&gt;&gt; data[&#x27;two&#x27;]</span><br><span class="line">Ohio         1</span><br><span class="line">Colorado     5</span><br><span class="line">Utah         9</span><br><span class="line">New York    13</span><br><span class="line">Name: two, dtype: int64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 利用多个label选择多列，可以改变列顺序</span><br><span class="line">&gt;&gt;&gt; data[[&#x27;three&#x27;, &#x27;one&#x27;]]</span><br><span class="line">          three  one</span><br><span class="line">Ohio          2    0</span><br><span class="line">Colorado      6    4</span><br><span class="line">Utah         10    8</span><br><span class="line">New York     14   12</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 利用boolean数组选择多行</span><br><span class="line">&gt;&gt;&gt; bools = np.array([False, True, False, True])</span><br><span class="line">&gt;&gt;&gt; bools</span><br><span class="line">array([False,  True, False,  True])</span><br><span class="line">&gt;&gt;&gt; data[bools]</span><br><span class="line">          one  two  three  four</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line">New York   12   13     14    15</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 利用切片(slice)选择多行，类似Numpy的语法</span><br><span class="line">&gt;&gt;&gt; data[:2]</span><br><span class="line">          one  two  three  four</span><br><span class="line">Ohio        0    1      2     3</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 利用boolean DataFrame选择数据</span><br><span class="line">&gt;&gt;&gt; data &lt; 5</span><br><span class="line">            one    two  three   four</span><br><span class="line">Ohio       True   True   True   True</span><br><span class="line">Colorado   True  False  False  False</span><br><span class="line">Utah      False  False  False  False</span><br><span class="line">New York  False  False  False  False</span><br><span class="line">&gt;&gt;&gt; data[data &lt; 5] = 0</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">          one  two  three  four</span><br><span class="line">Ohio        0    0      0     0</span><br><span class="line">Colorado    0    5      6     7</span><br><span class="line">Utah        8    9     10    11</span><br><span class="line">New York   12   13     14    15</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-df-loc语法"><a href="#5-2-df-loc语法" class="headerlink" title="5.2. df.loc语法"></a>5.2. df.loc语法</h3><p><code>df.loc[]</code> 索引值为 axis labels</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"># 使用 df.loc[val] 选择行</span><br><span class="line">&gt;&gt;&gt; data.loc[&#x27;Utah&#x27;]</span><br><span class="line">one       8</span><br><span class="line">two       9</span><br><span class="line">three    10</span><br><span class="line">four     11</span><br><span class="line">Name: Utah, dtype: int64</span><br><span class="line">&gt;&gt;&gt; data.loc[[&#x27;Utah&#x27;, &#x27;Ohio&#x27;]]</span><br><span class="line">      one  two  three  four</span><br><span class="line">Utah    8    9     10    11</span><br><span class="line">Ohio    0    1      2     3</span><br><span class="line"># 如果使用 label 索引，则索引区间为闭区间</span><br><span class="line">&gt;&gt;&gt; data.loc[:&#x27;Utah&#x27;]</span><br><span class="line">          one  two  three  four</span><br><span class="line">Ohio        0    1      2     3</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line">Utah        8    9     10    11</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用 df.loc[:, val] 选择列</span><br><span class="line">&gt;&gt;&gt; data.loc[:, &#x27;one&#x27;]</span><br><span class="line">Ohio         0</span><br><span class="line">Colorado     4</span><br><span class="line">Utah         8</span><br><span class="line">New York    12</span><br><span class="line">Name: one, dtype: int64</span><br><span class="line">&gt;&gt;&gt; data.loc[:, [&#x27;one&#x27;, &#x27;two&#x27;]]</span><br><span class="line">          one  two</span><br><span class="line">Ohio        0    1</span><br><span class="line">Colorado    4    5</span><br><span class="line">Utah        8    9</span><br><span class="line">New York   12   13</span><br><span class="line"># 如果使用 label 索引，则索引区间为闭区间</span><br><span class="line">&gt;&gt;&gt; data.loc[:, :&#x27;two&#x27;]</span><br><span class="line">          one  two</span><br><span class="line">Ohio        0    1</span><br><span class="line">Colorado    4    5</span><br><span class="line">Utah        8    9</span><br><span class="line">New York   12   13</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用 df.loc[val1, val2] 选择多行多列</span><br><span class="line">&gt;&gt;&gt; data.loc[[&#x27;Colorado&#x27;, &#x27;Ohio&#x27;], [&#x27;two&#x27;, &#x27;three&#x27;]]</span><br><span class="line">          two  three</span><br><span class="line">Colorado    5      6</span><br><span class="line">Ohio        1      2</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-df-iloc语法"><a href="#5-3-df-iloc语法" class="headerlink" title="5.3. df.iloc语法"></a>5.3. df.iloc语法</h3><p><code>df.iloc[]</code> 索引值为 integers</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"># 使用 df.iloc[where] 选择行</span><br><span class="line">&gt;&gt;&gt; data.iloc[2]</span><br><span class="line">one       8</span><br><span class="line">two       9</span><br><span class="line">three    10</span><br><span class="line">four     11</span><br><span class="line">Name: Utah, dtype: int64</span><br><span class="line">&gt;&gt;&gt; data.iloc[[2,1]]</span><br><span class="line">          one  two  three  four</span><br><span class="line">Utah        8    9     10    11</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line">&gt;&gt;&gt; data.iloc[:2]</span><br><span class="line">          one  two  three  four</span><br><span class="line">Ohio        0    1      2     3</span><br><span class="line">Colorado    4    5      6     7</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用 df.iloc[:, where] 选择列</span><br><span class="line">&gt;&gt;&gt; data.iloc[:, 1]</span><br><span class="line">Ohio         1</span><br><span class="line">Colorado     5</span><br><span class="line">Utah         9</span><br><span class="line">New York    13</span><br><span class="line">Name: two, dtype: int64</span><br><span class="line">&gt;&gt;&gt; data.iloc[:, [2, 0]]</span><br><span class="line">          three  one</span><br><span class="line">Ohio          2    0</span><br><span class="line">Colorado      6    4</span><br><span class="line">Utah         10    8</span><br><span class="line">New York     14   12</span><br><span class="line">&gt;&gt;&gt; data.iloc[:, :2]</span><br><span class="line">          one  two</span><br><span class="line">Ohio        0    1</span><br><span class="line">Colorado    4    5</span><br><span class="line">Utah        8    9</span><br><span class="line">New York   12   13</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用 df.iloc[where_i, where_j] 选择多行多列</span><br><span class="line">&gt;&gt;&gt; data.iloc[2, :2]</span><br><span class="line">one    8</span><br><span class="line">two    9</span><br><span class="line">Name: Utah, dtype: int64</span><br><span class="line">&gt;&gt;&gt; data.iloc[:2, :2]</span><br><span class="line">          one  two</span><br><span class="line">Ohio        0    1</span><br><span class="line">Colorado    4    5</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-Reset-Index"><a href="#5-4-Reset-Index" class="headerlink" title="5.4. Reset Index"></a>5.4. Reset Index</h3><p>可以使用DataFrame的<code>reset_index()</code>函数将index变为DataFrame的一列，原index替换为递增的整数索引</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.reset_index()</span><br><span class="line">      index  one  two  three  four</span><br><span class="line">0      Ohio    0    1      2     3</span><br><span class="line">1  Colorado    4    5      6     7</span><br><span class="line">2      Utah    8    9     10    11</span><br><span class="line">3  New York   12   13     14    15</span><br></pre></td></tr></table></figure>
+
+<p>这个函数还有一个用处就是可以给每一行编一个号，如果index已为递增的整数索引，再调用<code>reset_index()</code>函数时，就会多出一列，内容为递增整数，相当于给每一行编个号。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data2 = data.reset_index()</span><br><span class="line">&gt;&gt;&gt; data2</span><br><span class="line">      index  one  two  three  four</span><br><span class="line">0      Ohio    0    1      2     3</span><br><span class="line">1  Colorado    4    5      6     7</span><br><span class="line">2      Utah    8    9     10    11</span><br><span class="line">3  New York   12   13     14    15</span><br><span class="line">&gt;&gt;&gt; data2.reset_index()</span><br><span class="line">   level_0     index  one  two  three  four</span><br><span class="line">0        0      Ohio    0    1      2     3</span><br><span class="line">1        1  Colorado    4    5      6     7</span><br><span class="line">2        2      Utah    8    9     10    11</span><br><span class="line">3        3  New York   12   13     14    15</span><br></pre></td></tr></table></figure>
+
+<p>列<code>level_0</code>可以用于数据编号。</p>
+<h2 id="6-Series数据映射"><a href="#6-Series数据映射" class="headerlink" title="6. Series数据映射"></a>6. Series数据映射</h2><p>已知数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data = pd.DataFrame(&#123;&#x27;Age&#x27;: [22, 38, 26, 35, 35],</span><br><span class="line">...                      &#x27;Sex&#x27;: [&#x27;male&#x27;, &#x27;female&#x27;, &#x27;female&#x27;, &#x27;female&#x27;, &#x27;male&#x27;]&#125;)</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">   Age     Sex</span><br><span class="line">0   22    male</span><br><span class="line">1   38  female</span><br><span class="line">2   26  female</span><br><span class="line">3   35  female</span><br><span class="line">4   35    male</span><br></pre></td></tr></table></figure>
+
+<p><code>Sex</code> 那一列的数据取值有两种，分别为 <code>female</code> 和 <code>male</code>，此时想要作一个数据映射</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">female -&gt; 0</span><br><span class="line">male -&gt; 1</span><br></pre></td></tr></table></figure>
+
+<p>可以使用 <code>map()</code> 函数，输入映射参数 (映射用一个字典表示)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; sex_to_num = &#123;&#x27;female&#x27;: 0, &#x27;male&#x27;: 1&#125;</span><br><span class="line">&gt;&gt;&gt; data[&#x27;Sex&#x27;] = data[&#x27;Sex&#x27;].map(sex_to_num)</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">   Age  Sex</span><br><span class="line">0   22    1</span><br><span class="line">1   38    0</span><br><span class="line">2   26    0</span><br><span class="line">3   35    0</span><br><span class="line">4   35    1</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-缺失值"><a href="#7-缺失值" class="headerlink" title="7. 缺失值"></a>7. 缺失值</h2><p><strong>Note:</strong> 本节所述的 <code>NA</code> 代表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from numpy import nan as NA</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-1-缺失值分析"><a href="#7-1-缺失值分析" class="headerlink" title="7.1. 缺失值分析"></a>7.1. 缺失值分析</h3><p>首先分析数据缺失值情况</p>
+<ol>
+<li>Series</li>
+</ol>
+<p>对于 Series，可以使用 <code>isnull()</code> 函数判断 Series 中的数据是否为缺失值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data = pd.Series([1, NA, 3.5, NA, 7])</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">0    1.0</span><br><span class="line">1    NaN</span><br><span class="line">2    3.5</span><br><span class="line">3    NaN</span><br><span class="line">4    7.0</span><br><span class="line">dtype: float64</span><br><span class="line">&gt;&gt;&gt; data.isnull()</span><br><span class="line">0    False</span><br><span class="line">1     True</span><br><span class="line">2    False</span><br><span class="line">3     True</span><br><span class="line">4    False</span><br><span class="line">dtype: bool</span><br></pre></td></tr></table></figure>
+
+<p>要判断有多少个缺失值，可以使用 <code>sum()</code> 判断 <code>isnull()</code> 返回的 Boolean 数组中有多少个 True。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.isnull().sum()</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>DataFrame</li>
+</ol>
+<p>对于 DataFrame，同样可以使用 <code>isnull()</code> 函数判断数据是否为缺失值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data = pd.DataFrame([[1., 6.5, 3.], [1, NA, NA],</span><br><span class="line">...                      [NA, NA, NA], [NA, 6.5, 3.]])</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">     0    1    2</span><br><span class="line">0  1.0  6.5  3.0</span><br><span class="line">1  1.0  NaN  NaN</span><br><span class="line">2  NaN  NaN  NaN</span><br><span class="line">3  NaN  6.5  3.0</span><br><span class="line">&gt;&gt;&gt; data.isnull()</span><br><span class="line">       0      1      2</span><br><span class="line">0  False  False  False</span><br><span class="line">1  False   True   True</span><br><span class="line">2   True   True   True</span><br><span class="line">3   True  False  False</span><br></pre></td></tr></table></figure>
+
+<p>如果要知道每一列的缺失值是多少，可以使用 <code>info()</code> 函数，或者将 <code>isnull()</code> 与 <code>sum()</code> 配合起来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.info()</span><br><span class="line">&lt;class &#x27;pandas.core.frame.DataFrame&#x27;&gt;</span><br><span class="line">RangeIndex: 4 entries, 0 to 3</span><br><span class="line">Data columns (total 3 columns):</span><br><span class="line">0    2 non-null float64</span><br><span class="line">1    2 non-null float64</span><br><span class="line">2    2 non-null float64</span><br><span class="line">dtypes: float64(3)</span><br><span class="line">memory usage: 176.0 bytes</span><br><span class="line">&gt;&gt;&gt; data.isnull().sum()</span><br><span class="line">0    2</span><br><span class="line">1    2</span><br><span class="line">2    2</span><br><span class="line">dtype: int64</span><br></pre></td></tr></table></figure>
+
+<p>如果要知道缺失值总数，可以作两次 <code>sum()</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.isnull().sum().sum()</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-缺失值补全"><a href="#7-2-缺失值补全" class="headerlink" title="7.2. 缺失值补全"></a>7.2. 缺失值补全</h3><p>处理缺失值的一个方法就是使用插值或者自设的值补全缺失值。首先构造一个有缺失值的 DataFrame</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df = pd.DataFrame(np.random.randn(7, 3))</span><br><span class="line">&gt;&gt;&gt; df.iloc[:4, 1] = NA</span><br><span class="line">&gt;&gt;&gt; df.iloc[:2, 2] = NA</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">          0         1         2</span><br><span class="line">0  1.309480       NaN       NaN</span><br><span class="line">1 -0.542253       NaN       NaN</span><br><span class="line">2 -1.129503       NaN -0.396921</span><br><span class="line">3  1.172466       NaN -1.114420</span><br><span class="line">4  0.893893  0.572520  0.648532</span><br><span class="line">5  0.293066  1.875362 -0.426759</span><br><span class="line">6 -0.389516  0.379184  0.759198</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>使用自设的值补全缺失值</li>
+</ol>
+<p>这里主要使用函数 <code>fillna()</code>，传入一个值，则缺失值就被设为该值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 缺失值使用0补全</span><br><span class="line">&gt;&gt;&gt; df.fillna(0)</span><br><span class="line">          0         1         2</span><br><span class="line">0  1.309480  0.000000  0.000000</span><br><span class="line">1 -0.542253  0.000000  0.000000</span><br><span class="line">2 -1.129503  0.000000 -0.396921</span><br><span class="line">3  1.172466  0.000000 -1.114420</span><br><span class="line">4  0.893893  0.572520  0.648532</span><br><span class="line">5  0.293066  1.875362 -0.426759</span><br><span class="line">6 -0.389516  0.379184  0.759198</span><br></pre></td></tr></table></figure>
+
+<p>如果传入的是一个字典，则可以对每一列的缺失值设定不同的补全值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 第二列缺失值用0.5补全，第三列缺失值用0补全</span><br><span class="line">&gt;&gt;&gt; df.fillna(&#123;1: 0.5, 2: 0&#125;)</span><br><span class="line">          0         1         2</span><br><span class="line">0  1.309480  0.500000  0.000000</span><br><span class="line">1 -0.542253  0.500000  0.000000</span><br><span class="line">2 -1.129503  0.500000 -0.396921</span><br><span class="line">3  1.172466  0.500000 -1.114420</span><br><span class="line">4  0.893893  0.572520  0.648532</span><br><span class="line">5  0.293066  1.875362 -0.426759</span><br><span class="line">6 -0.389516  0.379184  0.759198</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>插值补全缺失值</li>
+</ol>
+<p>这里主要使用函数 <code>fillna()</code> 的 <code>method</code> 参数，例子中数据由于某列第一个元素有缺失，所以方法选择 backfill。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df.fillna(method=&#x27;backfill&#x27;)</span><br><span class="line">          0         1         2</span><br><span class="line">0  1.309480  0.572520 -0.396921</span><br><span class="line">1 -0.542253  0.572520 -0.396921</span><br><span class="line">2 -1.129503  0.572520 -0.396921</span><br><span class="line">3  1.172466  0.572520 -1.114420</span><br><span class="line">4  0.893893  0.572520  0.648532</span><br><span class="line">5  0.293066  1.875362 -0.426759</span><br><span class="line">6 -0.389516  0.379184  0.759198</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-3-缺失值删除"><a href="#7-3-缺失值删除" class="headerlink" title="7.3. 缺失值删除"></a>7.3. 缺失值删除</h3><ol>
+<li>删除有缺失值的行</li>
+</ol>
+<p>DataFrame的<code>dropna</code>函数默认是删除有缺失值的行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df = pd.DataFrame(&#123;&quot;name&quot;: [&#x27;Alfred&#x27;, &#x27;Batman&#x27;, &#x27;Catwoman&#x27;],</span><br><span class="line">...                    &quot;toy&quot;: [np.nan, &#x27;Batmobile&#x27;, &#x27;Bullwhip&#x27;],</span><br><span class="line">...                    &quot;born&quot;: [pd.NaT, pd.Timestamp(&quot;1940-04-25&quot;), pd.NaT]&#125;)</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">       name        toy       born</span><br><span class="line">0    Alfred        NaN        NaT</span><br><span class="line">1    Batman  Batmobile 1940-04-25</span><br><span class="line">2  Catwoman   Bullwhip        NaT</span><br><span class="line">&gt;&gt;&gt; df.dropna()</span><br><span class="line">     name        toy       born</span><br><span class="line">1  Batman  Batmobile 1940-04-25</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>删除有缺失值的列</li>
+</ol>
+<p>设定<code>dropna</code>函数的参数axis为1可以删除有缺失值的列</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df = pd.DataFrame(&#123;&quot;name&quot;: [&#x27;Alfred&#x27;, &#x27;Batman&#x27;, &#x27;Catwoman&#x27;],</span><br><span class="line">...                    &quot;toy&quot;: [np.nan, &#x27;Batmobile&#x27;, &#x27;Bullwhip&#x27;],</span><br><span class="line">...                    &quot;born&quot;: [pd.NaT, pd.Timestamp(&quot;1940-04-25&quot;), pd.NaT]&#125;)</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">       name        toy       born</span><br><span class="line">0    Alfred        NaN        NaT</span><br><span class="line">1    Batman  Batmobile 1940-04-25</span><br><span class="line">2  Catwoman   Bullwhip        NaT</span><br><span class="line">&gt;&gt;&gt; df.dropna(axis=1)</span><br><span class="line">       name</span><br><span class="line">0    Alfred</span><br><span class="line">1    Batman</span><br><span class="line">2  Catwoman</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-重复值"><a href="#8-重复值" class="headerlink" title="8. 重复值"></a>8. 重复值</h2><p>已知DataFrame</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data = pd.DataFrame(&#123;&#x27;k1&#x27;: [&#x27;one&#x27;, &#x27;two&#x27;] * 3 + [&#x27;two&#x27;],</span><br><span class="line">...                      &#x27;k2&#x27;: [1, 1, 2, 3, 3, 4, 4]&#125;)</span><br><span class="line">&gt;&gt;&gt; data</span><br><span class="line">    k1  k2</span><br><span class="line">0  one   1</span><br><span class="line">1  two   1</span><br><span class="line">2  one   2</span><br><span class="line">3  two   3</span><br><span class="line">4  one   3</span><br><span class="line">5  two   4</span><br><span class="line">6  two   4</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-1-删除重复值"><a href="#8-1-删除重复值" class="headerlink" title="8.1. 删除重复值"></a>8.1. 删除重复值</h3><p>可以使用函数<code>drop_duplicates()</code>删除重复值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.drop_duplicates()</span><br><span class="line">    k1  k2</span><br><span class="line">0  one   1</span><br><span class="line">1  two   1</span><br><span class="line">2  one   2</span><br><span class="line">3  two   3</span><br><span class="line">4  one   3</span><br><span class="line">5  two   4</span><br></pre></td></tr></table></figure>
+
+<p>函数<code>drop_duplicates()</code>默认考虑的是全部列，也可以设定某些列来判断是否重复</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; data.drop_duplicates([&#x27;k1&#x27;])</span><br><span class="line">    k1  k2</span><br><span class="line">0  one   1</span><br><span class="line">1  two   1</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-排序"><a href="#9-排序" class="headerlink" title="9. 排序"></a>9. 排序</h2><p>已知DataFrame</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df = pd.DataFrame(&#123;&#x27;b&#x27;: [4, 7, -3, 2], &#x27;a&#x27;: [0, 1, 0, 1]&#125;)</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">   a  b</span><br><span class="line">0  0  4</span><br><span class="line">1  1  7</span><br><span class="line">2  0 -3</span><br><span class="line">3  1  2</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-1-根据某些列进行排序"><a href="#9-1-根据某些列进行排序" class="headerlink" title="9.1. 根据某些列进行排序"></a>9.1. 根据某些列进行排序</h3><p>排序使用函数<code>sort_values()</code>，如果要根据某些列进行排序，可以设定<code>by=</code>参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df.sort_values(by=&#x27;a&#x27;)</span><br><span class="line">   a  b</span><br><span class="line">0  0  4</span><br><span class="line">2  0 -3</span><br><span class="line">1  1  7</span><br><span class="line">3  1  2</span><br><span class="line">&gt;&gt;&gt; df.sort_values(by=[&#x27;a&#x27;, &#x27;b&#x27;])</span><br><span class="line">   a  b</span><br><span class="line">2  0 -3</span><br><span class="line">0  0  4</span><br><span class="line">3  1  2</span><br><span class="line">1  1  7</span><br></pre></td></tr></table></figure>
+
+<h2 id="10-GroupBy"><a href="#10-GroupBy" class="headerlink" title="10. GroupBy"></a>10. GroupBy</h2><p>已知DataFrame</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df = pd.DataFrame(&#123;&#x27;key1&#x27;:[&#x27;a&#x27;,&#x27;a&#x27;,&#x27;b&#x27;,&#x27;b&#x27;,&#x27;a&#x27;],</span><br><span class="line">...                    &#x27;key2&#x27;:[&#x27;one&#x27;,&#x27;two&#x27;,&#x27;one&#x27;,&#x27;two&#x27;,&#x27;one&#x27;],</span><br><span class="line">...                    &#x27;data1&#x27;:np.random.randn(5),</span><br><span class="line">...                    &#x27;data2&#x27;:np.random.randn(5)&#125;)</span><br><span class="line">&gt;&gt;&gt; df</span><br><span class="line">      data1     data2 key1 key2</span><br><span class="line">0  2.462027  0.054159    a  one</span><br><span class="line">1  0.283423 -0.658160    a  two</span><br><span class="line">2 -0.969307 -0.407126    b  one</span><br><span class="line">3 -0.636756  1.925338    b  two</span><br><span class="line">4 -0.408266  1.833710    a  one</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-1-查看分组名"><a href="#10-1-查看分组名" class="headerlink" title="10.1. 查看分组名"></a>10.1. 查看分组名</h3><p>DataFrame分了组后，想知道每个分组的名字，可以写为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df.groupby(&#x27;key1&#x27;).groups</span><br><span class="line">&#123;&#x27;a&#x27;: Int64Index([0, 1, 4], dtype=&#x27;int64&#x27;), &#x27;b&#x27;: Int64Index([2, 3], dtype=&#x27;int64&#x27;)&#125;</span><br><span class="line">&gt;&gt;&gt; df.groupby(&#x27;key1&#x27;).groups.keys()</span><br><span class="line">dict_keys([&#x27;a&#x27;, &#x27;b&#x27;])</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-2-分组计算和以及平均值"><a href="#10-2-分组计算和以及平均值" class="headerlink" title="10.2. 分组计算和以及平均值"></a>10.2. 分组计算和以及平均值</h3><p>如果想要根据列<code>key1</code>的值分组计算<code>data1</code>的和，可以写为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df[&#x27;data1&#x27;].groupby(df[&#x27;key1&#x27;]).sum().reset_index()</span><br><span class="line">  key1     data1</span><br><span class="line">0    a  2.337185</span><br><span class="line">1    b -1.606063</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df.filter([&#x27;data1&#x27;, &#x27;key1&#x27;]).groupby(&#x27;key1&#x27;, as_index=False).sum()</span><br><span class="line">  key1     data1</span><br><span class="line">0    a  2.337185</span><br><span class="line">1    b -1.606063</span><br></pre></td></tr></table></figure>
+
+<p>这个<code>as_index=False</code>使得<code>key1</code>的值不作为index。计算平均值只需要将<code>sum()</code>换成<code>mean()</code>即可。</p>
+<h2 id="11-Merge"><a href="#11-Merge" class="headerlink" title="11. Merge"></a>11. Merge</h2><h3 id="11-1-笛卡尔乘积"><a href="#11-1-笛卡尔乘积" class="headerlink" title="11.1. 笛卡尔乘积"></a>11.1. 笛卡尔乘积</h3><p>两个集合$X$和$Y$的笛卡尔乘积(Cartesian product)，表示为$X \times Y$，是指第一个对象是$X$的成员而第二个对象是$Y$的所有可能有序对的其中一个成员。举个例子，假设集合$A &#x3D; { a,b  }$，集合$B &#x3D; { 0, 1, 2 }$，则两个集合的笛卡尔积为 ${ (a, 0), (a, 1), (a, 2), (b, 0),  (b, 1), (b, 2) }$。使用Pandas的<code>merge</code>函数可以实现两个DataFrame的笛卡尔积。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; df1 = pd.DataFrame(&#123;&#x27;A&#x27;: [&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;]&#125;)</span><br><span class="line">&gt;&gt;&gt; df1</span><br><span class="line">   A</span><br><span class="line">0  a</span><br><span class="line">1  b</span><br><span class="line">2  c</span><br><span class="line">&gt;&gt;&gt; df2 = pd.DataFrame(&#123;&#x27;B&#x27;: [0, 1, 2]&#125;)</span><br><span class="line">&gt;&gt;&gt; df2</span><br><span class="line">   B</span><br><span class="line">0  0</span><br><span class="line">1  1</span><br><span class="line">2  2</span><br><span class="line">&gt;&gt;&gt; pd.merge(df1.assign(foo=0), df2.assign(foo=0), on=[&#x27;foo&#x27;]).drop(columns=[&#x27;foo&#x27;])</span><br><span class="line">   A  B</span><br><span class="line">0  a  0</span><br><span class="line">1  a  1</span><br><span class="line">2  a  2</span><br><span class="line">3  b  0</span><br><span class="line">4  b  1</span><br><span class="line">5  b  2</span><br><span class="line">6  c  0</span><br><span class="line">7  c  1</span><br><span class="line">8  c  2</span><br></pre></td></tr></table></figure>
+
+<p>主要是实现思想是增加一列<code>foo</code>，值设为0，然后使用<code>merge</code>函数进行合并。</p>
+<h2 id="12-读取数据"><a href="#12-读取数据" class="headerlink" title="12. 读取数据"></a>12. 读取数据</h2><h3 id="12-1-读取csv文件"><a href="#12-1-读取csv文件" class="headerlink" title="12.1. 读取csv文件"></a>12.1. 读取csv文件</h3><p>读取csv数据文件需要用到 <code>read_csv()</code> 函数</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/Pandas/" rel="tag"># Pandas</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/05/03/Numpy%E5%A4%87%E5%BF%98%E5%BD%95/" rel="prev" title="Numpy备忘录">
+      <i class="fa fa-chevron-left"></i> Numpy备忘录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/05/09/Matplotlib%E5%A4%87%E5%BF%98%E5%BD%95/" rel="next" title="Matplotlib备忘录">
+      Matplotlib备忘录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Pandas%E5%A4%87%E5%BF%98%E5%BD%95%E7%B3%BB%E5%88%97%E6%96%87%E7%AB%A0"><span class="nav-number">1.</span> <span class="nav-text">1. Pandas备忘录系列文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">2. 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%9E%84%E5%BB%BADataFrame"><span class="nav-number">3.</span> <span class="nav-text">3. 构建DataFrame</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-From-dict-of-ndarrays-lists"><span class="nav-number">3.1.</span> <span class="nav-text">3.1. From dict of ndarrays &#x2F; lists</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-From-a-list-of-dicts"><span class="nav-number">3.2.</span> <span class="nav-text">3.2. From a list of dicts</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Series%E7%B4%A2%E5%BC%95"><span class="nav-number">4.</span> <span class="nav-text">4. Series索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-DataFrame%E7%B4%A2%E5%BC%95"><span class="nav-number">5.</span> <span class="nav-text">5. DataFrame索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-df-%E8%AF%AD%E6%B3%95"><span class="nav-number">5.1.</span> <span class="nav-text">5.1. df[]语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-df-loc%E8%AF%AD%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">5.2. df.loc语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-df-iloc%E8%AF%AD%E6%B3%95"><span class="nav-number">5.3.</span> <span class="nav-text">5.3. df.iloc语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-Reset-Index"><span class="nav-number">5.4.</span> <span class="nav-text">5.4. Reset Index</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Series%E6%95%B0%E6%8D%AE%E6%98%A0%E5%B0%84"><span class="nav-number">6.</span> <span class="nav-text">6. Series数据映射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E7%BC%BA%E5%A4%B1%E5%80%BC"><span class="nav-number">7.</span> <span class="nav-text">7. 缺失值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E7%BC%BA%E5%A4%B1%E5%80%BC%E5%88%86%E6%9E%90"><span class="nav-number">7.1.</span> <span class="nav-text">7.1. 缺失值分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E7%BC%BA%E5%A4%B1%E5%80%BC%E8%A1%A5%E5%85%A8"><span class="nav-number">7.2.</span> <span class="nav-text">7.2. 缺失值补全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E7%BC%BA%E5%A4%B1%E5%80%BC%E5%88%A0%E9%99%A4"><span class="nav-number">7.3.</span> <span class="nav-text">7.3. 缺失值删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E9%87%8D%E5%A4%8D%E5%80%BC"><span class="nav-number">8.</span> <span class="nav-text">8. 重复值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E5%88%A0%E9%99%A4%E9%87%8D%E5%A4%8D%E5%80%BC"><span class="nav-number">8.1.</span> <span class="nav-text">8.1. 删除重复值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E6%8E%92%E5%BA%8F"><span class="nav-number">9.</span> <span class="nav-text">9. 排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E6%A0%B9%E6%8D%AE%E6%9F%90%E4%BA%9B%E5%88%97%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F"><span class="nav-number">9.1.</span> <span class="nav-text">9.1. 根据某些列进行排序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-GroupBy"><span class="nav-number">10.</span> <span class="nav-text">10. GroupBy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E6%9F%A5%E7%9C%8B%E5%88%86%E7%BB%84%E5%90%8D"><span class="nav-number">10.1.</span> <span class="nav-text">10.1. 查看分组名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E5%88%86%E7%BB%84%E8%AE%A1%E7%AE%97%E5%92%8C%E4%BB%A5%E5%8F%8A%E5%B9%B3%E5%9D%87%E5%80%BC"><span class="nav-number">10.2.</span> <span class="nav-text">10.2. 分组计算和以及平均值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-Merge"><span class="nav-number">11.</span> <span class="nav-text">11. Merge</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-1-%E7%AC%9B%E5%8D%A1%E5%B0%94%E4%B9%98%E7%A7%AF"><span class="nav-number">11.1.</span> <span class="nav-text">11.1. 笛卡尔乘积</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="nav-number">12.</span> <span class="nav-text">12. 读取数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#12-1-%E8%AF%BB%E5%8F%96csv%E6%96%87%E4%BB%B6"><span class="nav-number">12.1.</span> <span class="nav-text">12.1. 读取csv文件</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

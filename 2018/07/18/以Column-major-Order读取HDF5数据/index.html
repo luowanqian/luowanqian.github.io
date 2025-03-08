@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="在使用h5py这类库读取HDF5里面的数据时，数据的存储方式为row-major order，而一些机器学习算法的实现在使用数据时需要的存储方式为column-major order，此时需要对数据进行转换。如果数据量很小，转换是没有问题的，如果数据量巨大，进行转换时，由于需要多一倍内存来存放转换的数据，因此可能导致内存溢出。本篇博文主要是重新实现h5py库中的 read_direct 函数，使得">
+<meta property="og:type" content="article">
+<meta property="og:title" content="以Column-major Order读取HDF5数据">
+<meta property="og:url" content="http://example.com/2018/07/18/%E4%BB%A5Column-major-Order%E8%AF%BB%E5%8F%96HDF5%E6%95%B0%E6%8D%AE/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="在使用h5py这类库读取HDF5里面的数据时，数据的存储方式为row-major order，而一些机器学习算法的实现在使用数据时需要的存储方式为column-major order，此时需要对数据进行转换。如果数据量很小，转换是没有问题的，如果数据量巨大，进行转换时，由于需要多一倍内存来存放转换的数据，因此可能导致内存溢出。本篇博文主要是重新实现h5py库中的 read_direct 函数，使得">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-07-18T01:39:07.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.195Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="HDF5">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2018/07/18/%E4%BB%A5Column-major-Order%E8%AF%BB%E5%8F%96HDF5%E6%95%B0%E6%8D%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>以Column-major Order读取HDF5数据 | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/07/18/%E4%BB%A5Column-major-Order%E8%AF%BB%E5%8F%96HDF5%E6%95%B0%E6%8D%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          以Column-major Order读取HDF5数据
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-07-18 09:39:07" itemprop="dateCreated datePublished" datetime="2018-07-18T09:39:07+08:00">2018-07-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在使用h5py这类库读取HDF5里面的数据时，数据的存储方式为row-major order，而一些机器学习算法的实现在使用数据时需要的存储方式为column-major order，此时需要对数据进行转换。如果数据量很小，转换是没有问题的，如果数据量巨大，进行转换时，由于需要多一倍内存来存放转换的数据，因此可能导致内存溢出。本篇博文主要是重新实现h5py库中的 <code>read_direct</code> 函数，使得该函数在读取HDF5文件时，可以使得读取到内存的数据是以column-major order方式存储。</p>
+<p>相关实现代码在: <a target="_blank" rel="noopener" href="https://gist.github.com/luowanqian/b924987be33d51f50a30e741fe249526">HDF5 gist</a></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>基本思路就是一行行地读取HDF5文件里面的数据，然后存储到内存的数组中，内存的数组是以column-major order方式存储数据。这里假设HDF5文件里面的数据存储是连续的，没有进行分块，复杂的情况等以后再实现，这里只是应对最简单的情况。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>实现主要是 Python + C 形式，Python部分主要提供一个函数接口用于调用，C部分主要是使用HDF5 C API对HDF5数据进行读取，两者之间的相互调用使用的是Cython。</p>
+<h3 id="C"><a href="#C" class="headerlink" title="C"></a>C</h3><p>这部分需要使用HDF5库提供的C API对HDF5文件数据进行读取。主要使用的API是 <code>H5Sselect_hyperslab</code>，这个函数可以设定读取存储空间的哪一部分数据或者将数据存在存储空间的哪一部分，这里的存储空间是一个抽象概念，既可以表示HDF5文件里面内容，也可以表示内存申请的存储空间，这里我们分别对HDF5文件内容和内存申请的空间分别进行设定。实现代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * 从H5文件中读取矩阵数据，以column order存储数据</span><br><span class="line"> *</span><br><span class="line"> * filename: H5文件名</span><br><span class="line"> * dataset_name: 数据集名</span><br><span class="line"> * buffer: 数据内存存储处，大小为 num_rows * num_cols</span><br><span class="line"> * num_rows: 待读取的矩阵的行数</span><br><span class="line"> * num_cols: 待读取的矩阵的列数</span><br><span class="line"> * offset_x: 读取的数据在H5文件中的矩阵的x方向上的偏移 (第几行)</span><br><span class="line"> * offset_y: 读取的数据在H5文件中的矩阵的y方向上的偏移 (第几列)</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">int read_direct_f(char *file_name, char *dataset_name, double *buffer,</span><br><span class="line">                  int num_rows, int num_cols, int offset_x, int offset_y)</span><br><span class="line">&#123;</span><br><span class="line">    int i;</span><br><span class="line"></span><br><span class="line">    hid_t file_id, dataset_id;</span><br><span class="line">    hid_t dataspace_id, memspace_id;</span><br><span class="line">    herr_t status;</span><br><span class="line"></span><br><span class="line">    hsize_t dims_mem[1];</span><br><span class="line"></span><br><span class="line">    hsize_t offset[2];</span><br><span class="line">    hsize_t count[2];</span><br><span class="line">    hsize_t stride[2];</span><br><span class="line">    hsize_t block[2];</span><br><span class="line">    hsize_t offset_mem[1];</span><br><span class="line">    hsize_t count_mem[1];</span><br><span class="line">    hsize_t stride_mem[1];</span><br><span class="line">    hsize_t block_mem[1];</span><br><span class="line"></span><br><span class="line">    // open the hdf5 file and the dataset</span><br><span class="line">    file_id = H5Fopen(file_name, H5F_ACC_RDONLY, H5P_DEFAULT);</span><br><span class="line">    dataset_id = H5Dopen2(file_id, dataset_name, H5P_DEFAULT);</span><br><span class="line"></span><br><span class="line">    // get file dataspace</span><br><span class="line">    dataspace_id = H5Dget_space(dataset_id);</span><br><span class="line"></span><br><span class="line">    // create memory space</span><br><span class="line">    dims_mem[0] = num_rows;         // avoid numeric overflow</span><br><span class="line">    dims_mem[0] = dims_mem[0] * num_cols;</span><br><span class="line">    memspace_id = H5Screate_simple(1, dims_mem, NULL);</span><br><span class="line"></span><br><span class="line">    // specify size and shape of subset to read</span><br><span class="line">    offset[0] = offset_x;</span><br><span class="line">    offset[1] = offset_y;</span><br><span class="line">    count[0] = 1;</span><br><span class="line">    count[1] = num_cols;</span><br><span class="line">    stride[0] = 1;</span><br><span class="line">    stride[1] = 1;</span><br><span class="line">    block[0] = 1;</span><br><span class="line">    block[1] = 1;</span><br><span class="line">    offset_mem[0] = 0;</span><br><span class="line">    count_mem[0] = num_cols;</span><br><span class="line">    stride_mem[0] = num_rows;</span><br><span class="line">    block_mem[0] = 1;</span><br><span class="line"></span><br><span class="line">    for (i=0; i&lt;num_rows; i++) &#123;</span><br><span class="line">        offset[0] = offset_x + i;</span><br><span class="line">        offset_mem[0] = i;</span><br><span class="line"></span><br><span class="line">        // select subset from dataspace</span><br><span class="line">        status = H5Sselect_hyperslab(dataspace_id, H5S_SELECT_SET,</span><br><span class="line">                                     offset, stride, count, block);</span><br><span class="line">        if (status &lt; 0) &#123;</span><br><span class="line">            H5Eprint2(H5E_DEFAULT, NULL);</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        status = H5Sselect_hyperslab(memspace_id, H5S_SELECT_SET,</span><br><span class="line">                                     offset_mem, stride_mem,</span><br><span class="line">                                     count_mem, block_mem);</span><br><span class="line">        if (status &lt; 0) &#123;</span><br><span class="line">            H5Eprint2(H5E_DEFAULT, NULL);</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // read data</span><br><span class="line">        status = H5Dread(dataset_id, H5T_NATIVE_DOUBLE,</span><br><span class="line">                         memspace_id, dataspace_id,</span><br><span class="line">                         H5P_DEFAULT, buffer);</span><br><span class="line">        if (status &lt; 0) &#123;</span><br><span class="line">            H5Eprint2(H5E_DEFAULT, NULL);</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // close the resources</span><br><span class="line">    H5Sclose(memspace_id);</span><br><span class="line">    H5Sclose(dataspace_id);</span><br><span class="line">    H5Dclose(dataset_id);</span><br><span class="line">    H5Fclose(file_id);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基本实现思路就是每次就只读取HDF5文件中矩阵的一行，然后写入到内存空间中，每次读取都要用函数 <code>H5Sselect_hyperslab</code> 函数设定读取区域，同样，每次写入都要使用函数 <code>H5Sselect_hyperslab</code> 设定写入区域。这个实现思想参考了HDF5官方教程 <a target="_blank" rel="noopener" href="https://portal.hdfgroup.org/display/HDF5/Reading+From+or+Writing+To+a+Subset+of+a+Dataset">Reading From or Writing To a Subset of a Dataset</a>，教程中仅仅设定了文件的读取区域，没有设定写入区域。</p>
+<h3 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h3><p>这部分使用Cython来实现Python中调用前面所写的C语言代码，这部分代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">def read_direct_fortran(str file_name, str dataset_name,</span><br><span class="line">                        double[::1, :] data, int offset_x, int offset_y):</span><br><span class="line">    cdef int num_rows</span><br><span class="line">    cdef int num_cols</span><br><span class="line">    cdef bytes file_name_bytes = bytes(file_name, encoding=&#x27;utf-8&#x27;)</span><br><span class="line">    cdef bytes dataset_name_bytes = bytes(dataset_name, encoding=&#x27;utf-8&#x27;)</span><br><span class="line">    cdef int ret;</span><br><span class="line"></span><br><span class="line">    num_rows = data.shape[0]</span><br><span class="line">    num_cols = data.shape[1]</span><br><span class="line"></span><br><span class="line">    ret = read_direct_f(file_name_bytes, dataset_name_bytes, &amp;data[0, 0],</span><br><span class="line">                        num_rows, num_cols, offset_x, offset_y)</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HDF5/" rel="tag"># HDF5</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/07/15/LeetCode-7-Reverse-Integer/" rel="prev" title="LeetCode 7 - Reverse Integer">
+      <i class="fa fa-chevron-left"></i> LeetCode 7 - Reverse Integer
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/07/22/Weighted-Random-Sampling-With-Replacement/" rel="next" title="Weighted Random Sampling With Replacement">
+      Weighted Random Sampling With Replacement <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#C"><span class="nav-number">2.1.</span> <span class="nav-text">C</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python"><span class="nav-number">2.2.</span> <span class="nav-text">Python</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

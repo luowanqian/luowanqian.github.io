@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="IntroductionShell Snippets 列出目录里面文件名并进行排序在目录 train 里面有大量的图片 (扩展名为 png) 1234567891011$ ls -l train&#x2F; | headtotal 400000-rw-r--r--@ 1 luowanqian  staff  2455 10 19  2013 1.png-rw-r--r--@ 1 luowanqian  st">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell Snippets Part 1">
+<meta property="og:url" content="http://example.com/2018/04/23/Shell-Snippets-Part-1/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="IntroductionShell Snippets 列出目录里面文件名并进行排序在目录 train 里面有大量的图片 (扩展名为 png) 1234567891011$ ls -l train&#x2F; | headtotal 400000-rw-r--r--@ 1 luowanqian  staff  2455 10 19  2013 1.png-rw-r--r--@ 1 luowanqian  st">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-04-23T04:40:43.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.180Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="编程语言">
+<meta property="article:tag" content="Shell">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2018/04/23/Shell-Snippets-Part-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Shell Snippets Part 1 | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/04/23/Shell-Snippets-Part-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Shell Snippets Part 1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-04-23 12:40:43" itemprop="dateCreated datePublished" datetime="2018-04-23T12:40:43+08:00">2018-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Shell Snippets</p>
+<h2 id="列出目录里面文件名并进行排序"><a href="#列出目录里面文件名并进行排序" class="headerlink" title="列出目录里面文件名并进行排序"></a>列出目录里面文件名并进行排序</h2><p>在目录 <code>train</code> 里面有大量的图片 (扩展名为 png)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l train/ | head</span><br><span class="line">total 400000</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2455 10 19  2013 1.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2101 10 19  2013 10.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2466 10 19  2013 100.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2171 10 19  2013 1000.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2031 10 19  2013 10000.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2051 10 19  2013 10001.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2317 10 19  2013 10002.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2511 10 19  2013 10003.png</span><br><span class="line">-rw-r--r--@ 1 luowanqian  staff  2460 10 19  2013 10004.png</span><br></pre></td></tr></table></figure>
+
+<p>提取该目录下的所有图片的文件名并进行排序</p>
+<h3 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l train/ | grep &quot;.png&quot; | tr -s &#x27; &#x27; | cut -d &#x27; &#x27; -f 9 | sort -n &gt; list.txt</span><br><span class="line">$ head list.txt</span><br><span class="line">1.png</span><br><span class="line">2.png</span><br><span class="line">3.png</span><br><span class="line">4.png</span><br><span class="line">5.png</span><br><span class="line">6.png</span><br><span class="line">7.png</span><br><span class="line">8.png</span><br><span class="line">9.png</span><br><span class="line">10.png</span><br></pre></td></tr></table></figure>
+
+<p>其中</p>
+<ul>
+<li><code>tr -s &#39; &#39;</code> 是为了将多个space压缩成一个space</li>
+<li><code>cut -d &#39; &#39; -f 9</code> 是为了取出最后一列的文件名</li>
+<li><code>sort -n</code> 是将文件进行排序，由于文件名里面有数字，所以用<code>-n</code>选项</li>
+</ul>
+<h3 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ ls train/ | sort -n &gt; list.txt</span><br><span class="line">$ head list.txt</span><br><span class="line">1.png</span><br><span class="line">2.png</span><br><span class="line">3.png</span><br><span class="line">4.png</span><br><span class="line">5.png</span><br><span class="line">6.png</span><br><span class="line">7.png</span><br><span class="line">8.png</span><br><span class="line">9.png</span><br><span class="line">10.png</span><br></pre></td></tr></table></figure>
+
+<h2 id="pip升级所有包"><a href="#pip升级所有包" class="headerlink" title="pip升级所有包"></a>pip升级所有包</h2><p>pip 升级所有Python包，命令如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 list --outdated --format=freeze | cut -d = -f 1 | xargs pip3 install -U&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>pip3</code> 可以根据 pip 版本替换。</p>
+<h2 id="rsync断点续传"><a href="#rsync断点续传" class="headerlink" title="rsync断点续传"></a>rsync断点续传</h2><p>主要使用的是 rsync 的 <code>-P</code> 的选项，传输命令写为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rsync -P ubuntu/ubuntu-16.04.4-desktop-amd64.iso lab217server:/home/luowanqian/Downloads/</span><br></pre></td></tr></table></figure>
+
+<p>如果传输过程中网络中断或者使用了 <code>Ctrl + C</code>，此时可以再次使用该命令进行断点续传。</p>
+<p><strong>参考：</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.ostechnix.com/how-to-resume-partially-downloaded-or-transferred-files-using-rsync/">How To Resume Partially Transferred Files Over SSH Using Rsync</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag"># 编程语言</a>
+              <a href="/tags/Shell/" rel="tag"># Shell</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/04/23/ROC%E6%9B%B2%E7%BA%BF%E7%BB%98%E5%88%B6/" rel="prev" title="ROC曲线绘制">
+      <i class="fa fa-chevron-left"></i> ROC曲线绘制
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/04/25/Non-Maximum-Suppression/" rel="next" title="Non-Maximum Suppression">
+      Non-Maximum Suppression <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%97%E5%87%BA%E7%9B%AE%E5%BD%95%E9%87%8C%E9%9D%A2%E6%96%87%E4%BB%B6%E5%90%8D%E5%B9%B6%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">列出目录里面文件名并进行排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%881"><span class="nav-number">2.1.</span> <span class="nav-text">方案1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%882"><span class="nav-number">2.2.</span> <span class="nav-text">方案2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pip%E5%8D%87%E7%BA%A7%E6%89%80%E6%9C%89%E5%8C%85"><span class="nav-number">3.</span> <span class="nav-text">pip升级所有包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsync%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0"><span class="nav-number">4.</span> <span class="nav-text">rsync断点续传</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要是记录一些h5py的使用方法。 Note: 如果没有特别说明，np 指的是 numpy，代表导入的 numpy 1import numpy as np  存储浮点数采用单精度浮点数在HDF5文件中存储浮点数时，可以选择单精度浮点数和双精度浮点数，常见是用单精度浮点数来存储浮点数，相比于双精度浮点数，单精度浮点数存储空间为双精度浮点数的一半，这样可以缩小一半的存储空间。不同于文件存储，在内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="H5py备忘录">
+<meta property="og:url" content="http://example.com/2018/04/27/H5py%E5%A4%87%E5%BF%98%E5%BD%95/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="本文主要是记录一些h5py的使用方法。 Note: 如果没有特别说明，np 指的是 numpy，代表导入的 numpy 1import numpy as np  存储浮点数采用单精度浮点数在HDF5文件中存储浮点数时，可以选择单精度浮点数和双精度浮点数，常见是用单精度浮点数来存储浮点数，相比于双精度浮点数，单精度浮点数存储空间为双精度浮点数的一半，这样可以缩小一半的存储空间。不同于文件存储，在内存">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-04-27T09:32:59.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.162Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="HDF5">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2018/04/27/H5py%E5%A4%87%E5%BF%98%E5%BD%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>H5py备忘录 | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/04/27/H5py%E5%A4%87%E5%BF%98%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          H5py备忘录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-04-27 17:32:59" itemprop="dateCreated datePublished" datetime="2018-04-27T17:32:59+08:00">2018-04-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要是记录一些h5py的使用方法。</p>
+<p><strong>Note:</strong> 如果没有特别说明，<code>np</code> 指的是 <code>numpy</code>，代表导入的 numpy</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+
+<h2 id="存储浮点数采用单精度浮点数"><a href="#存储浮点数采用单精度浮点数" class="headerlink" title="存储浮点数采用单精度浮点数"></a>存储浮点数采用单精度浮点数</h2><p>在HDF5文件中存储浮点数时，可以选择单精度浮点数和双精度浮点数，常见是用单精度浮点数来存储浮点数，相比于双精度浮点数，单精度浮点数存储空间为双精度浮点数的一半，这样可以缩小一半的存储空间。不同于文件存储，在内存中需要使用双精度浮点数来保证计算的准确性，因此一个通常的操作是，在内存中使用双精度浮点数，然后存储到HDF5文件时，使用单精度浮点数，两者的使用只需要进行数据类型转换。</p>
+<p>在内存中，我们使用Numpy创建一个数组，数据类型为双精度浮点数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata = np.ones((<span class="number">100</span>, <span class="number">1000</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata.shape</span><br><span class="line">(<span class="number">100</span>, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>直接使用赋值方式将数组存储到HDF5文件中，存储的浮点数为双精度浮点数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> h5py.File(<span class="string">&#x27;big1.hdf5&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f1:</span><br><span class="line"><span class="meta">... </span>    f1[<span class="string">&#x27;big&#x27;</span>] = bigdata</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1 = h5py.File(<span class="string">&#x27;big1.hdf5&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1[<span class="string">&#x27;big&#x27;</span>].dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>文件大小为 783K</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span> -lh big1.hdf5</span></span><br><span class="line">-rw-r--r--  1 luowanqian  staff   783K  4 29 10:44 big1.hdf5</span><br></pre></td></tr></table></figure>
+
+<p>我们可以使用 <code>create_dataset</code> 函数来指定存储单精度浮点数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> h5py.File(<span class="string">&#x27;big2.hdf5&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f2:</span><br><span class="line"><span class="meta">... </span>    f2.create_dataset(<span class="string">&#x27;big&#x27;</span>, data=bigdata, dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f2 = h5py.File(<span class="string">&#x27;big2.hdf5&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f2[<span class="string">&#x27;big&#x27;</span>].dtype</span><br><span class="line">dtype(<span class="string">&#x27;float32&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>文件大小为 393K</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span> -lh big2.hdf5</span></span><br><span class="line">-rw-r--r--  1 luowanqian  staff   393K  4 29 11:02 big2.hdf5</span><br></pre></td></tr></table></figure>
+
+<h2 id="读取数据时进行数据转换"><a href="#读取数据时进行数据转换" class="headerlink" title="读取数据时进行数据转换"></a>读取数据时进行数据转换</h2><p>假设有个存储单精度浮点数的HDF5文件，我们想将数据读入到内存时是双精度浮点数。HDF5文件的数据如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> h5py</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bigdata = np.ones((<span class="number">100</span>, <span class="number">1000</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> h5py.File(<span class="string">&#x27;big.hdf5&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line"><span class="meta">... </span>    f.create_dataset(<span class="string">&#x27;big&#x27;</span>, data=bigdata, dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f = h5py.File(<span class="string">&#x27;big.hdf5&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset = f[<span class="string">&#x27;big&#x27;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float32&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.shape</span><br><span class="line">(<span class="number">100</span>, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h3><p>使用 <code>np.empty</code> 创建一个空数组，然后使用 <code>read_direct</code> 函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = np.empty((<span class="number">100</span>, <span class="number">1000</span>), dtype=np.float64)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.read_direct(out)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如果不想读取全部数据，可以设置函数 <code>read_direct</code> 的 <code>source_sel</code> 和 <code>dest_sel</code> 参数。假设要将 <code>dset[0, :]</code> 的数据读入到 <code>out[50, :]</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = np.empty((<span class="number">100</span>, <span class="number">1000</span>), dtype=np.float64)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.read_direct(out, source_sel=np.s_[<span class="number">0</span>, :], dest_sel=np.s_[<span class="number">50</span>, :])</span><br></pre></td></tr></table></figure>
+
+<p>其中使用 <code>np.s_</code> 返回是 Numpy 的 <code>slice</code> 对象，该对象包含索引信息。如果省略 <code>dset_sel</code> 参数，则采用类似 Numpy 的广播规则进行赋值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = np.empty((<span class="number">100</span>, <span class="number">50</span>), dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dset.read_direct(out, source_sel=np.s_[:, <span class="number">0</span>:<span class="number">50</span>])</span><br></pre></td></tr></table></figure>
+
+<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><p>如果要读取多次同样大小的数据时，使用 <code>read_direct</code> 可以节省很多时间，因为只需要申请一次空间，后面数据读入直接覆盖到这个空间。做一个Benchmark：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> h5py</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> timeit <span class="keyword">import</span> timeit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">filename = <span class="string">&#x27;test.hdf5&#x27;</span></span><br><span class="line">n = <span class="number">10000</span></span><br><span class="line"></span><br><span class="line">f = h5py.File(filename, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">dset = f.create_dataset(<span class="string">&#x27;perftest&#x27;</span>, (n, n), dtype=np.float32)</span><br><span class="line">dset[:] = np.random.random(n)</span><br><span class="line">out = np.empty((n, <span class="number">500</span>), dtype=np.float32)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">time_simple</span>():</span><br><span class="line">    dset[:, <span class="number">0</span>:<span class="number">500</span>].mean(axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">time_direct</span>():</span><br><span class="line">    dset.read_direct(out, np.s_[:, <span class="number">0</span>:<span class="number">500</span>])</span><br><span class="line">    out.mean(axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Time simple: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(timeit(time_simple, number=<span class="number">500</span>)))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Time direct: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(timeit(time_direct, number=<span class="number">500</span>)))</span><br><span class="line"></span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+
+<p>运行结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Time simple: 41.33699381200131</span><br><span class="line">Time direct: 39.005692337988876</span><br></pre></td></tr></table></figure>
+
+<h3 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h3><p>使用 <code>Dataset.astype</code> 这个上下文管理器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> dset.astype(<span class="string">&#x27;float64&#x27;</span>):</span><br><span class="line"><span class="meta">... </span>    out = dset[...]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.shape</span><br><span class="line">(<span class="number">100</span>, <span class="number">1000</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>当然，也适合读取部分数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> dset.astype(<span class="string">&#x27;float64&#x27;</span>):</span><br><span class="line"><span class="meta">... </span>    out = dset[<span class="number">0</span>, :]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out.dtype</span><br><span class="line">dtype(<span class="string">&#x27;float64&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/HDF5/" rel="tag"># HDF5</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/04/25/Non-Maximum-Suppression/" rel="prev" title="Non-Maximum Suppression">
+      <i class="fa fa-chevron-left"></i> Non-Maximum Suppression
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/04/28/%E5%9B%BE%E5%83%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E6%88%90LMDB%E6%96%87%E4%BB%B6/" rel="next" title="图像数据转换成LMDB文件">
+      图像数据转换成LMDB文件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E6%B5%AE%E7%82%B9%E6%95%B0%E9%87%87%E7%94%A8%E5%8D%95%E7%B2%BE%E5%BA%A6%E6%B5%AE%E7%82%B9%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">存储浮点数采用单精度浮点数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E6%97%B6%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2"><span class="nav-number">2.</span> <span class="nav-text">读取数据时进行数据转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%881"><span class="nav-number">2.1.</span> <span class="nav-text">方案1</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF"><span class="nav-number">2.1.1.</span> <span class="nav-text">优势</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%882"><span class="nav-number">2.2.</span> <span class="nav-text">方案2</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

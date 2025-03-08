@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要记录一些CMake的常见用法，例子代码都可以在CMakeDemos这里找到。 单个源文件 代码：Demo1  目录里面只有一个源文件，这个最简单的情况。目录结构如下所示 1234Demo1├── CMakeLists.txt├── build└── main.cpp  文件 CMakeLists.txt 内容如下 12345678# CMake 最低版本号要求cmake_minimum_r">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CMake使用笔记">
+<meta property="og:url" content="http://example.com/2018/04/03/CMake%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="本文主要记录一些CMake的常见用法，例子代码都可以在CMakeDemos这里找到。 单个源文件 代码：Demo1  目录里面只有一个源文件，这个最简单的情况。目录结构如下所示 1234Demo1├── CMakeLists.txt├── build└── main.cpp  文件 CMakeLists.txt 内容如下 12345678# CMake 最低版本号要求cmake_minimum_r">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2018/04/03/CMake%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/ccmake.png">
+<meta property="article:published_time" content="2018-04-03T00:24:31.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.159Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="Makefile">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2018/04/03/CMake%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/ccmake.png">
+
+<link rel="canonical" href="http://example.com/2018/04/03/CMake%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>CMake使用笔记 | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/04/03/CMake%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CMake使用笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-04-03 08:24:31" itemprop="dateCreated datePublished" datetime="2018-04-03T08:24:31+08:00">2018-04-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要记录一些CMake的常见用法，例子代码都可以在<a target="_blank" rel="noopener" href="https://github.com/luowanqian/CMakeDemos">CMakeDemos</a>这里找到。</p>
+<h2 id="单个源文件"><a href="#单个源文件" class="headerlink" title="单个源文件"></a>单个源文件</h2><blockquote>
+<p>代码：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/CMakeDemos/tree/master/Demo1">Demo1</a></p>
+</blockquote>
+<p>目录里面只有一个源文件，这个最简单的情况。目录结构如下所示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Demo1</span><br><span class="line">├── CMakeLists.txt</span><br><span class="line">├── build</span><br><span class="line">└── main.cpp</span><br></pre></td></tr></table></figure>
+
+<p>文件 CMakeLists.txt 内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># CMake 最低版本号要求</span><br><span class="line">cmake_minimum_required(VERSION 3.9)</span><br><span class="line"></span><br><span class="line"># 项目信息</span><br><span class="line">project(Demo1)</span><br><span class="line"></span><br><span class="line"># 指定生成目标</span><br><span class="line">add_executable(Demo main.cpp)</span><br></pre></td></tr></table></figure>
+
+<p>符号<code>#</code>后面的内容被认为是注释。由<code>add_executable</code>知道，最终编译出的可执行文件是 Demo。</p>
+<h3 id="编译项目"><a href="#编译项目" class="headerlink" title="编译项目"></a>编译项目</h3><p>如果在源码目录中直接使用命令<code>cmake .</code>生成Makefile文件的话，会发现目录多出很多文件，这样会导致目录内容很乱，通常做法是在一个目录里面生成CMake的临时文件，这里选择在目录 build 中生成。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">➜  Demo1 git:(master) cd build</span><br><span class="line">➜  build git:(master) cmake ..</span><br><span class="line">-- The C compiler identification is AppleClang 8.0.0.8000042</span><br><span class="line">-- The CXX compiler identification is AppleClang 8.0.0.8000042</span><br><span class="line">-- Check for working C compiler: /Library/Developer/CommandLineTools/usr/bin/cc</span><br><span class="line">-- Check for working C compiler: /Library/Developer/CommandLineTools/usr/bin/cc -- works</span><br><span class="line">-- Detecting C compiler ABI info</span><br><span class="line">-- Detecting C compiler ABI info - done</span><br><span class="line">-- Detecting C compile features</span><br><span class="line">-- Detecting C compile features - done</span><br><span class="line">-- Check for working CXX compiler: /Library/Developer/CommandLineTools/usr/bin/c++</span><br><span class="line">-- Check for working CXX compiler: /Library/Developer/CommandLineTools/usr/bin/c++ -- works</span><br><span class="line">-- Detecting CXX compiler ABI info</span><br><span class="line">-- Detecting CXX compiler ABI info - done</span><br><span class="line">-- Detecting CXX compile features</span><br><span class="line">-- Detecting CXX compile features - done</span><br><span class="line">-- Configuring done</span><br><span class="line">-- Generating done</span><br><span class="line">-- Build files have been written to: /Users/luowanqian/Documents/Project/CMakeDemos/Demo1/build</span><br><span class="line">➜  build git:(master) make</span><br><span class="line">Scanning dependencies of target Demo</span><br><span class="line">[ 50%] Building CXX object CMakeFiles/Demo.dir/main.cpp.o</span><br><span class="line">[100%] Linking CXX executable Demo</span><br><span class="line">[100%] Built target Demo</span><br><span class="line">➜  build git:(master) ./Demo</span><br><span class="line">Sqrt(2) is 1.41421</span><br><span class="line">➜  build git:(master)</span><br></pre></td></tr></table></figure>
+
+<p>进入<code>build</code>目录，然后使用命令<code>cmake ..</code>生成Makefile文件，然后使用<code>make</code>命令编译得到可执行文件<code>Demo</code>。</p>
+<h2 id="同一个目录，多个源文件"><a href="#同一个目录，多个源文件" class="headerlink" title="同一个目录，多个源文件"></a>同一个目录，多个源文件</h2><blockquote>
+<p>代码：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/CMakeDemos/tree/master/Demo2">Demo2</a></p>
+</blockquote>
+<p>在同一个目录里面，有个多个源文件，此时目录结构如下所示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Demo2</span><br><span class="line">├── CMakeLists.txt</span><br><span class="line">├── MathFunctions.cpp</span><br><span class="line">├── MathFunctions.h</span><br><span class="line">├── build</span><br><span class="line">└── main.cpp</span><br></pre></td></tr></table></figure>
+
+<p>此时 MathFunctions.cpp 里面实现了一个函数 mysqrt，main.cpp 会调用这个函数。此时文件 CMakeLists.txt 的内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># CMake 最低版本号要求</span><br><span class="line">cmake_minimum_required(VERSION 3.9)</span><br><span class="line"></span><br><span class="line"># 项目信息</span><br><span class="line">project(Demo2)</span><br><span class="line"></span><br><span class="line"># 指定生成目标</span><br><span class="line">add_executable(Demo main.cpp MathFunctions.cpp)</span><br></pre></td></tr></table></figure>
+
+<p>大致内容同前一节的所写的那样，只不过<code>add_executable</code>里面多了 MathFunctions.cpp 项。</p>
+<h2 id="多个目录，多个源文件"><a href="#多个目录，多个源文件" class="headerlink" title="多个目录，多个源文件"></a>多个目录，多个源文件</h2><blockquote>
+<p>代码：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/CMakeDemos/tree/master/Demo3">Demo3</a></p>
+</blockquote>
+<p>有时候我们不想把所有源文件放到同一个目录里面，想根据实现的功能放到不同的目录中，前面的 MathFunctions.cpp 实现了数学函数功能，因此这里把它放入 Math 目录中，此时目录结构如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Demo3</span><br><span class="line">├── CMakeLists.txt</span><br><span class="line">├── build</span><br><span class="line">├── main.cpp</span><br><span class="line">└── math</span><br><span class="line">    ├── CMakeLists.txt</span><br><span class="line">    ├── MathFunctions.cpp</span><br><span class="line">    └── MathFunctions.h</span><br></pre></td></tr></table></figure>
+
+<p>对于这种情况，需要分别在项目根目录 Demo3 和 math 目录中分别编写 CMakeLists.txt 文件。在项目编译时，现将 math 目录里的文件编译成静态库再链接到程序 Demo 中。</p>
+<h3 id="根目录CMakeLists-txt"><a href="#根目录CMakeLists-txt" class="headerlink" title="根目录CMakeLists.txt"></a>根目录CMakeLists.txt</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># CMake 最低版本号要求</span><br><span class="line">cmake_minimum_required(VERSION 3.9)</span><br><span class="line"></span><br><span class="line"># 项目信息</span><br><span class="line">project(Demo3)</span><br><span class="line"></span><br><span class="line"># 添加 math 子目录</span><br><span class="line">add_subdirectory(math)</span><br><span class="line"></span><br><span class="line"># 添加 math 到头文件搜索路径</span><br><span class="line">include_directories(math)</span><br><span class="line"></span><br><span class="line"># 指定生成目标</span><br><span class="line">add_executable(Demo main.cpp)</span><br><span class="line"></span><br><span class="line"># 添加链接库</span><br><span class="line">target_link_libraries(Demo MathFunctions)</span><br></pre></td></tr></table></figure>
+
+<p>文件的使用命令<code>add_subdirectory</code>添加子目录 math，这个命令很类似Makefile中的<code>include</code>命令，使用该命令后，CMake会处理 math 目录下的 CMakeLists.txt。这里还用了命令<code>include_directories</code>，主要是文件 main.cpp 会调用头文件 MathFunctions.h。链接静态库使用命令<code>target_link_libraries</code>，其中 MathFunctions 是静态库的名称，定义在 math 目录的 CMakeLists.txt 中。</p>
+<h3 id="math目录CMakeLists-txt"><a href="#math目录CMakeLists-txt" class="headerlink" title="math目录CMakeLists.txt"></a>math目录CMakeLists.txt</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add_library(MathFunctions MathFunctions.cpp)</span><br></pre></td></tr></table></figure>
+
+<p>子目录的 CMakeLists.txt 文件内容如上，使用命令<code>add_library</code>命令将本目录的源文件编译为静态链接库，名称为 MathFunctions。</p>
+<h2 id="自定义编译选项"><a href="#自定义编译选项" class="headerlink" title="自定义编译选项"></a>自定义编译选项</h2><blockquote>
+<p>代码：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/CMakeDemos/tree/master/Demo4">Demo4</a></p>
+</blockquote>
+<p>CMake可以项目设置编译选项，例如可以将 MathFunctions 库设为一个可选的库，如果该选项为 <code>ON</code>，则使用该库中的函数来进行运算，否则使用标准库的数学函数进行运算。首先看看项目目录的结构</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Demo4</span><br><span class="line">├── CMakeLists.txt</span><br><span class="line">├── build</span><br><span class="line">├── config.h.in</span><br><span class="line">├── main.cpp</span><br><span class="line">└── math</span><br><span class="line">    ├── CMakeLists.txt</span><br><span class="line">    ├── MathFunctions.cpp</span><br><span class="line">    └── MathFunctions.h</span><br></pre></td></tr></table></figure>
+
+<p>目录中比上一节的目录结构中多了一个文件 config.h.in，CMake会将文件 config.h.in 转换成 config.h，这个头文件主要是定义了一些宏，源文件可以包含这个头文件，根据里面调用的宏来确定是否调用某个功能，所谓编译选项说白就是一堆宏。上面描述可能有点抽象，下面详细介绍各个文件内容</p>
+<h3 id="根目录CMakeLists-txt-1"><a href="#根目录CMakeLists-txt-1" class="headerlink" title="根目录CMakeLists.txt"></a>根目录CMakeLists.txt</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># CMake 最低版本号要求</span><br><span class="line">cmake_minimum_required(VERSION 3.9)</span><br><span class="line"></span><br><span class="line"># 项目信息</span><br><span class="line">project(Demo3)</span><br><span class="line"></span><br><span class="line"># 是否使用 MathFunctions 库选项</span><br><span class="line">option(USE_MYMATH &quot;Use provided math implementation&quot; ON)</span><br><span class="line"></span><br><span class="line"># 生成一个配置头文件</span><br><span class="line">configure_file(</span><br><span class="line">    &quot;$&#123;PROJECT_SOURCE_DIR&#125;/config.h.in&quot;</span><br><span class="line">    &quot;$&#123;PROJECT_BINARY_DIR&#125;/config.h&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"># 是否加入 MathFunctions 库</span><br><span class="line">if (USE_MYMATH)</span><br><span class="line">    include_directories(&quot;$&#123;PROJECT_SOURCE_DIR&#125;/math&quot;)</span><br><span class="line">    add_subdirectory(math)</span><br><span class="line">    set(EXTRA_LIBS $&#123;EXTRA_LIBS&#125; MathFunctions)</span><br><span class="line">endif(USE_MYMATH)</span><br><span class="line"></span><br><span class="line"># 使得 CMake 可以找到生成的 config.h</span><br><span class="line">include_directories(&quot;$&#123;PROJECT_BINARY_DIR&#125;&quot;)</span><br><span class="line"></span><br><span class="line"># 指定生成目标</span><br><span class="line">add_executable(Demo main.cpp)</span><br><span class="line"></span><br><span class="line"># 添加链接库</span><br><span class="line">target_link_libraries(Demo $&#123;EXTRA_LIBS&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>文件中<code>configure_file</code>命令用于生成配置头文件 config.h，这个头文件由CMake从 config.h.in 中生成，config.h.in 这个文件里面有用户自己定义的编译选项，其中 <code>USE_MYMATH</code> 就是定义在文件 <code>config.h.in</code> 中，这里使用命令 <code>option</code> 默认开启这个选项，然后后面的 if 语句根据 <code>USE_MYMATH</code> 变量的值来决定是否使用我们自己的编写的数学函数库，由于 <code>USE_MYATH</code> 为 ON，所以默认是使用我们自己的库。</p>
+<h3 id="main-cpp"><a href="#main-cpp" class="headerlink" title="main.cpp"></a>main.cpp</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;cmath&gt;</span><br><span class="line"></span><br><span class="line">#include &quot;config.h&quot;</span><br><span class="line"></span><br><span class="line">#ifdef USE_MYMATH</span><br><span class="line">#include &quot;MathFunctions.h&quot;</span><br><span class="line">#endif</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">#ifdef USE_MYMATH</span><br><span class="line">    cout &lt;&lt; &quot;Now we use our own Math library.&quot; &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; &quot;Sqrt(2) is &quot; &lt;&lt; mysqrt(2) &lt;&lt; endl;</span><br><span class="line">#else</span><br><span class="line">    cout &lt;&lt; &quot;Now we use the standard libary.&quot; &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; &quot;Sqrt(2) is &quot; &lt;&lt; sqrt(2) &lt;&lt; endl;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>源文件中可以使用我们定义 <code>USE_MYMATH</code> 来决定是否调用自己编写的库，要使用这个宏，需要包含 config.h 这个头文件，这个头文件是CMake根据 config.h.in 生成。</p>
+<h3 id="config-h-in"><a href="#config-h-in" class="headerlink" title="config.h.in"></a>config.h.in</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#cmakedefine USE_MYMATH</span><br></pre></td></tr></table></figure>
+
+<p>编译选项 <code>USE_MYMATH</code> 定义在这个文件中。</p>
+<h3 id="编译项目-1"><a href="#编译项目-1" class="headerlink" title="编译项目"></a>编译项目</h3><p>现在编译这个项目，为了便于交互式的修改编译选项，可以使用 <code>ccmake</code> 命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">➜  Demo4 git:(master) ✗ ll</span><br><span class="line">total 24</span><br><span class="line">-rw-r--r--  1 luowanqian  staff   722B  4  3 10:07 CMakeLists.txt</span><br><span class="line">drwxr-xr-x  2 luowanqian  staff    68B  4  3 10:11 build</span><br><span class="line">-rw-r--r--  1 luowanqian  staff    23B  4  2 08:46 config.h.in</span><br><span class="line">-rw-r--r--  1 luowanqian  staff   398B  4  2 08:54 main.cpp</span><br><span class="line">drwxr-xr-x  5 luowanqian  staff   170B  4  2 08:44 math</span><br><span class="line">➜  Demo4 git:(master) ✗ cd build</span><br><span class="line">➜  build git:(master) ✗ cmake ..</span><br><span class="line">-- The C compiler identification is AppleClang 8.0.0.8000042</span><br><span class="line">-- The CXX compiler identification is AppleClang 8.0.0.8000042</span><br><span class="line">-- Check for working C compiler: /Library/Developer/CommandLineTools/usr/bin/cc</span><br><span class="line">-- Check for working C compiler: /Library/Developer/CommandLineTools/usr/bin/cc -- works</span><br><span class="line">-- Detecting C compiler ABI info</span><br><span class="line">-- Detecting C compiler ABI info - done</span><br><span class="line">-- Detecting C compile features</span><br><span class="line">-- Detecting C compile features - done</span><br><span class="line">-- Check for working CXX compiler: /Library/Developer/CommandLineTools/usr/bin/c++</span><br><span class="line">-- Check for working CXX compiler: /Library/Developer/CommandLineTools/usr/bin/c++ -- works</span><br><span class="line">-- Detecting CXX compiler ABI info</span><br><span class="line">-- Detecting CXX compiler ABI info - done</span><br><span class="line">-- Detecting CXX compile features</span><br><span class="line">-- Detecting CXX compile features - done</span><br><span class="line">-- Configuring done</span><br><span class="line">-- Generating done</span><br><span class="line">-- Build files have been written to: /Users/luowanqian/Documents/Project/CMakeDemos/Demo4/build</span><br><span class="line">➜  build git:(master) ✗ ccmake ..</span><br></pre></td></tr></table></figure>
+
+<img src="/2018/04/03/CMake%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/ccmake.png" class="" title="ccmake">
+
+<p>从中可以找到刚刚定义的<code>USE_MYMATH</code>选项，按键盘的方向键可以在不同的选项窗口间跳转，按下<code>enter</code>键可以修改该选项。修改完成后可以按下<code>c</code>键完成配置，之后再按<code>g</code>键确认生成 Makefile。下面分别展示将<code>USE_MYMATH</code>设为<code>ON</code>和<code>OFF</code>得到的结果：</p>
+<p><strong>USE_MYMATH 设为 ON</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">➜  build git:(master) ✗ make</span><br><span class="line">Scanning dependencies of target MathFunctions</span><br><span class="line">[ 25%] Building CXX object math/CMakeFiles/MathFunctions.dir/MathFunctions.cpp.o</span><br><span class="line">[ 50%] Linking CXX static library libMathFunctions.a</span><br><span class="line">[ 50%] Built target MathFunctions</span><br><span class="line">Scanning dependencies of target Demo</span><br><span class="line">[ 75%] Building CXX object CMakeFiles/Demo.dir/main.cpp.o</span><br><span class="line">[100%] Linking CXX executable Demo</span><br><span class="line">[100%] Built target Demo</span><br><span class="line">➜  build git:(master) ✗ ./Demo</span><br><span class="line">Now we use our own Math library.</span><br><span class="line">Sqrt(2) is 1.41421</span><br><span class="line">➜  build git:(master) ✗</span><br></pre></td></tr></table></figure>
+
+<p><strong>USE_MYMATH 设为 OFF</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜  build git:(master) ✗ make</span><br><span class="line">Scanning dependencies of target Demo</span><br><span class="line">[ 50%] Building CXX object CMakeFiles/Demo.dir/main.cpp.o</span><br><span class="line">[100%] Linking CXX executable Demo</span><br><span class="line">[100%] Built target Demo</span><br><span class="line">➜  build git:(master) ✗ ./Demo</span><br><span class="line">Now we use the standard libary.</span><br><span class="line">Sqrt(2) is 1.41421</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="http://www.hahack.com/codes/cmake/">CMake入门实战</a></li>
+<li><a target="_blank" rel="noopener" href="https://cmake.org/cmake-tutorial/">CMake Tutorial</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Makefile/" rel="tag"># Makefile</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/03/30/LeetCode-167-Two-Sum-II-Input-array-is-sorted/" rel="prev" title="LeetCode 167 - Two Sum II - Input array is sorted">
+      <i class="fa fa-chevron-left"></i> LeetCode 167 - Two Sum II - Input array is sorted
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/04/03/LeetCode-191-Number-of-1-Bits/" rel="next" title="LeetCode 191 - Number of 1 Bits">
+      LeetCode 191 - Number of 1 Bits <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%B8%AA%E6%BA%90%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">单个源文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.1.</span> <span class="nav-text">编译项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E4%B8%80%E4%B8%AA%E7%9B%AE%E5%BD%95%EF%BC%8C%E5%A4%9A%E4%B8%AA%E6%BA%90%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">同一个目录，多个源文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E7%9B%AE%E5%BD%95%EF%BC%8C%E5%A4%9A%E4%B8%AA%E6%BA%90%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">多个目录，多个源文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E7%9B%AE%E5%BD%95CMakeLists-txt"><span class="nav-number">3.1.</span> <span class="nav-text">根目录CMakeLists.txt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#math%E7%9B%AE%E5%BD%95CMakeLists-txt"><span class="nav-number">3.2.</span> <span class="nav-text">math目录CMakeLists.txt</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9"><span class="nav-number">4.</span> <span class="nav-text">自定义编译选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E7%9B%AE%E5%BD%95CMakeLists-txt-1"><span class="nav-number">4.1.</span> <span class="nav-text">根目录CMakeLists.txt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#main-cpp"><span class="nav-number">4.2.</span> <span class="nav-text">main.cpp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config-h-in"><span class="nav-number">4.3.</span> <span class="nav-text">config.h.in</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E9%A1%B9%E7%9B%AE-1"><span class="nav-number">4.4.</span> <span class="nav-text">编译项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

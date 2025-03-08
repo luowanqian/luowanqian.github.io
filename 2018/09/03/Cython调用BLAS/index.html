@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="介绍看本文之前建议看文章”Typed Memoryviews“，该文章主要介绍的是Memoryviews，使用Memoryviews可以直接访问Numpy数组的memory buffer，直接操作Numpy数组的数据，同时是连接C数组与Numpy数组之间的桥梁。相关代码在：CythonDemos&#x2F;Demo1 BLASBLAS，全称Basic Linear Algebra Subprogr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cython调用BLAS">
+<meta property="og:url" content="http://example.com/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="介绍看本文之前建议看文章”Typed Memoryviews“，该文章主要介绍的是Memoryviews，使用Memoryviews可以直接访问Numpy数组的memory buffer，直接操作Numpy数组的数据，同时是连接C数组与Numpy数组之间的桥梁。相关代码在：CythonDemos&#x2F;Demo1 BLASBLAS，全称Basic Linear Algebra Subprogr">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-09-03T15:21:59.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.162Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Cython">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Cython调用BLAS | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/09/03/Cython%E8%B0%83%E7%94%A8BLAS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Cython调用BLAS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-09-03 23:21:59" itemprop="dateCreated datePublished" datetime="2018-09-03T23:21:59+08:00">2018-09-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>看本文之前建议看文章”<a target="_blank" rel="noopener" href="http://docs.cython.org/en/latest/src/userguide/memoryviews.html">Typed Memoryviews</a>“，该文章主要介绍的是<code>Memoryviews</code>，使用<code>Memoryviews</code>可以直接访问Numpy数组的memory buffer，直接操作Numpy数组的数据，同时是连接C数组与Numpy数组之间的桥梁。相关代码在：<a target="_blank" rel="noopener" href="https://github.com/luowanqian/CythonDemos/tree/master/Demo1">CythonDemos&#x2F;Demo1</a></p>
+<h2 id="BLAS"><a href="#BLAS" class="headerlink" title="BLAS"></a>BLAS</h2><p><a target="_blank" rel="noopener" href="http://www.netlib.org/blas/">BLAS</a>，全称Basic Linear Algebra Subprograms，即基础线性代数子程序库，里面有大量已经编写好的关于线性代数运算的程序。BLAS库的API分三大类，分别为<code>Level 1</code>、<code>Level 2</code>以及<code>Level 3</code>。</p>
+<ul>
+<li>Level 1: 函数处理单一向量的线性运算以及两个向量的二元运算</li>
+<li>Level 2: 函数处理矩阵与向量的运算，同时也包含线性方程组求解</li>
+<li>Level 3: 函数处理矩阵与矩阵之间的运算</li>
+</ul>
+<p>API的全部介绍可以参考官方文档：<a target="_blank" rel="noopener" href="http://www.netlib.org/blas/blasqr.pdf">blasqr.pdf</a></p>
+<h2 id="Cython调用BLAS函数"><a href="#Cython调用BLAS函数" class="headerlink" title="Cython调用BLAS函数"></a>Cython调用BLAS函数</h2><p>Cython要调用BLAS函数，主要是通过BLAS库的C接口，接口的具体定义可以参考现有BLAS库的 <a target="_blank" rel="noopener" href="https://github.com/xianyi/OpenBLAS/blob/develop/cblas.h">cblas.h</a>，里面函数的命名和 <a target="_blank" rel="noopener" href="http://www.netlib.org/blas/blasqr.pdf">blasqr.pdf</a> 中函数命名是一一对应的，只不过函数前多了<code>cblas_</code>前缀。这里演示如何调用函数<code>cblas_dgemv</code>，在头文件  <a target="_blank" rel="noopener" href="https://github.com/xianyi/OpenBLAS/blob/develop/cblas.h">cblas.h</a> 中函数声明为</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">cblas_dgemv</span><span class="params">(OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_ORDER order, OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE trans, OPENBLAS_CONST blasint m, OPENBLAS_CONST blasint n, OPENBLAS_CONST <span class="type">double</span> alpha, OPENBLAS_CONST <span class="type">double</span> *a, OPENBLAS_CONST blasint lda, OPENBLAS_CONST <span class="type">double</span> *x, OPENBLAS_CONST blasint incx, OPENBLAS_CONST <span class="type">double</span> beta, <span class="type">double</span> *y, OPENBLAS_CONST blasint incy)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>去除一些宏以及替换定义的数据类型，简单表示就是</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">cblas_dgemv</span><span class="params">(<span class="keyword">enum</span> CBLAS_ORDER order, <span class="keyword">enum</span> CBLAS_TRANSPOSE trans, <span class="type">int</span> m, <span class="type">int</span> n, <span class="type">double</span> alpha, <span class="type">double</span> *a, <span class="type">int</span> lda, <span class="type">double</span> *x, <span class="type">int</span> incx, <span class="type">double</span> beta, <span class="type">double</span> *y, <span class="type">int</span> incy)</span></span><br></pre></td></tr></table></figure>
+
+<p>这个函数主要是实现的功能计算矩阵与向量相乘，在 <a target="_blank" rel="noopener" href="http://www.netlib.org/blas/blasqr.pdf">blasqr.pdf</a> 中对应的是<code>Level2</code>中<code>xGEMV</code>函数</p>
+<p>$$<br>y &#x3D; \alpha Ax + \beta y<br>$$</p>
+<p>在Cython调用BLAS函数首先要使用<code>cdef extern</code>引入头文件，然后声明函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cdef <span class="keyword">extern</span> from <span class="string">&#x27;cblas.h&#x27;</span>:</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">CBLAS_ORDER</span>:</span></span><br><span class="line">        CblasRowMajor=<span class="number">101</span></span><br><span class="line">        CblasColMajor=<span class="number">102</span></span><br><span class="line">    <span class="keyword">enum</span> CBLAS_TRANSPOSE:</span><br><span class="line">        CblasNoTrans=<span class="number">111</span></span><br><span class="line">        CblasTrans=<span class="number">112</span></span><br><span class="line">        CblasConjTrans=<span class="number">113</span></span><br><span class="line">        CblasConjNoTrans=<span class="number">114</span></span><br><span class="line">    <span class="type">void</span> dgemv <span class="string">&quot;cblas_dgemv&quot;</span>(CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA,</span><br><span class="line">                             <span class="type">int</span> M, <span class="type">int</span> N, <span class="type">double</span> alpha, <span class="type">double</span> *A, <span class="type">int</span> lda,</span><br><span class="line">                             <span class="type">double</span> *X, <span class="type">int</span> incX, <span class="type">double</span> beta,</span><br><span class="line">                             <span class="type">double</span> *Y, <span class="type">int</span> incY) nogil</span><br></pre></td></tr></table></figure>
+
+<p>关于<code>enum</code>中<code>CblasRowMajor</code>这些标识符的取值，是按照 <a target="_blank" rel="noopener" href="https://github.com/xianyi/OpenBLAS/blob/develop/cblas.h">cblas.h</a> 中定义来取值。函数声明后就可以编写一个wrapper函数来调用BLAS函数，之所以要写一个wrapper函数，是因为声明的BLAS函数只能在C中进行调用，我们还要使得其能够在Python中进行调用，wrapper函数定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cpdef <span class="title function_">blas_dgemv</span><span class="params">(<span class="type">double</span>[:, ::<span class="number">1</span>] A, <span class="type">double</span>[::<span class="number">1</span>] x, <span class="type">double</span>[::<span class="number">1</span>] y,</span></span><br><span class="line"><span class="params">                 <span class="type">int</span> M, <span class="type">int</span> N, <span class="type">double</span> alpha, <span class="type">double</span> beta)</span>:</span><br><span class="line">    cdef <span class="type">double</span> *A_ptr = &amp;A[<span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">    cdef <span class="type">double</span> *x_ptr = &amp;x[<span class="number">0</span>]</span><br><span class="line">    cdef <span class="type">double</span> *y_ptr = &amp;y[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    dgemv(CblasRowMajor, CblasNoTrans, M, N,</span><br><span class="line">          alpha, A_ptr, N, x_ptr, <span class="number">1</span>, beta, y_ptr, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>cpdef</code>可以使得定义的函数可以被Python调用。这里说一下如何将<code>MemoryViews</code>转化成C的指针，对于向量<code>x</code>可以通过对第一个元素进行取址来进行转换<code>&amp;x[0]</code>，对于矩阵<code>A</code>则是对其第一行第一列的元素进行取址操作<code>&amp;A[0, 0]</code>。</p>
+<p>由于BLAS库中将矩阵数据看成是一个一维数组，所以在调用BLAS函数时需要指定矩阵是Row Major还是Column Major，即参数<code>CBLAS_ORDER Order</code>，这里设定是Row Major，因此函数<code>blas_dgemv</code>中参数<code>A</code>限定是Row Major，即声明为<code>double[:, ::1]</code>。</p>
+<p>整个pyx文件的内容为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">cdef extern from &#x27;cblas.h&#x27;:</span><br><span class="line">    enum CBLAS_ORDER:</span><br><span class="line">        CblasRowMajor=101</span><br><span class="line">        CblasColMajor=102</span><br><span class="line">    enum CBLAS_TRANSPOSE:</span><br><span class="line">        CblasNoTrans=111</span><br><span class="line">        CblasTrans=112</span><br><span class="line">        CblasConjTrans=113</span><br><span class="line">        CblasConjNoTrans=114</span><br><span class="line">    void dgemv &quot;cblas_dgemv&quot;(CBLAS_ORDER Order, CBLAS_TRANSPOSE TransA,</span><br><span class="line">                             int M, int N, double alpha, double *A, int lda,</span><br><span class="line">                             double *X, int incX, double beta,</span><br><span class="line">                             double *Y, int incY) nogil</span><br><span class="line"></span><br><span class="line">cpdef blas_dgemv(double[:, ::1] A, double[::1] x, double[::1] y,</span><br><span class="line">                 int M, int N, double alpha, double beta):</span><br><span class="line">    cdef double *A_ptr = &amp;A[0, 0]</span><br><span class="line">    cdef double *x_ptr = &amp;x[0]</span><br><span class="line">    cdef double *y_ptr = &amp;y[0]</span><br><span class="line"></span><br><span class="line">    dgemv(CblasRowMajor, CblasNoTrans, M, N,</span><br><span class="line">          alpha, A_ptr, N, x_ptr, 1, beta, y_ptr, 1)</span><br></pre></td></tr></table></figure>
+
+<p>剩下就是将pyx进行编译，然后就可以在Python中调用<code>blas_dgemv</code>函数了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://maciejkula.github.io/2015/01/01/calling-blas-from-cython/">Calling BLAS from Cython</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/Cython/" rel="tag"># Cython</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/09/03/Pandas%E5%A4%87%E5%BF%98%E5%BD%952/" rel="prev" title="Pandas备忘录2">
+      <i class="fa fa-chevron-left"></i> Pandas备忘录2
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/09/09/%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8DTmux%E4%BC%9A%E8%AF%9D/" rel="next" title="保存和恢复Tmux会话">
+      保存和恢复Tmux会话 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BLAS"><span class="nav-number">2.</span> <span class="nav-text">BLAS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cython%E8%B0%83%E7%94%A8BLAS%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">Cython调用BLAS函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

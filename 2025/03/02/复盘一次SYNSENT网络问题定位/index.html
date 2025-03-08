@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="背景最近在做一个项目，使用一个公司内部开发的消息通信模块遇到了一个问题，就是进行本地socket通信，连接消息服务进程监听的一个端口时发现TCP连接始终建立不了，netstat查看端口始终处于SYN_SENT状态，当时花了好几天才最终定位出原因，是因为这个端口在iptables中设置了规则，只允许特定UID的进程能连接这个端口，由于没加规则，导致socket通信始终建立不起来。 经此一事，就反思后">
+<meta property="og:type" content="article">
+<meta property="og:title" content="复盘一次SYN_SENT网络问题定位">
+<meta property="og:url" content="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="背景最近在做一个项目，使用一个公司内部开发的消息通信模块遇到了一个问题，就是进行本地socket通信，连接消息服务进程监听的一个端口时发现TCP连接始终建立不了，netstat查看端口始终处于SYN_SENT状态，当时花了好几天才最终定位出原因，是因为这个端口在iptables中设置了规则，只允许特定UID的进程能连接这个端口，由于没加规则，导致socket通信始终建立不起来。 经此一事，就反思后">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/server1.png">
+<meta property="og:image" content="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/client1.png">
+<meta property="og:image" content="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/iptables1.png">
+<meta property="og:image" content="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/client_timeout.png">
+<meta property="og:image" content="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/netstat1.png">
+<meta property="og:image" content="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/tables_traverse.jpg">
+<meta property="og:image" content="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/netstat2.png">
+<meta property="og:image" content="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/iptables2.png">
+<meta property="article:published_time" content="2025-03-02T13:59:48.000Z">
+<meta property="article:modified_time" content="2025-03-08T03:54:42.701Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="Debug">
+<meta property="article:tag" content="网络通信">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/server1.png">
+
+<link rel="canonical" href="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>复盘一次SYN_SENT网络问题定位 | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          复盘一次SYN_SENT网络问题定位
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-03-02 21:59:48" itemprop="dateCreated datePublished" datetime="2025-03-02T21:59:48+08:00">2025-03-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-08 11:54:42" itemprop="dateModified" datetime="2025-03-08T11:54:42+08:00">2025-03-08</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近在做一个项目，使用一个公司内部开发的消息通信模块遇到了一个问题，就是进行本地socket通信，连接消息服务进程监听的一个端口时发现TCP连接始终建立不了，netstat查看端口始终处于SYN_SENT状态，当时花了好几天才最终定位出原因，是因为这个端口在iptables中设置了规则，只允许特定UID的进程能连接这个端口，由于没加规则，导致socket通信始终建立不起来。</p>
+<p>经此一事，就反思后续这类问题该如何去定位，由于问题原因是由iptables导致的，所以在寻找有没有手段去分析数据包是否被拦截。</p>
+<h2 id="问题场景还原"><a href="#问题场景还原" class="headerlink" title="问题场景还原"></a>问题场景还原</h2><h3 id="问题场景描述"><a href="#问题场景描述" class="headerlink" title="问题场景描述"></a>问题场景描述</h3><p>1、有A、B两个进程，B进程监听端口PortB</p>
+<p>2、iptables设置了<code>INPUT</code>规则，任何发往端口PortB的数据包都会被丢弃（DROP）</p>
+<p>3、A进程调用<code>connect</code>接口连接 127.0.0.1 的端口PortB，netstat命令查看端口PortB的连接，状态始终为SYN_SENT</p>
+<h3 id="问题场景构造"><a href="#问题场景构造" class="headerlink" title="问题场景构造"></a>问题场景构造</h3><p>1、分别构造一个client和server程序，client连接server特定端口，这里从网上找了一个python写的client-server程序 <a target="_blank" rel="noopener" href="https://github.com/brandon-rhodes/fopnp/blob/m/py3/chapter03/tcp_sixteen.py">tcp_sixteen.py</a>，程序默认连接1060端口。</p>
+<p>1）启动server，执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 tcp_sixteen.py server 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<p>2）启动client，执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 tcp_sixteen.py client 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<p>client会向server发送一个消息，server收到消息后会返回一个响应。server端输出如下：</p>
+<p><img src="/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/server1.png"></p>
+<p>client端输出如下：</p>
+<p><img src="/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/client1.png"></p>
+<p>由图可知，client端 <code>(127.0.0.1, 41292)</code> 连接server端 <code>(127.0.0.1, 1060)</code>。client端的端口是任意的，server端的端口固定是1060</p>
+<p>2、新增一条iptables的filter表<code>INPUT</code>规则，拦截传给端口1060的数据包，执行命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -A INPUT -p tcp --dport 1060 -j DROP</span><br></pre></td></tr></table></figure>
+
+<p>可以查看当前filter表的规则</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -t filter -L -v -n --line-numbers</span><br></pre></td></tr></table></figure>
+
+<p>已新增一条规则：丢弃（DROP）所有发往1060端口的数据包</p>
+<p><img src="/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/iptables1.png"></p>
+<p>3、再一次执行client，向server发送消息，此时由于iptables规则，client发送消息超时</p>
+<p><img src="/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/client_timeout.png"></p>
+<p>使用<code>netstat</code>查看端口1060的连接情况，发现有个连接<code>127.0.0.1:59346 -&gt; 127.0.0.1:1060</code>一直处于SYN_SENT状态，说明iptables规则生效了，已还原问题场景</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo netstat -tunalp | grep :1060</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/netstat1.png"></p>
+<h2 id="问题定位"><a href="#问题定位" class="headerlink" title="问题定位"></a>问题定位</h2><h3 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h3><p>由于涉及到iptables使用，需要了解关键概念：表Table、链Chain，还有使用iptables的<code>TRACE</code>功能，需要设置并查看跟踪日志。这些预备知识可以参考下面文章进行学习：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Iptables">ArchLinux Wiki: iptables</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.frozentux.net/iptables-tutorial/iptables-tutorial.html#TRAVERSINGOFTABLES">Chapter 6. Traversing of tables and chains</a></li>
+<li><a target="_blank" rel="noopener" href="https://linux.vbird.org/linux_server/rocky9/0180firewall.php#7.2.2">鸟哥私房菜：7.2.2 iptables的表格（table）与链（chain）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/opus/830723460482203664">数据包如何游走于 Iptables 规则之间？</a></li>
+</ol>
+<h3 id="IPTables-Trace"><a href="#IPTables-Trace" class="headerlink" title="IPTables Trace"></a>IPTables Trace</h3><p>要定位是否由iptables设置的规则拦截导致的，这里需要用到iptables的<code>TRACE</code>功能。要使用<code>TRACE</code>功能，首先需要了解一个数据包从client发往server，需要经过iptables哪些表和链</p>
+<p>搬一张ArchLinux Wiki的<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Iptables">iptables</a>教程中的图</p>
+<p><img src="/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/tables_traverse.jpg"></p>
+<p>由上图可以看到，本节点进程A发数据包给同节点的进程B，需要经过的表和链如下：</p>
+<p>1、进程A发出数据包（从图中 Local Process 节点开始）</p>
+<ol>
+<li>Local Process</li>
+<li>Routing Decision</li>
+<li>raw表OUTPUT链</li>
+<li>mangle表OUTPUT链</li>
+<li>nat表OUTPUT链</li>
+<li>filter表OUTPUT链</li>
+<li>Routing Decision</li>
+<li>mangle表POSTROUTING链</li>
+<li>nat表POSTROUTING链</li>
+<li>NETWORK</li>
+</ol>
+<p>2、发往进程B的数据包（从图中最顶端的节点 NETWORK开始）</p>
+<ol>
+<li>NETWORK</li>
+<li>raw表PREROUTING链</li>
+<li>mangle表PREROUTING链</li>
+<li>nat表PREROUTING链</li>
+<li>Routing Decision</li>
+<li>mangle表INPUT链</li>
+<li>filter表INPUT链</li>
+<li>Local Process</li>
+</ol>
+<p><code>TRACE</code>功能只能在iptables的raw表中使用，需要在raw表的链中添加规则，跟踪特定数据包，输出其经过的表和链到日志中，通过分析日志可以知道哪些规则拦截了数据包</p>
+<p>可以看出，本节点进程A和B间的TCP通信会经过raw表的OUTPUT、PREROUTING链，可以在其中一个新增trace规则进行数据包跟踪</p>
+<h3 id="Trace-Packet"><a href="#Trace-Packet" class="headerlink" title="Trace Packet"></a>Trace Packet</h3><p>在raw表OUTPUT链中新增目的端口1060的trace规则，执行以下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -t raw -A OUTPUT -p tcp --dport 1060 -j TRACE</span><br></pre></td></tr></table></figure>
+
+<p>再次执行client，向server发消息，使用<code>netstat</code>查看端口1060连接情况</p>
+<p><img src="/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/netstat2.png"></p>
+<p>client尝试从端口55714发送TCP请求给端口1060，但是都没收到server的ACK。这时可以查看内核日志，grep下trace关键字</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dmesg | grep -i trace</span><br></pre></td></tr></table></figure>
+
+<p>trace规则抓到日志如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 第一次TCP请求</span><br><span class="line">[ 7579.448153] TRACE: raw:OUTPUT:policy:2 IN= OUT=lo SRC=127.0.0.1 DST=127.0.0.1 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=48009 DF PROTO=TCP SPT=55714 DPT=1060 SEQ=3916344369 ACK=0 WINDOW=65495 RES=0x00 SYN URGP=0 OPT (0204FFD70402080A3E7182C20000000001030307) UID=1000 GID=1000</span><br><span class="line">[ 7579.448160] TRACE: filter:OUTPUT:policy:1 IN= OUT=lo SRC=127.0.0.1 DST=127.0.0.1 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=48009 DF PROTO=TCP SPT=55714 DPT=1060 SEQ=3916344369 ACK=0 WINDOW=65495 RES=0x00 SYN URGP=0 OPT (0204FFD70402080A3E7182C20000000001030307) UID=1000 GID=1000</span><br><span class="line">[ 7579.448167] TRACE: raw:PREROUTING:policy:1 IN=lo OUT= MAC=00:00:00:00:00:00:00:00:00:00:00:00:08:00 SRC=127.0.0.1 DST=127.0.0.1 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=48009 DF PROTO=TCP SPT=55714 DPT=1060 SEQ=3916344369 ACK=0 WINDOW=65495 RES=0x00 SYN URGP=0 OPT (0204FFD70402080A3E7182C20000000001030307)</span><br><span class="line">[ 7579.448169] TRACE: filter:INPUT:rule:1 IN=lo OUT= MAC=00:00:00:00:00:00:00:00:00:00:00:00:08:00 SRC=127.0.0.1 DST=127.0.0.1 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=48009 DF PROTO=TCP SPT=55714 DPT=1060 SEQ=3916344369 ACK=0 WINDOW=65495 RES=0x00 SYN URGP=0 OPT (0204FFD70402080A3E7182C20000000001030307)</span><br><span class="line"></span><br><span class="line">// 第二次TCP请求</span><br><span class="line">[ 7580.449767] TRACE: raw:OUTPUT:policy:2 IN= OUT=lo SRC=127.0.0.1 DST=127.0.0.1 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=48010 DF PROTO=TCP SPT=55714 DPT=1060 SEQ=3916344369 ACK=0 WINDOW=65495 RES=0x00 SYN URGP=0 OPT (0204FFD70402080A3E7186AC0000000001030307) UID=1000 GID=1000</span><br><span class="line">[ 7580.449955] TRACE: filter:OUTPUT:policy:1 IN= OUT=lo SRC=127.0.0.1 DST=127.0.0.1 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=48010 DF PROTO=TCP SPT=55714 DPT=1060 SEQ=3916344369 ACK=0 WINDOW=65495 RES=0x00 SYN URGP=0 OPT (0204FFD70402080A3E7186AC0000000001030307) UID=1000 GID=1000</span><br><span class="line">[ 7580.450133] TRACE: raw:PREROUTING:policy:1 IN=lo OUT= MAC=00:00:00:00:00:00:00:00:00:00:00:00:08:00 SRC=127.0.0.1 DST=127.0.0.1 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=48010 DF PROTO=TCP SPT=55714 DPT=1060 SEQ=3916344369 ACK=0 WINDOW=65495 RES=0x00 SYN URGP=0 OPT (0204FFD70402080A3E7186AC0000000001030307)</span><br><span class="line">[ 7580.450137] TRACE: filter:INPUT:rule:1 IN=lo OUT= MAC=00:00:00:00:00:00:00:00:00:00:00:00:08:00 SRC=127.0.0.1 DST=127.0.0.1 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=48010 DF PROTO=TCP SPT=55714 DPT=1060 SEQ=3916344369 ACK=0 WINDOW=65495 RES=0x00 SYN URGP=0 OPT (0204FFD70402080A3E7186AC0000000001030307)</span><br><span class="line"></span><br><span class="line">// ..... 多次重复TCP请求</span><br></pre></td></tr></table></figure>
+
+<p>日志中关键字段：</p>
+<ol>
+<li>源端口Source Port：关键字<code>SPT=</code></li>
+<li>目的端口Destination Port：关键字<code>DPT=</code></li>
+<li>经过的规则：关键字<code>TRACE: xxx表:xxx链:&lt;policy|rule&gt;:规则ID</code></li>
+</ol>
+<p>从第一次TCP请求日志可以获取到以下信息：</p>
+<ol>
+<li><p>TCP请求源端口为55714，目的端口为1060</p>
+</li>
+<li><p>经过的规则顺序为：</p>
+<ol>
+<li>raw表OUTPUT链policy 2</li>
+<li>filter表OUTPUT链policy 1</li>
+<li>raw表PREROUTING链policy 1</li>
+<li>filter表INPUT链<strong>rule 1</strong></li>
+</ol>
+</li>
+</ol>
+<p>可以分析出从端口55714发送的TCP请求最终只走到filter表INPUT链的规则1，说明这个规则可能导致TCP请求未发到server端。通过iptables命令查看这个规则：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -t filter -L -v -n --line-numbers</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/03/02/%E5%A4%8D%E7%9B%98%E4%B8%80%E6%AC%A1SYNSENT%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/iptables2.png"></p>
+<p>规则1刚好就是之前新增的拦截规则，至此可以得出结论是由于filter表的INPUT规则导致TCP请求未成功发送</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Debug/" rel="tag"># Debug</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/" rel="tag"># 网络通信</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/07/28/%E4%B8%AD%E5%9B%BD%E8%BF%91%E4%BB%A3%E5%8F%B2%E4%BA%8B%E4%BB%B6/" rel="prev" title="中国近代史事件">
+      <i class="fa fa-chevron-left"></i> 中国近代史事件
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/03/07/LFS%E6%9E%84%E5%BB%BA%E8%AE%B0%E5%BD%95/" rel="next" title="Linux From Scratch构建记录">
+      Linux From Scratch构建记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%9C%BA%E6%99%AF%E8%BF%98%E5%8E%9F"><span class="nav-number">2.</span> <span class="nav-text">问题场景还原</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%9C%BA%E6%99%AF%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.1.</span> <span class="nav-text">问题场景描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%9C%BA%E6%99%AF%E6%9E%84%E9%80%A0"><span class="nav-number">2.2.</span> <span class="nav-text">问题场景构造</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D"><span class="nav-number">3.</span> <span class="nav-text">问题定位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="nav-number">3.1.</span> <span class="nav-text">预备知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IPTables-Trace"><span class="nav-number">3.2.</span> <span class="nav-text">IPTables Trace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Trace-Packet"><span class="nav-number">3.3.</span> <span class="nav-text">Trace Packet</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Weighted random sampling with replacement，中文翻译为带权重的有放回地采样，简单来说就是每一个样本都有一个权重，然后根据样本权重大小有放回地采样数据，样本的权重越大，样本被选择的概率也就越大。该问题换种方式描述就是，给定一个权重数组 $w$，大小为 $N$，然后根据权重大小，在下标数组 ${0, 1, \ldots, N-1}$ 中进行有放回地采样，下标 $">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Weighted Random Sampling With Replacement">
+<meta property="og:url" content="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/index.html">
+<meta property="og:site_name" content="袋熊的树洞">
+<meta property="og:description" content="Weighted random sampling with replacement，中文翻译为带权重的有放回地采样，简单来说就是每一个样本都有一个权重，然后根据样本权重大小有放回地采样数据，样本的权重越大，样本被选择的概率也就越大。该问题换种方式描述就是，给定一个权重数组 $w$，大小为 $N$，然后根据权重大小，在下标数组 ${0, 1, \ldots, N-1}$ 中进行有放回地采样，下标 $">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/rejection.png">
+<meta property="og:image" content="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/sampling-visual.png">
+<meta property="og:image" content="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/test.png">
+<meta property="article:published_time" content="2018-07-22T07:07:18.000Z">
+<meta property="article:modified_time" content="2025-03-02T13:44:33.191Z">
+<meta property="article:author" content="Luo Wanqian">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/rejection.png">
+
+<link rel="canonical" href="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Weighted Random Sampling With Replacement | 袋熊的树洞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">袋熊的树洞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">日拱一卒，功不唐捐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-diary">
+
+    <a href="/diary" rel="section"><i class="fa fa-fw fa-calendar"></i>diary</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2018/07/22/Weighted-Random-Sampling-With-Replacement/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Luo Wanqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袋熊的树洞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Weighted Random Sampling With Replacement
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-07-22 15:07:18" itemprop="dateCreated datePublished" datetime="2018-07-22T15:07:18+08:00">2018-07-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-02 21:44:33" itemprop="dateModified" datetime="2025-03-02T21:44:33+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Weighted random sampling with replacement，中文翻译为带权重的有放回地采样，简单来说就是每一个样本都有一个权重，然后根据样本权重大小有放回地采样数据，样本的权重越大，样本被选择的概率也就越大。该问题换种方式描述就是，给定一个权重数组 $w$，大小为 $N$，然后根据权重大小，在下标数组 ${0, 1, \ldots, N-1}$ 中进行有放回地采样，下标 $i$ 被选中的概率为 $w[i]&#x2F;\text{sum}(w)$。</p>
+<p>这个采样方法一个应用是在Boosting算法中，Boosting算法每次训练完模型时，根据模型分类的情况改变数据样本的权重，然后用带权重的样本训练下一个模型，如果模型的训练不支持带权重的样本，则进行带权重的样本采样。</p>
+<blockquote>
+<p>本文主要将博文 <a target="_blank" rel="noopener" href="https://www.aarondefazio.com/tangentially/?p=58">WEIGHTED RANDOM SAMPLING WITH REPLACEMENT WITH DYNAMIC WEIGHTS</a> 内容进行解析 (文章拷贝：<a href="/2018/07/22/Weighted-Random-Sampling-With-Replacement/copy.pdf" title="Copy">Copy</a>)。算法实现代码在：<a target="_blank" rel="noopener" href="https://github.com/adefazio/sampler">adefazio&#x2F;sampler</a></p>
+</blockquote>
+<h2 id="Rejection-Sampling"><a href="#Rejection-Sampling" class="headerlink" title="Rejection Sampling"></a>Rejection Sampling</h2><p>这个思想很简单，给定一个权重数组 $w \in R^N$，权重最大值为 $w_\max$，然后在下标数组 ${ 0, 1, \ldots, N-1 }$ 中随机采样得到下标 $i$，接下来就是判断该下标是否被accept，首先根据分布 $X \sim U(0, 1)$ 获得一个随机数 $x$，然后判断 $w_\max * x \le w[i]$，如果符合该条件，则accept该下标 $i$，否则就reject该下标。</p>
+<p>算法实现的代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">w = [1,4,2,5] # Some data</span><br><span class="line">w_max = max(w)</span><br><span class="line">n = len(w)</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">	idx = random.randrange(n)</span><br><span class="line">	u = w_max*random.random()</span><br><span class="line">	if u &lt;= w[idx]:</span><br><span class="line">		break</span><br><span class="line">print idx</span><br></pre></td></tr></table></figure>
+
+<p>算法思想可以用下面图表示：</p>
+<img src="/2018/07/22/Weighted-Random-Sampling-With-Replacement/rejection.png" class="">
+
+<p>橘色区域代表accept区域，灰色区域代表reject区域。这个算法有个缺点就是当数据不平衡时，性能会很低，因为如果小部分数据权重很大时，$w_\max$ 会变的很大，数据权重小的下标很难被accept，而且权重小的占大部分，这导致算法会经过很多次循环。</p>
+<h2 id="Level-Rejection-Sampling"><a href="#Level-Rejection-Sampling" class="headerlink" title="Level Rejection Sampling"></a>Level Rejection Sampling</h2><p>这个是在Rejection Sampling之前对下标进行分层 (level)，根据权重 $w[i]$ 的大小将下标 $i$ 分到不同层中，第 $k$ 层权重的范围为 $[2^k, 2^{k+1}]$，由于每一层内的权重的差距不会偏大，对该层进行Rejection Sampling效率会较高。</p>
+<p>该方法的思想如下图所示：</p>
+<img src="/2018/07/22/Weighted-Random-Sampling-With-Replacement/sampling-visual.png" class="">
+
+<p>如图所示，总共分了5层，每一层存储的是数组下标。下标分层后，在进行采样时，首先随机选择某一层，然后进行Rejection Sampling获得最终想要的下标。</p>
+<h3 id="模拟实验"><a href="#模拟实验" class="headerlink" title="模拟实验"></a>模拟实验</h3><p>贴出一段实验代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sampler <span class="keyword">import</span> Sampler</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    weights = np.array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">2</span>], dtype=<span class="string">&#x27;d&#x27;</span>)</span><br><span class="line">    num_entries = <span class="built_in">len</span>(weights)</span><br><span class="line">    normalized_weights = weights / np.<span class="built_in">sum</span>(weights)</span><br><span class="line"></span><br><span class="line">    weight_sampler = Sampler(num_entries, max_value=<span class="number">100</span>, min_value=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_entries):</span><br><span class="line">        weight_sampler.add(i, weights[i])</span><br><span class="line"></span><br><span class="line">    num_samples = <span class="number">10000</span></span><br><span class="line">    distro = np.zeros(num_entries)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_samples):</span><br><span class="line">        idx = weight_sampler.sample()</span><br><span class="line">        distro[idx] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    normalized_distro = distro / np.<span class="built_in">sum</span>(distro)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Sample distribution: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(distro))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Weights distribution: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(weights))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Normalized sample distribution: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(normalized_distro))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Normalized weights distribution: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(normalized_weights))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># plot frequency</span></span><br><span class="line">    plt.bar(np.arange(num_entries),</span><br><span class="line">            normalized_weights, width=<span class="number">0.35</span>,</span><br><span class="line">            label=<span class="string">&#x27;Normalized Weights Distribution&#x27;</span>)</span><br><span class="line">    plt.bar(np.arange(num_entries)+<span class="number">0.35</span>,</span><br><span class="line">            normalized_distro, width=<span class="number">0.35</span>,</span><br><span class="line">            label=<span class="string">&#x27;Normalized Sample Distribution&#x27;</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Sample distribution: [ 843.  824. 2513. 4182. 1638.]</span><br><span class="line">Weights distribution: [1. 1. 3. 5. 2.]</span><br><span class="line">Normalized sample distribution: [0.0843 0.0824 0.2513 0.4182 0.1638]</span><br><span class="line">Normalized weights distribution: [0.08333333 0.08333333 0.25 0.41666667 0.16666667]</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果如下图所示：</p>
+<img src="/2018/07/22/Weighted-Random-Sampling-With-Replacement/test.png" class="">
+
+<p>图中横坐标代表数组下标，蓝色柱代表各个下标的权重大小 (归一化)，橘色柱代表经过大量采样时，各个下标被采中的比例。从图中可以看出，采样结果基本符合权重分布规律，权重越大，被采中的概率也就越大。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/07/18/%E4%BB%A5Column-major-Order%E8%AF%BB%E5%8F%96HDF5%E6%95%B0%E6%8D%AE/" rel="prev" title="以Column-major Order读取HDF5数据">
+      <i class="fa fa-chevron-left"></i> 以Column-major Order读取HDF5数据
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/09/03/Pandas%E5%A4%87%E5%BF%98%E5%BD%952/" rel="next" title="Pandas备忘录2">
+      Pandas备忘录2 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Rejection-Sampling"><span class="nav-number">1.</span> <span class="nav-text">Rejection Sampling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Level-Rejection-Sampling"><span class="nav-number">2.</span> <span class="nav-text">Level Rejection Sampling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%8B%9F%E5%AE%9E%E9%AA%8C"><span class="nav-number">2.1.</span> <span class="nav-text">模拟实验</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Luo Wanqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luo Wanqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
