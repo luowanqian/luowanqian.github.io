@@ -4,6 +4,7 @@ db.json
 *.log
 node_modules/
 public/
+themes/next/
 .deploy*/
 _multiconfig.yml
 package-lock.json
