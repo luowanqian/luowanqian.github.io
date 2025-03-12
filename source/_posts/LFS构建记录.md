@@ -251,3 +251,97 @@ EOF'
 ```
 
 备注：使用sudo cat写入root配置文件需要用`bash -c`，参考 [sudo cat << EOF > File doesn't work, sudo su does](https://stackoverflow.com/questions/18836853/sudo-cat-eof-file-doesnt-work-sudo-su-does) 做法
+
+### 2.7 Mounting the New Partition
+
+为了重启后能自动挂载，在`/etc/fstab`文件中新增一行，启动时自动挂载文件系统`/dev/sdb1`到目录`/mnt/lfs`
+
+```shell
+luowanqian@LFS:~/Documents/Code/LFS$ cat /etc/fstab
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sda2 during curtin installation
+/dev/sdb1  /mnt/lfs ext4   defaults      1     1
+```
+
+挂载成功后，使用`df`查看挂载（见最后一行输出）
+
+```shell
+luowanqian@LFS:~/Documents/Code/LFS$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           776M  1.4M  774M   1% /run
+/dev/sda2        49G  6.1G   41G  14% /
+tmpfs           3.8G     0  3.8G   0% /dev/shm
+tmpfs           5.0M  8.0K  5.0M   1% /run/lock
+tmpfs           776M   96K  775M   1% /run/user/120
+tmpfs           776M  104K  775M   1% /run/user/1000
+/dev/sdb1        30G   24K   28G   1% /mnt/lfs
+```
+
+## 3. Packages and Patches
+
+### 3.1 Introduction
+
+本节内容主要是说明软件包下载事项：
+
+1. 下载教程中指定版本的软件包
+2. 下载release tar包而不是Git的snapshot
+
+准备工作
+
+* 创建工作目录`$LFS/sources`，修改目录权限
+
+```shell
+luowanqian@LFS:~$ sudo mkdir -v $LFS/sources
+mkdir: created directory '/mnt/lfs/sources'
+luowanqian@LFS:~$ sudo chmod -v a+wt $LFS/sources
+mode of '/mnt/lfs/sources' changed from 0755 (rwxr-xr-x) to 1777 (rwxrwxrwt)
+```
+
+* 下载软件包列表文件[wget-list-sysv](https://www.linuxfromscratch.org/lfs/view/stable/wget-list-sysv)
+
+```shell
+wget https://www.linuxfromscratch.org/lfs/view/stable/wget-list-sysv
+```
+
+* （可选）替换软件包下载地址为LFS mirror地址
+
+LFS提供了一些mirror，见 [https://www.linuxfromscratch.org/mirrors.html#files](https://www.linuxfromscratch.org/mirrors.html#files)，网络不好可以设置软件包下载地址为LFS mirror地址。这里使用`awk`进行替换wget-list-sysv文件中的url
+
+```shell
+awk -F'/' '{print "https://mirrors.ustc.edu.cn/lfs/lfs-packages/12.3/" $NF}' wget-list-sysv > replaced-wget-list-sysv
+```
+
+* 使用`wget`下载软件包到目录`$LFS/sources`中
+
+```shell
+wget --input-file=wget-list-sysv --continue --directory-prefix=$LFS/sources
+
+# 或者
+wget --input-file=replaced-wget-list-sysv --continue --directory-prefix=$LFS/sources
+```
+
+* 下载软件包的[md5sums](https://www.linuxfromscratch.org/lfs/view/stable/md5sums)到目录`$LFS/sources`中
+
+```shell
+wget -P $LFS/sources https://www.linuxfromscratch.org/lfs/view/stable/md5sums
+```
+
+* 校验软件包，执行以下命令
+
+```shell
+pushd $LFS/sources
+  md5sum -c md5sums
+popd
+```
+
+* 设置软件包属主为`root:root`
+
+```shell
+sudo chown root:root $LFS/sources/*
+```
