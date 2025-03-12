@@ -182,7 +182,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2025-03-09 12:02:50" itemprop="dateModified" datetime="2025-03-09T12:02:50+08:00">2025-03-09</time>
+                <time title="Modified: 2025-03-12 23:07:45" itemprop="dateModified" datetime="2025-03-12T23:07:45+08:00">2025-03-12</time>
               </span>
 
           
@@ -259,7 +259,53 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">sudo touch /root/.bash_profile</span><br><span class="line"></span><br><span class="line">sudo bash -c &#x27;cat &gt;&gt; /root/.bash_profile &lt;&lt; &quot;EOF&quot;</span><br><span class="line">export LFS=/mnt/lfs</span><br><span class="line">umask 022</span><br><span class="line">EOF&#x27;</span><br><span class="line"></span><br><span class="line">sudo bash -c &#x27;cat &gt;&gt; /root/.bashrc &lt;&lt; &quot;EOF&quot;</span><br><span class="line"></span><br><span class="line">if [ -f /root/.bash_profile ]; then</span><br><span class="line">    . /root/.bash_profile</span><br><span class="line">fi</span><br><span class="line">EOF&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>备注：使用sudo cat写入root配置文件需要用<code>bash -c</code>，参考 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18836853/sudo-cat-eof-file-doesnt-work-sudo-su-does">sudo cat &lt;&lt; EOF &gt; File doesn’t work, sudo su does</a> 做法</p>
+<h3 id="2-7-Mounting-the-New-Partition"><a href="#2-7-Mounting-the-New-Partition" class="headerlink" title="2.7 Mounting the New Partition"></a>2.7 Mounting the New Partition</h3><p>为了重启后能自动挂载，在<code>/etc/fstab</code>文件中新增一行，启动时自动挂载文件系统<code>/dev/sdb1</code>到目录<code>/mnt/lfs</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">luowanqian@LFS:~/Documents/Code/LFS$ cat /etc/fstab</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/fstab: static file system information.</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Use &#x27;blkid&#x27; to print the universally unique identifier for a</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">device; this may be used with UUID= as a more robust way to name devices</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">that works even <span class="keyword">if</span> disks are added and removed. See fstab(5).</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/ was on /dev/sda2 during curtin installation</span></span><br><span class="line">/dev/sdb1  /mnt/lfs ext4   defaults      1     1</span><br></pre></td></tr></table></figure>
 
+<p>挂载成功后，使用<code>df</code>查看挂载（见最后一行输出）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">luowanqian@LFS:~/Documents/Code/LFS$ df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">tmpfs           776M  1.4M  774M   1% /run</span><br><span class="line">/dev/sda2        49G  6.1G   41G  14% /</span><br><span class="line">tmpfs           3.8G     0  3.8G   0% /dev/shm</span><br><span class="line">tmpfs           5.0M  8.0K  5.0M   1% /run/lock</span><br><span class="line">tmpfs           776M   96K  775M   1% /run/user/120</span><br><span class="line">tmpfs           776M  104K  775M   1% /run/user/1000</span><br><span class="line">/dev/sdb1        30G   24K   28G   1% /mnt/lfs</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Packages-and-Patches"><a href="#3-Packages-and-Patches" class="headerlink" title="3. Packages and Patches"></a>3. Packages and Patches</h2><h3 id="3-1-Introduction"><a href="#3-1-Introduction" class="headerlink" title="3.1 Introduction"></a>3.1 Introduction</h3><p>本节内容主要是说明软件包下载事项：</p>
+<ol>
+<li>下载教程中指定版本的软件包</li>
+<li>下载release tar包而不是Git的snapshot</li>
+</ol>
+<p>准备工作</p>
+<ul>
+<li>创建工作目录<code>$LFS/sources</code>，修改目录权限</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">luowanqian@LFS:~$ sudo mkdir -v $LFS/sources</span><br><span class="line">mkdir: created directory &#x27;/mnt/lfs/sources&#x27;</span><br><span class="line">luowanqian@LFS:~$ sudo chmod -v a+wt $LFS/sources</span><br><span class="line">mode of &#x27;/mnt/lfs/sources&#x27; changed from 0755 (rwxr-xr-x) to 1777 (rwxrwxrwt)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载软件包列表文件<a target="_blank" rel="noopener" href="https://www.linuxfromscratch.org/lfs/view/stable/wget-list-sysv">wget-list-sysv</a></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.linuxfromscratch.org/lfs/view/stable/wget-list-sysv</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>（可选）替换软件包下载地址为LFS mirror地址</li>
+</ul>
+<p>LFS提供了一些mirror，见 <a target="_blank" rel="noopener" href="https://www.linuxfromscratch.org/mirrors.html#files">https://www.linuxfromscratch.org/mirrors.html#files</a>，网络不好可以设置软件包下载地址为LFS mirror地址。这里使用<code>awk</code>替换wget-list-sysv文件中的url</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F&#x27;/&#x27; &#x27;&#123;print &quot;https://mirrors.ustc.edu.cn/lfs/lfs-packages/12.3/&quot; $NF&#125;&#x27; wget-list-sysv &gt; replaced-wget-list-sysv</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用<code>wget</code>下载软件包到目录<code>$LFS/sources</code>中</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget --input-file=wget-list-sysv --continue --directory-prefix=$LFS/sources</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">或者</span></span><br><span class="line">wget --input-file=replaced-wget-list-sysv --continue --directory-prefix=$LFS/sources</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载软件包的<a target="_blank" rel="noopener" href="https://www.linuxfromscratch.org/lfs/view/stable/md5sums">md5sums</a>到目录<code>$LFS/sources</code>中</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -P $LFS/sources https://www.linuxfromscratch.org/lfs/view/stable/md5sums</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>校验软件包，执行以下命令</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pushd $LFS/sources</span><br><span class="line">  md5sum -c md5sums</span><br><span class="line">popd</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置软件包属主为<code>root:root</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown root:root $LFS/sources/*</span><br></pre></td></tr></table></figure>
       
     </div>
 
