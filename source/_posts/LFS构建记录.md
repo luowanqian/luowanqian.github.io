@@ -311,7 +311,7 @@ wget https://www.linuxfromscratch.org/lfs/view/stable/wget-list-sysv
 
 * （可选）替换软件包下载地址为LFS mirror地址
 
-LFS提供了一些mirror，见 [https://www.linuxfromscratch.org/mirrors.html#files](https://www.linuxfromscratch.org/mirrors.html#files)，网络不好可以设置软件包下载地址为LFS mirror地址。这里使用`awk`进行替换wget-list-sysv文件中的url
+LFS提供了一些mirror，见 [https://www.linuxfromscratch.org/mirrors.html#files](https://www.linuxfromscratch.org/mirrors.html#files)，网络不好可以设置软件包下载地址为LFS mirror地址。这里使用`awk`替换wget-list-sysv文件中的url
 
 ```shell
 awk -F'/' '{print "https://mirrors.ustc.edu.cn/lfs/lfs-packages/12.3/" $NF}' wget-list-sysv > replaced-wget-list-sysv
