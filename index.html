@@ -182,7 +182,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2025-03-12 23:07:45" itemprop="dateModified" datetime="2025-03-12T23:07:45+08:00">2025-03-12</time>
+                <time title="Modified: 2025-03-15 23:00:48" itemprop="dateModified" datetime="2025-03-15T23:00:48+08:00">2025-03-15</time>
               </span>
 
           
@@ -306,6 +306,29 @@
 <li>设置软件包属主为<code>root:root</code></li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown root:root $LFS/sources/*</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Final-Preparations"><a href="#4-Final-Preparations" class="headerlink" title="4. Final Preparations"></a>4. Final Preparations</h2><h3 id="4-2-Creating-a-Limited-Directory-Layout-in-the-LFS-Filesystem"><a href="#4-2-Creating-a-Limited-Directory-Layout-in-the-LFS-Filesystem" class="headerlink" title="4.2 Creating a Limited Directory Layout in the LFS Filesystem"></a>4.2 Creating a Limited Directory Layout in the LFS Filesystem</h3><p>执行以下命令，在<code>$LFS</code>中创建一些子目录用构建</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; prepare-dir.sh &lt;&lt; &quot;EOF&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">echo &quot;LFS dir: $LFS&quot;</span><br><span class="line">mkdir -pv $LFS/&#123;etc,var&#125; $LFS/usr/&#123;bin,lib,sbin&#125;</span><br><span class="line"></span><br><span class="line">for i in bin lib sbin; do</span><br><span class="line">  ln -sv usr/$i $LFS/$i</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">case $(uname -m) in</span><br><span class="line">  x86_64) mkdir -pv $LFS/lib64 ;;</span><br><span class="line">esac</span><br><span class="line"></span><br><span class="line">mkdir -pv $LFS/tools</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">sudo bash -i prepare-dir.sh</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-Adding-the-LFS-User"><a href="#4-3-Adding-the-LFS-User" class="headerlink" title="4.3 Adding the LFS User"></a>4.3 Adding the LFS User</h3><ul>
+<li>创建用户<code>lfs</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo groupadd lfs</span><br><span class="line">sudo useradd -s /bin/bash -g lfs -m -k /dev/null lfs</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置用户<code>lfs</code>密码</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo passwd lfs</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置<code>$LFS</code>下目录的属主为新创建的用户<code>lfs</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo su</span><br><span class="line"></span><br><span class="line">chown -v lfs $LFS/&#123;usr&#123;,/*&#125;,var,etc,tools&#125;</span><br><span class="line">case $(uname -m) in</span><br><span class="line">  x86_64) chown -v lfs $LFS/lib64 ;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>切换到用户<code>lfs</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su - lfs</span><br></pre></td></tr></table></figure>
       
     </div>
 
