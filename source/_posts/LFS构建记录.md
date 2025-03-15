@@ -345,3 +345,62 @@ popd
 ```shell
 sudo chown root:root $LFS/sources/*
 ```
+
+## 4. Final Preparations
+
+### 4.2 Creating a Limited Directory Layout in the LFS Filesystem
+
+执行以下命令，在`$LFS`中创建一些子目录用构建
+
+```shell
+cat > prepare-dir.sh << "EOF"
+#!/bin/bash
+
+echo "LFS dir: $LFS"
+mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
+
+for i in bin lib sbin; do
+  ln -sv usr/$i $LFS/$i
+done
+
+case $(uname -m) in
+  x86_64) mkdir -pv $LFS/lib64 ;;
+esac
+
+mkdir -pv $LFS/tools
+EOF
+
+sudo bash -i prepare-dir.sh
+```
+
+### 4.3 Adding the LFS User
+
+* 创建用户`lfs`
+
+```shell
+sudo groupadd lfs
+sudo useradd -s /bin/bash -g lfs -m -k /dev/null lfs
+```
+
+* 设置用户`lfs`密码
+
+```shell
+sudo passwd lfs
+```
+
+* 设置`$LFS`下目录的属主为新创建的用户`lfs`
+
+```shell
+sudo su
+
+chown -v lfs $LFS/{usr{,/*},var,etc,tools}
+case $(uname -m) in
+  x86_64) chown -v lfs $LFS/lib64 ;;
+esac
+```
+
+* 切换到用户`lfs`
+
+```shell
+su - lfs
+```
