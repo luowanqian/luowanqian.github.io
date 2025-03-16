@@ -9,8 +9,8 @@ date: 2025-03-07 20:46:48
 
 | 索引 |  事项 | 加入日期 | 进展 |
 | :------: | :------: | :------: | :------ |
-| 1 | [YouTuBe: How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw&t=1088s&ab_channel=AndrejKarpathy) | 2025.3.7 | 2025.3.7 : [00:18:03](https://www.youtube.com/watch?v=EWvNQjAaOHw&t=1083s) Be aware of the model you're using, pricing tiers<br>2025.3.9 : [00:31:00](https://www.youtube.com/watch?v=EWvNQjAaOHw&t=1860s) Tool use: internet search |
-| 2 | [Linux From Scratch](https://www.linuxfromscratch.org/lfs/view/stable/index.html) | 2025.3.7 | 2025.3.7 : 实操到2.4节，想办法在Virtual Box中创建一个新的Partition<br>2025.3.9 : 实操到2.6节，已创建一个新的分区`/dev/sdb`<br>2025.3.12 : 已实操完第3节的软件包下载<br>2025.3.15 : 实操到4.3节 |
+| 1 | [YouTuBe: How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw&t=1088s&ab_channel=AndrejKarpathy) | 2025.3.7 | 2025.3.7 : [00:18:03](https://www.youtube.com/watch?v=EWvNQjAaOHw&t=1083s) Be aware of the model you're using, pricing tiers<br>2025.3.9 : [00:31:00](https://www.youtube.com/watch?v=EWvNQjAaOHw&t=1860s) Tool use: internet search<br>2025.3.16 : [00:50:57](https://www.youtube.com/watch?v=EWvNQjAaOHw&t=3057s) File uploads, adding documents to context |
+| 2 | [Linux From Scratch](https://www.linuxfromscratch.org/lfs/view/stable/index.html) | 2025.3.7 | 2025.3.7 : 实操到2.4节，想办法在Virtual Box中创建一个新的Partition<br>2025.3.9 : 实操到2.6节，已创建一个新的分区`/dev/sdb`<br>2025.3.12 : 已实操完第3节的软件包下载<br>2025.3.15 : 实操到4.3节<br>2025.3.16 : 已实操完第4章内容 |
 | 3 | [《菜根谭》向古人学谋略与智慧](https://www.youtube.com/playlist?list=PLkWWcTwDGs4bHO8NsL000pBUixU5TT02m) | 2025.3.9 | 2025.3.9 : 第10、12节|
 
 ### 2025.3.7
@@ -40,3 +40,7 @@ date: 2025-03-07 20:46:48
 ### 2025.3.15
 
 1. LFS教程已实操到4.3节
+
+### 2025.3.16
+
+1. LFS教程已实操完第4章内容
