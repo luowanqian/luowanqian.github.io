@@ -32,7 +32,7 @@
 <meta property="og:image" content="http://example.com/2025/03/07/LFS%E6%9E%84%E5%BB%BA%E8%AE%B0%E5%BD%95/2_4_new_hd.png">
 <meta property="og:image" content="http://example.com/2025/03/07/LFS%E6%9E%84%E5%BB%BA%E8%AE%B0%E5%BD%95/2_4_new_sata.png">
 <meta property="article:published_time" content="2025-03-07T13:28:26.000Z">
-<meta property="article:modified_time" content="2025-03-15T15:00:48.841Z">
+<meta property="article:modified_time" content="2025-03-16T14:06:09.424Z">
 <meta property="article:author" content="Luo Wanqian">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -192,7 +192,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2025-03-15 23:00:48" itemprop="dateModified" datetime="2025-03-15T23:00:48+08:00">2025-03-15</time>
+                <time title="Modified: 2025-03-16 22:06:09" itemprop="dateModified" datetime="2025-03-16T22:06:09+08:00">2025-03-16</time>
               </span>
 
           
@@ -339,6 +339,57 @@
 <li>切换到用户<code>lfs</code></li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su - lfs</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4-Setting-Up-the-Environment"><a href="#4-4-Setting-Up-the-Environment" class="headerlink" title="4.4 Setting Up the Environment"></a>4.4 Setting Up the Environment</h3><ul>
+<li>切换到用户<code>lfs</code>，创建bash配置文件<code>.bash_profile</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; ~/.bash_profile &lt;&lt; &quot;EOF&quot;</span><br><span class="line">exec env -i HOME=$HOME TERM=$TERM PS1=&#x27;\u:\w\$ &#x27; /bin/bash</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>逻辑：当（1）以lfs用户登录系统（2）用<code>su - lfs</code>切换到lfs用户，initial shell是一个login shell，会依次读取<code>/etc/profile</code>和<code>~/.bash_profile</code>。上面的<code>.bash_profile</code>此时会创建一个empty环境，只保<strong>HOME</strong>、<strong>TERM</strong>和<strong>PS1</strong>环境变量，然后切换到non-login shell，去执行<code>~/.bashrc</code>的配置</p>
+<ul>
+<li>创建<code>.bashrc</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; ~/.bashrc &lt;&lt; &quot;EOF&quot;</span><br><span class="line">set +h</span><br><span class="line">umask 022</span><br><span class="line">LFS=/mnt/lfs</span><br><span class="line">LC_ALL=POSIX</span><br><span class="line">LFS_TGT=$(uname -m)-lfs-linux-gnu</span><br><span class="line">PATH=/usr/bin</span><br><span class="line">if [ ! -L /bin ]; then PATH=/bin:$PATH; fi</span><br><span class="line">PATH=$LFS/tools/bin:$PATH</span><br><span class="line">CONFIG_SITE=$LFS/usr/share/config.site</span><br><span class="line">export LFS LC_ALL LFS_TGT PATH CONFIG_SITE</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>逻辑：如果当前是non-login shell，则会执行<code>~/.bashrc</code>，不执行<code>/etc/profile</code>和<code>~/.bash_profile</code>，因此<code>.bashrc</code>要设置构建需要的环境变量</p>
+<ul>
+<li>检查<code>/etc/bash.bashrc</code>是否存在，如果存在则需要将该文件换一个路径。<strong>切换到root用户</strong></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ ! -e /etc/bash.bashrc ] || mv -v /etc/bash.bashrc /etc/bash.bashrc.NOUSE</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置make的并发环境变量</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; ~/.bashrc &lt;&lt; &quot;EOF&quot;</span><br><span class="line">export MAKEFLAGS=-j$(nproc)</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>载入bash配置</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>检查环境变量设置是否符合预期（每次重启登录<code>lfs</code>用户时都检查下）</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">lfs:~$ env</span><br><span class="line">PWD=/home/lfs</span><br><span class="line">HOME=/home/lfs</span><br><span class="line">MAKEFLAGS=-j4</span><br><span class="line">TERM=tmux-256color</span><br><span class="line">SHLVL=1</span><br><span class="line">PS1=\u:\w\$</span><br><span class="line">LFS_TGT=x86_64-lfs-linux-gnu</span><br><span class="line">LC_ALL=POSIX</span><br><span class="line">LFS=/mnt/lfs</span><br><span class="line">CONFIG_SITE=/mnt/lfs/usr/share/config.site</span><br><span class="line">PATH=/mnt/lfs/tools/bin:/usr/bin</span><br><span class="line">_=/usr/bin/env</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-5-About-SBUs"><a href="#4-5-About-SBUs" class="headerlink" title="4.5 About SBUs"></a>4.5 About SBUs</h3><p>只是一些构建时间说明</p>
+<h2 id="Important-Preliminary-Material"><a href="#Important-Preliminary-Material" class="headerlink" title="Important Preliminary Material"></a>Important Preliminary Material</h2><h3 id="II-Toolchain-Technical-Notes"><a href="#II-Toolchain-Technical-Notes" class="headerlink" title="II. Toolchain Technical Notes"></a>II. Toolchain Technical Notes</h3><p>介绍交叉编译基础知识</p>
+<h3 id="III-General-Compilation-Instructions"><a href="#III-General-Compilation-Instructions" class="headerlink" title="III. General Compilation Instructions"></a>III. General Compilation Instructions</h3><p>在实操Chapter 5和Chapter 6内容之前，需要进行环境检查</p>
+<ul>
+<li>检查环境变量<code>$LFS</code>是否设置为<code>/mnt/lfs</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $LFS</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>切换到<code>lfs</code>用户</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su - lfs</span><br></pre></td></tr></table></figure>
+
+<h2 id="LFS-End"><a href="#LFS-End" class="headerlink" title="LFS End"></a>LFS End</h2><p>完成LFS教程后，需要回滚的操作如下：</p>
+<ol>
+<li>4.4节的<code>/etc/bash.bashrc</code>文件还原</li>
+</ol>
+
     </div>
 
     
@@ -418,7 +469,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-From-Scratch"><span class="nav-number">1.</span> <span class="nav-text">Linux From Scratch</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Preparing-the-Host-System"><span class="nav-number">1.1.</span> <span class="nav-text">2. Preparing the Host System</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Host-System-Requirements"><span class="nav-number">1.1.1.</span> <span class="nav-text">2.2 Host System Requirements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Building-LFS-in-Stages"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.3. Building LFS in Stages</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Creating-a-New-Partition"><span class="nav-number">1.1.3.</span> <span class="nav-text">2.4 Creating a New Partition</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#VirtualBox%E5%88%9B%E5%BB%BA%E7%A1%AC%E7%9B%98"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">VirtualBox创建硬盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">创建分区</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-Creating-a-File-System-on-the-Partition"><span class="nav-number">1.1.4.</span> <span class="nav-text">2.5 Creating a File System on the Partition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-Setting-the-LFS-Variable-and-the-Umask"><span class="nav-number">1.1.5.</span> <span class="nav-text">2.6 Setting the $LFS Variable and the Umask</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-Mounting-the-New-Partition"><span class="nav-number">1.1.6.</span> <span class="nav-text">2.7 Mounting the New Partition</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Packages-and-Patches"><span class="nav-number">1.2.</span> <span class="nav-text">3. Packages and Patches</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Introduction"><span class="nav-number">1.2.1.</span> <span class="nav-text">3.1 Introduction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Final-Preparations"><span class="nav-number">1.3.</span> <span class="nav-text">4. Final Preparations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Creating-a-Limited-Directory-Layout-in-the-LFS-Filesystem"><span class="nav-number">1.3.1.</span> <span class="nav-text">4.2 Creating a Limited Directory Layout in the LFS Filesystem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Adding-the-LFS-User"><span class="nav-number">1.3.2.</span> <span class="nav-text">4.3 Adding the LFS User</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-From-Scratch"><span class="nav-number">1.</span> <span class="nav-text">Linux From Scratch</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Preparing-the-Host-System"><span class="nav-number">1.1.</span> <span class="nav-text">2. Preparing the Host System</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Host-System-Requirements"><span class="nav-number">1.1.1.</span> <span class="nav-text">2.2 Host System Requirements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Building-LFS-in-Stages"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.3. Building LFS in Stages</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Creating-a-New-Partition"><span class="nav-number">1.1.3.</span> <span class="nav-text">2.4 Creating a New Partition</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#VirtualBox%E5%88%9B%E5%BB%BA%E7%A1%AC%E7%9B%98"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">VirtualBox创建硬盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">创建分区</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-Creating-a-File-System-on-the-Partition"><span class="nav-number">1.1.4.</span> <span class="nav-text">2.5 Creating a File System on the Partition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-Setting-the-LFS-Variable-and-the-Umask"><span class="nav-number">1.1.5.</span> <span class="nav-text">2.6 Setting the $LFS Variable and the Umask</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-Mounting-the-New-Partition"><span class="nav-number">1.1.6.</span> <span class="nav-text">2.7 Mounting the New Partition</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Packages-and-Patches"><span class="nav-number">1.2.</span> <span class="nav-text">3. Packages and Patches</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Introduction"><span class="nav-number">1.2.1.</span> <span class="nav-text">3.1 Introduction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Final-Preparations"><span class="nav-number">1.3.</span> <span class="nav-text">4. Final Preparations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Creating-a-Limited-Directory-Layout-in-the-LFS-Filesystem"><span class="nav-number">1.3.1.</span> <span class="nav-text">4.2 Creating a Limited Directory Layout in the LFS Filesystem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Adding-the-LFS-User"><span class="nav-number">1.3.2.</span> <span class="nav-text">4.3 Adding the LFS User</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Setting-Up-the-Environment"><span class="nav-number">1.3.3.</span> <span class="nav-text">4.4 Setting Up the Environment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-About-SBUs"><span class="nav-number">1.3.4.</span> <span class="nav-text">4.5 About SBUs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Important-Preliminary-Material"><span class="nav-number">1.4.</span> <span class="nav-text">Important Preliminary Material</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#II-Toolchain-Technical-Notes"><span class="nav-number">1.4.1.</span> <span class="nav-text">II. Toolchain Technical Notes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#III-General-Compilation-Instructions"><span class="nav-number">1.4.2.</span> <span class="nav-text">III. General Compilation Instructions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LFS-End"><span class="nav-number">1.5.</span> <span class="nav-text">LFS End</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
