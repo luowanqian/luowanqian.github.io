@@ -404,3 +404,104 @@ esac
 ```shell
 su - lfs
 ```
+
+### 4.4 Setting Up the Environment
+
+* 切换到用户`lfs`，创建bash配置文件`.bash_profile`
+
+```shell
+cat > ~/.bash_profile << "EOF"
+exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+EOF
+```
+
+逻辑：当（1）以lfs用户登录系统（2）用`su - lfs`切换到lfs用户，initial shell是一个login shell，会依次读取`/etc/profile`和`~/.bash_profile`。上面的`.bash_profile`此时会创建一个empty环境，只保**HOME**、**TERM**和**PS1**环境变量，然后切换到non-login shell，去执行`~/.bashrc`的配置
+
+* 创建`.bashrc`
+
+```shell
+cat > ~/.bashrc << "EOF"
+set +h
+umask 022
+LFS=/mnt/lfs
+LC_ALL=POSIX
+LFS_TGT=$(uname -m)-lfs-linux-gnu
+PATH=/usr/bin
+if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
+PATH=$LFS/tools/bin:$PATH
+CONFIG_SITE=$LFS/usr/share/config.site
+export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
+EOF
+```
+
+逻辑：如果当前是non-login shell，则会执行`~/.bashrc`，不执行`/etc/profile`和`~/.bash_profile`，因此`.bashrc`要设置构建需要的环境变量
+
+* 检查`/etc/bash.bashrc`是否存在，如果存在则需要将该文件换一个路径。**切换到root用户**
+
+```shell
+[ ! -e /etc/bash.bashrc ] || mv -v /etc/bash.bashrc /etc/bash.bashrc.NOUSE
+```
+
+* 设置make的并发环境变量
+
+```shell
+cat >> ~/.bashrc << "EOF"
+export MAKEFLAGS=-j$(nproc)
+EOF
+```
+
+* 载入bash配置
+
+```shell
+source ~/.bash_profile
+```
+
+* 检查环境变量设置是否符合预期（每次重启登录`lfs`用户时都检查下）
+
+```shell
+lfs:~$ env
+PWD=/home/lfs
+HOME=/home/lfs
+MAKEFLAGS=-j4
+TERM=tmux-256color
+SHLVL=1
+PS1=\u:\w\$
+LFS_TGT=x86_64-lfs-linux-gnu
+LC_ALL=POSIX
+LFS=/mnt/lfs
+CONFIG_SITE=/mnt/lfs/usr/share/config.site
+PATH=/mnt/lfs/tools/bin:/usr/bin
+_=/usr/bin/env
+```
+
+### 4.5 About SBUs
+
+只是一些构建时间说明
+
+## Important Preliminary Material
+
+### II. Toolchain Technical Notes
+
+介绍交叉编译基础知识
+
+### III. General Compilation Instructions
+
+在实操Chapter 5和Chapter 6内容之前，需要进行环境检查
+
+* 检查环境变量`$LFS`是否设置为`/mnt/lfs`
+
+```shell
+echo $LFS
+```
+
+* 切换到`lfs`用户
+
+```shell
+su - lfs
+```
+
+## LFS End
+
+完成LFS教程后，需要回滚的操作如下：
+
+1. 4.4节的`/etc/bash.bashrc`文件还原
