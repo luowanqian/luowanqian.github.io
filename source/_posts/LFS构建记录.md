@@ -500,6 +500,145 @@ echo $LFS
 su - lfs
 ```
 
+## 5. Compiling a Cross-Toolchain
+
+后续编译需要在`$LFS/sources`目录中进行
+
+```shell
+cd $LFS/sources/
+```
+
+### 5.2 Binutils-2.44 - Pass 1
+
+* 解压代码，创建构建目录
+
+```shell
+tar -xvf binutils-2.44.tar.xz
+cd binutils-2.44
+mkdir -v build
+cd build
+```
+
+* 编译
+
+```shell
+../configure --prefix=$LFS/tools \
+             --with-sysroot=$LFS \
+             --target=$LFS_TGT   \
+             --disable-nls       \
+             --enable-gprofng=no \
+             --disable-werror    \
+             --enable-new-dtags  \
+             --enable-default-hash-style=gnu
+
+make
+make install
+```
+
+### 5.3 GCC-14.2.0 - Pass 1
+
+* 解压gcc源码包
+
+```shell
+tar -xvf gcc-14.2.0.tar.xz
+cd gcc-14.2.0
+```
+
+* 解压GMP、MPFR和MPC代码到gcc目录中
+
+```shell
+tar -xf ../mpfr-4.2.1.tar.xz
+mv -v mpfr-4.2.1 mpfr
+tar -xf ../gmp-6.3.0.tar.xz
+mv -v gmp-6.3.0 gmp
+tar -xf ../mpc-1.3.1.tar.gz
+mv -v mpc-1.3.1 mpc
+```
+
+* On x86_64 hosts, set the default directory name for 64-bit libraries to “lib”:
+
+```shell
+case $(uname -m) in
+  x86_64)
+    sed -e '/m64=/s/lib64/lib/' \
+        -i.orig gcc/config/i386/t-linux64
+ ;;
+esac
+```
+
+* 创建构建目录
+
+```shell
+mkdir -v build
+cd       build
+```
+
+* 准备gcc编译
+
+```shell
+../configure                  \
+    --target=$LFS_TGT         \
+    --prefix=$LFS/tools       \
+    --with-glibc-version=2.41 \
+    --with-sysroot=$LFS       \
+    --with-newlib             \
+    --without-headers         \
+    --enable-default-pie      \
+    --enable-default-ssp      \
+    --disable-nls             \
+    --disable-shared          \
+    --disable-multilib        \
+    --disable-threads         \
+    --disable-libatomic       \
+    --disable-libgomp         \
+    --disable-libquadmath     \
+    --disable-libssp          \
+    --disable-libvtv          \
+    --disable-libstdcxx       \
+    --enable-languages=c,c++
+```
+
+* 编译安装gcc
+
+```shell
+make
+make install
+```
+* 拷贝limit.h。当前已在build目录中，需要cd到gcc源码目录
+
+```shell
+cd ..
+cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
+  `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include/limits.h
+```
+
+### 5.4 Linux-6.13.4 API Headers
+
+* 解压Linux kernel包
+
+```shell
+tar -xvf linux-6.13.4.tar.xz
+cd linux-6.13.4
+```
+
+* 预检查。LFS教程这步不太懂在干啥，先执行吧
+
+```shell
+make mrproper
+```
+
+* 提取kernel headers，拷贝到`$LFS/usr`
+
+```shell
+make headers
+find usr/include -type f ! -name '*.h' -delete
+cp -rv usr/include $LFS/usr
+```
+
+第二步是删除`usr/include`除了`*.h`以外的文件，即只保留头文件
+
+* 检查`$LFS/usr/include/`目录是否已经有头文件，有哪些头文件见 [5.4.2. Contents of Linux API Headers](https://www.linuxfromscratch.org/lfs/view/stable/chapter05/linux-headers.html)
+
 ## LFS End
 
 完成LFS教程后，需要回滚的操作如下：
