@@ -182,7 +182,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2025-03-16 22:06:09" itemprop="dateModified" datetime="2025-03-16T22:06:09+08:00">2025-03-16</time>
+                <time title="Modified: 2025-03-22 22:02:40" itemprop="dateModified" datetime="2025-03-22T22:02:40+08:00">2025-03-22</time>
               </span>
 
           
@@ -375,6 +375,72 @@
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su - lfs</span><br></pre></td></tr></table></figure>
 
+<h2 id="5-Compiling-a-Cross-Toolchain"><a href="#5-Compiling-a-Cross-Toolchain" class="headerlink" title="5. Compiling a Cross-Toolchain"></a>5. Compiling a Cross-Toolchain</h2><p>后续编译需要在<code>$LFS/sources</code>目录中进行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd $LFS/sources/</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-Binutils-2-44-Pass-1"><a href="#5-2-Binutils-2-44-Pass-1" class="headerlink" title="5.2 Binutils-2.44 - Pass 1"></a>5.2 Binutils-2.44 - Pass 1</h3><ul>
+<li>解压代码，创建构建目录</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf binutils-2.44.tar.xz</span><br><span class="line">cd binutils-2.44</span><br><span class="line">mkdir -v build</span><br><span class="line">cd build</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编译</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">../configure --prefix=$LFS/tools \</span><br><span class="line">             --with-sysroot=$LFS \</span><br><span class="line">             --target=$LFS_TGT   \</span><br><span class="line">             --disable-nls       \</span><br><span class="line">             --enable-gprofng=no \</span><br><span class="line">             --disable-werror    \</span><br><span class="line">             --enable-new-dtags  \</span><br><span class="line">             --enable-default-hash-style=gnu</span><br><span class="line"></span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-GCC-14-2-0-Pass-1"><a href="#5-3-GCC-14-2-0-Pass-1" class="headerlink" title="5.3 GCC-14.2.0 - Pass 1"></a>5.3 GCC-14.2.0 - Pass 1</h3><ul>
+<li>解压gcc源码包</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf gcc-14.2.0.tar.xz</span><br><span class="line">cd gcc-14.2.0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>解压GMP、MPFR和MPC代码到gcc目录中</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tar -xf ../mpfr-4.2.1.tar.xz</span><br><span class="line">mv -v mpfr-4.2.1 mpfr</span><br><span class="line">tar -xf ../gmp-6.3.0.tar.xz</span><br><span class="line">mv -v gmp-6.3.0 gmp</span><br><span class="line">tar -xf ../mpc-1.3.1.tar.gz</span><br><span class="line">mv -v mpc-1.3.1 mpc</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>On x86_64 hosts, set the default directory name for 64-bit libraries to “lib”:</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">case $(uname -m) in</span><br><span class="line">  x86_64)</span><br><span class="line">    sed -e &#x27;/m64=/s/lib64/lib/&#x27; \</span><br><span class="line">        -i.orig gcc/config/i386/t-linux64</span><br><span class="line"> ;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建构建目录</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -v build</span><br><span class="line">cd       build</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>准备gcc编译</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">../configure                  \</span><br><span class="line">    --target=$LFS_TGT         \</span><br><span class="line">    --prefix=$LFS/tools       \</span><br><span class="line">    --with-glibc-version=2.41 \</span><br><span class="line">    --with-sysroot=$LFS       \</span><br><span class="line">    --with-newlib             \</span><br><span class="line">    --without-headers         \</span><br><span class="line">    --enable-default-pie      \</span><br><span class="line">    --enable-default-ssp      \</span><br><span class="line">    --disable-nls             \</span><br><span class="line">    --disable-shared          \</span><br><span class="line">    --disable-multilib        \</span><br><span class="line">    --disable-threads         \</span><br><span class="line">    --disable-libatomic       \</span><br><span class="line">    --disable-libgomp         \</span><br><span class="line">    --disable-libquadmath     \</span><br><span class="line">    --disable-libssp          \</span><br><span class="line">    --disable-libvtv          \</span><br><span class="line">    --disable-libstdcxx       \</span><br><span class="line">    --enable-languages=c,c++</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编译安装gcc</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<ul>
+<li>拷贝limit.h。当前已在build目录中，需要cd到gcc源码目录</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ..</span><br><span class="line">cat gcc/limitx.h gcc/glimits.h gcc/limity.h &gt; \</span><br><span class="line">  `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include/limits.h</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-Linux-6-13-4-API-Headers"><a href="#5-4-Linux-6-13-4-API-Headers" class="headerlink" title="5.4 Linux-6.13.4 API Headers"></a>5.4 Linux-6.13.4 API Headers</h3><ul>
+<li>解压Linux kernel包</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf linux-6.13.4.tar.xz</span><br><span class="line">cd linux-6.13.4</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>预检查。LFS教程这步不太懂在干啥，先执行吧</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make mrproper</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>提取kernel headers，拷贝到<code>$LFS/usr</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make headers</span><br><span class="line">find usr/include -type f ! -name &#x27;*.h&#x27; -delete</span><br><span class="line">cp -rv usr/include $LFS/usr</span><br></pre></td></tr></table></figure>
+
+<p>第二步是删除<code>usr/include</code>除了<code>*.h</code>以外的文件，即只保留头文件</p>
+<ul>
+<li>检查<code>$LFS/usr/include/</code>目录是否已经有头文件，有哪些头文件见 <a target="_blank" rel="noopener" href="https://www.linuxfromscratch.org/lfs/view/stable/chapter05/linux-headers.html">5.4.2. Contents of Linux API Headers</a></li>
+</ul>
 <h2 id="LFS-End"><a href="#LFS-End" class="headerlink" title="LFS End"></a>LFS End</h2><p>完成LFS教程后，需要回滚的操作如下：</p>
 <ol>
 <li>4.4节的<code>/etc/bash.bashrc</code>文件还原</li>
