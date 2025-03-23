@@ -182,7 +182,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2025-03-22 22:02:40" itemprop="dateModified" datetime="2025-03-22T22:02:40+08:00">2025-03-22</time>
+                <time title="Modified: 2025-03-23 09:39:00" itemprop="dateModified" datetime="2025-03-23T09:39:00+08:00">2025-03-23</time>
               </span>
 
           
@@ -441,6 +441,89 @@
 <ul>
 <li>检查<code>$LFS/usr/include/</code>目录是否已经有头文件，有哪些头文件见 <a target="_blank" rel="noopener" href="https://www.linuxfromscratch.org/lfs/view/stable/chapter05/linux-headers.html">5.4.2. Contents of Linux API Headers</a></li>
 </ul>
+<h3 id="5-5-Glibc-2-41"><a href="#5-5-Glibc-2-41" class="headerlink" title="5.5 Glibc-2.41"></a>5.5 Glibc-2.41</h3><ul>
+<li>解压Glibc包</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf glibc-2.41.tar.xz</span><br><span class="line">cd glibc-2.41</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建符号链接</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">case $(uname -m) in</span><br><span class="line">    i?86)   ln -sfv ld-linux.so.2 $LFS/lib/ld-lsb.so.3</span><br><span class="line">    ;;</span><br><span class="line">    x86_64) ln -sfv ../lib/ld-linux-x86-64.so.2 $LFS/lib64</span><br><span class="line">            ln -sfv ../lib/ld-linux-x86-64.so.2 $LFS/lib64/ld-lsb-x86-64.so.3</span><br><span class="line">    ;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>打补丁</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">patch -Np1 -i ../glibc-2.41-fhs-1.patch</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建构建目录</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -v build</span><br><span class="line">cd       build</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Ensure that the <code>ldconfig</code> and <code>sln</code> utilities are installed into <code>/usr/sbin</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;rootsbindir=/usr/sbin&quot; &gt; configparms</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>准备Glibc编译</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">../configure                             \</span><br><span class="line">      --prefix=/usr                      \</span><br><span class="line">      --host=$LFS_TGT                    \</span><br><span class="line">      --build=$(../scripts/config.guess) \</span><br><span class="line">      --enable-kernel=5.4                \</span><br><span class="line">      --with-headers=$LFS/usr/include    \</span><br><span class="line">      --disable-nscd                     \</span><br><span class="line">      libc_cv_slibdir=/usr/lib</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编译</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装Glibc</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make DESTDIR=$LFS install</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Fix a hard coded path to the executable loader in the <code>ldd</code> script</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#x27;/RTLDLIST=/s@/usr@@g&#x27; -i $LFS/usr/bin/ldd</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>检查Glibc是否正确安装（<strong>必须检查通过</strong>）</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;int main()&#123;&#125;&#x27; | $LFS_TGT-gcc -xc -</span><br><span class="line">readelf -l a.out | grep ld-linux</span><br></pre></td></tr></table></figure>
+
+<p>正确安装Glibc，会看到以下输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]</span><br></pre></td></tr></table></figure>
+
+<p>删除临时文件<code>a.out</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -v a.out</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-6-Libstdc-from-GCC-14-2-0"><a href="#5-6-Libstdc-from-GCC-14-2-0" class="headerlink" title="5.6 Libstdc++ from GCC-14.2.0"></a>5.6 Libstdc++ from GCC-14.2.0</h3><p>因为<code>Libstdc++</code>是gcc一部分，需要重新在gcc源码目录中构建</p>
+<ul>
+<li>进入gcc源码目录，重新创建构建目录</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd gcc-14.2.0</span><br><span class="line">rm -rfv build</span><br><span class="line">mkdir -v build</span><br><span class="line">cd build</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>准备Libstdc++编译</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">../libstdc++-v3/configure           \</span><br><span class="line">    --host=$LFS_TGT                 \</span><br><span class="line">    --build=$(../config.guess)      \</span><br><span class="line">    --prefix=/usr                   \</span><br><span class="line">    --disable-multilib              \</span><br><span class="line">    --disable-nls                   \</span><br><span class="line">    --disable-libstdcxx-pch         \</span><br><span class="line">    --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/14.2.0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编译</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装库</li>
+</ul>
+<p>确保环境变量<code>$LFS</code>设置正确</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make DESTDIR=$LFS install</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Remove the libtool archive files because they are harmful for cross-compilation</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -v $LFS/usr/lib/lib&#123;stdc++&#123;,exp,fs&#125;,supc++&#125;.la</span><br></pre></td></tr></table></figure>
+
 <h2 id="LFS-End"><a href="#LFS-End" class="headerlink" title="LFS End"></a>LFS End</h2><p>完成LFS教程后，需要回滚的操作如下：</p>
 <ol>
 <li>4.4节的<code>/etc/bash.bashrc</code>文件还原</li>
