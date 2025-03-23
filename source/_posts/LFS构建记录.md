@@ -639,6 +639,141 @@ cp -rv usr/include $LFS/usr
 
 * 检查`$LFS/usr/include/`目录是否已经有头文件，有哪些头文件见 [5.4.2. Contents of Linux API Headers](https://www.linuxfromscratch.org/lfs/view/stable/chapter05/linux-headers.html)
 
+### 5.5 Glibc-2.41
+
+* 解压Glibc包
+
+```shell
+tar -xvf glibc-2.41.tar.xz
+cd glibc-2.41
+```
+
+* 创建符号链接
+
+```shell
+case $(uname -m) in
+    i?86)   ln -sfv ld-linux.so.2 $LFS/lib/ld-lsb.so.3
+    ;;
+    x86_64) ln -sfv ../lib/ld-linux-x86-64.so.2 $LFS/lib64
+            ln -sfv ../lib/ld-linux-x86-64.so.2 $LFS/lib64/ld-lsb-x86-64.so.3
+    ;;
+esac
+```
+
+* 打补丁
+
+```shell
+patch -Np1 -i ../glibc-2.41-fhs-1.patch
+```
+
+* 创建构建目录
+
+```shell
+mkdir -v build
+cd       build
+```
+
+* Ensure that the `ldconfig` and `sln` utilities are installed into `/usr/sbin`
+
+```shell
+echo "rootsbindir=/usr/sbin" > configparms
+```
+
+* 准备Glibc编译
+
+```shell
+../configure                             \
+      --prefix=/usr                      \
+      --host=$LFS_TGT                    \
+      --build=$(../scripts/config.guess) \
+      --enable-kernel=5.4                \
+      --with-headers=$LFS/usr/include    \
+      --disable-nscd                     \
+      libc_cv_slibdir=/usr/lib
+```
+
+* 编译
+
+```shell
+make
+```
+
+* 安装Glibc
+
+```shell
+make DESTDIR=$LFS install
+```
+
+* Fix a hard coded path to the executable loader in the `ldd` script
+
+```shell
+sed '/RTLDLIST=/s@/usr@@g' -i $LFS/usr/bin/ldd
+```
+
+* 检查Glibc是否正确安装（**必须检查通过**）
+
+```shell
+echo 'int main(){}' | $LFS_TGT-gcc -xc -
+readelf -l a.out | grep ld-linux
+```
+
+正确安装Glibc，会看到以下输出
+
+```
+[Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]
+```
+
+删除临时文件`a.out`
+```
+rm -v a.out
+```
+
+### 5.6 Libstdc++ from GCC-14.2.0
+
+因为`Libstdc++`是gcc一部分，需要重新在gcc源码目录中构建
+
+* 进入gcc源码目录，重新创建构建目录
+
+```shell
+cd gcc-14.2.0
+rm -rfv build
+mkdir -v build
+cd build
+```
+
+* 准备Libstdc++编译
+
+```shell
+../libstdc++-v3/configure           \
+    --host=$LFS_TGT                 \
+    --build=$(../config.guess)      \
+    --prefix=/usr                   \
+    --disable-multilib              \
+    --disable-nls                   \
+    --disable-libstdcxx-pch         \
+    --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/14.2.0
+```
+
+* 编译
+
+```shell
+make
+```
+
+* 安装库
+
+确保环境变量`$LFS`设置正确
+
+```shell
+make DESTDIR=$LFS install
+```
+
+* Remove the libtool archive files because they are harmful for cross-compilation
+
+```shell
+rm -v $LFS/usr/lib/lib{stdc++{,exp,fs},supc++}.la
+```
+
 ## LFS End
 
 完成LFS教程后，需要回滚的操作如下：
