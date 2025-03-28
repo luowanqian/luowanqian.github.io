@@ -774,6 +774,122 @@ make DESTDIR=$LFS install
 rm -v $LFS/usr/lib/lib{stdc++{,exp,fs},supc++}.la
 ```
 
+## 6. Cross Compiling Temporary Tools
+
+后续编译需要在`$LFS/sources`目录中进行，同时确保当前用户为`lfs`
+
+```shell
+su - lfs
+cd $LFS/sources/
+```
+
+### 6.2 M4-1.4.19
+
+* 解压M4源码包
+
+```shell
+tar -xvf m4-1.4.19.tar.xz
+cd m4-1.4.19
+```
+
+* 准备M4编译
+
+```shell
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(build-aux/config.guess)
+```
+
+* 编译安装
+
+```shell
+make
+make DESTDIR=$LFS install
+```
+
+### 6.3 Ncurses-6.5
+
+* 解压Ncurses源码包
+
+```shell
+tar -xvf ncurses-6.5.tar.gz
+cd ncurses-6.5
+```
+
+* 构建“tic”程序
+
+```shell
+mkdir build
+pushd build
+  ../configure AWK=gawk
+  make -C include
+  make -C progs tic
+popd
+```
+
+* 准备Ncurses编译
+
+```shell
+./configure --prefix=/usr                \
+            --host=$LFS_TGT              \
+            --build=$(./config.guess)    \
+            --mandir=/usr/share/man      \
+            --with-manpage-format=normal \
+            --with-shared                \
+            --without-normal             \
+            --with-cxx-shared            \
+            --without-debug              \
+            --without-ada                \
+            --disable-stripping          \
+            AWK=gawk
+```
+
+* 编译
+
+```shell
+make
+```
+
+* 安装
+
+```shell
+make DESTDIR=$LFS TIC_PATH=$(pwd)/build/progs/tic install
+ln -sv libncursesw.so $LFS/usr/lib/libncurses.so
+sed -e 's/^#if.*XOPEN.*$/#if 1/' \
+    -i $LFS/usr/include/curses.h
+```
+
+### 6.4 Bash-5.2.37
+
+* 解压Bash源码包
+
+```shell
+tar -xzvf bash-5.2.37.tar.gz
+cd bash-5.2.37
+```
+
+* 准备Bash编译
+
+```shell
+./configure --prefix=/usr                      \
+            --build=$(sh support/config.guess) \
+            --host=$LFS_TGT                    \
+            --without-bash-malloc
+```
+
+* 编译安装
+
+```shell
+make
+make DESTDIR=$LFS install
+```
+
+* 创建sh链接
+
+```shell
+ln -sv bash $LFS/bin/sh
+```
+
 ## LFS End
 
 完成LFS教程后，需要回滚的操作如下：
