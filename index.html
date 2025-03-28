@@ -182,7 +182,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2025-03-23 09:39:00" itemprop="dateModified" datetime="2025-03-23T09:39:00+08:00">2025-03-23</time>
+                <time title="Modified: 2025-03-28 22:53:59" itemprop="dateModified" datetime="2025-03-28T22:53:59+08:00">2025-03-28</time>
               </span>
 
           
@@ -523,6 +523,69 @@
 <li>Remove the libtool archive files because they are harmful for cross-compilation</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -v $LFS/usr/lib/lib&#123;stdc++&#123;,exp,fs&#125;,supc++&#125;.la</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-Cross-Compiling-Temporary-Tools"><a href="#6-Cross-Compiling-Temporary-Tools" class="headerlink" title="6. Cross Compiling Temporary Tools"></a>6. Cross Compiling Temporary Tools</h2><p>后续编译需要在<code>$LFS/sources</code>目录中进行，同时确保当前用户为<code>lfs</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su - lfs</span><br><span class="line">cd $LFS/sources/</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-M4-1-4-19"><a href="#6-2-M4-1-4-19" class="headerlink" title="6.2 M4-1.4.19"></a>6.2 M4-1.4.19</h3><ul>
+<li>解压M4源码包</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf m4-1.4.19.tar.xz</span><br><span class="line">cd m4-1.4.19</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>准备M4编译</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr   \</span><br><span class="line">            --host=$LFS_TGT \</span><br><span class="line">            --build=$(build-aux/config.guess)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编译安装</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">make DESTDIR=$LFS install</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-Ncurses-6-5"><a href="#6-3-Ncurses-6-5" class="headerlink" title="6.3 Ncurses-6.5"></a>6.3 Ncurses-6.5</h3><ul>
+<li>解压Ncurses源码包</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf ncurses-6.5.tar.gz</span><br><span class="line">cd ncurses-6.5</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>构建“tic”程序</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line">pushd build</span><br><span class="line">  ../configure AWK=gawk</span><br><span class="line">  make -C include</span><br><span class="line">  make -C progs tic</span><br><span class="line">popd</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>准备Ncurses编译</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr                \</span><br><span class="line">            --host=$LFS_TGT              \</span><br><span class="line">            --build=$(./config.guess)    \</span><br><span class="line">            --mandir=/usr/share/man      \</span><br><span class="line">            --with-manpage-format=normal \</span><br><span class="line">            --with-shared                \</span><br><span class="line">            --without-normal             \</span><br><span class="line">            --with-cxx-shared            \</span><br><span class="line">            --without-debug              \</span><br><span class="line">            --without-ada                \</span><br><span class="line">            --disable-stripping          \</span><br><span class="line">            AWK=gawk</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编译</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">make DESTDIR=$LFS TIC_PATH=$(pwd)/build/progs/tic install</span><br><span class="line">ln -sv libncursesw.so $LFS/usr/lib/libncurses.so</span><br><span class="line">sed -e &#x27;s/^#if.*XOPEN.*$/#if 1/&#x27; \</span><br><span class="line">    -i $LFS/usr/include/curses.h</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-4-Bash-5-2-37"><a href="#6-4-Bash-5-2-37" class="headerlink" title="6.4 Bash-5.2.37"></a>6.4 Bash-5.2.37</h3><ul>
+<li>解压Bash源码包</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf bash-5.2.37.tar.gz</span><br><span class="line">cd bash-5.2.37</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>准备Bash编译</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr                      \</span><br><span class="line">            --build=$(sh support/config.guess) \</span><br><span class="line">            --host=$LFS_TGT                    \</span><br><span class="line">            --without-bash-malloc</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编译安装</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">make DESTDIR=$LFS install</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建sh链接</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -sv bash $LFS/bin/sh</span><br></pre></td></tr></table></figure>
 
 <h2 id="LFS-End"><a href="#LFS-End" class="headerlink" title="LFS End"></a>LFS End</h2><p>完成LFS教程后，需要回滚的操作如下：</p>
 <ol>
